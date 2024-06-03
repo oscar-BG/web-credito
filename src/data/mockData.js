@@ -56,4 +56,31 @@ export const mockDataTeam = [
         check_out : true,
         check_int : false,
     }
-]
+];
+
+export const mockDataUsers = [
+    {
+        id : 1,
+        name_user : "sreyes",
+        name : "Sonia Reyes",
+        type_user : "Administrador",
+        zone : "Occidente",
+        subsidiary : "Morelia"
+    },
+    {
+        id : 2,
+        name_user : "aperez",
+        name : "Adolfo Pérez",
+        type_user : "Jefe de Cartera",
+        zone : "Centro",
+        subsidiary : "Toluca"
+    },
+    {
+        id : 3,
+        name_user : "lalvarez",
+        name : "Luis Álvarez",
+        type_user : "Ejecutivo Comercial",
+        zone : "Bajío",
+        subsidiary : "Querétaro"
+    },
+];
