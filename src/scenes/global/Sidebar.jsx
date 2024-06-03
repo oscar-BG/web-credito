@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import { Sidebar, SubMenu, Menu, MenuItem } from 'react-pro-sidebar';
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -11,6 +11,9 @@ import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplic
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
+import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSearchOutlined';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -36,6 +39,7 @@ const SidebarPro = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const { pathname: currentPath } = useLocation()
 
   return (
     <Box
@@ -111,48 +115,65 @@ const SidebarPro = () => {
 
             <Box paddingLeft={isCollapsed ? undefined : "10%"}>
                 <Item
-                    title="Inicio"
-                    to="/"
-                    icon={<HomeOutlinedIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
+                  title="Inicio"
+                  to="/"
+                  icon={<HomeOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
                 />
                 
+                <SubMenu defaultOpen label={"Configuración"} icon={<SettingsApplicationsOutlinedIcon />}>
+                  <Item
+                    title="Usuarios"
+                    to="/config/user"
+                    icon={<PersonOutlineOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Catálogos"
+                    to="/config/catalogue"
+                    icon={<SummarizeOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Audit Trail"
+                    to="/config/audittrail"
+                    icon={<ContentPasteSearchOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
+                
                 <Item
-                title="Configuración"
-                to="/config"
-                icon={<SettingsApplicationsOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
+                  title="Comercial"
+                  to="/commercial"
+                  icon={<ContactsOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
                 />
                 <Item
-                title="Comercial"
-                to="/commercial"
-                icon={<ContactsOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-                />
-                <Item
-                title="Cartera"
-                to="/briefcase"
-                icon={<ReceiptOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
+                  title="Cartera"
+                  to="/briefcase"
+                  icon={<ReceiptOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
                 />
 
                 <Item
-                title="Analista de crédito"
-                to="/creditanalyst"
-                icon={<ManageSearchOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
+                  title="Analista de crédito"
+                  to="/creditanalyst"
+                  icon={<ManageSearchOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
                 />
                 <Item
-                title="Cerrar sesión"
-                to="/signoff"
-                icon={<LogoutOutlinedIcon />}
-                selected={selected}
-                setSelected={setSelected}
+                  title="Cerrar sesión"
+                  to="/signoff"
+                  icon={<LogoutOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
                 />
                
             </Box>

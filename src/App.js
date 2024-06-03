@@ -9,6 +9,9 @@ import Config from "./scenes/config";
 import Commercial from "./scenes/commercial";
 import Briefcase from "./scenes/briefcase";
 import Creditanalyst from "./scenes/creditanalyst";
+import User from "./scenes/config/user";
+import Catalogue from "./scenes/config/catalogue";
+import AuditTrail from "./scenes/config/auditTrail";
 // import Signoff from "./scenes/Signoff";
 
 function App() {
@@ -29,6 +32,9 @@ function App() {
                 <Route path="/commercial" element={<Commercial/>} />
                 <Route path="/briefcase" element={<Briefcase/>} />
                 <Route path="/creditanalyst" element={<Creditanalyst/>} />
+                <Route path="/config/user" element={<User/>} />
+                <Route path="/config/catalogue" element={<Catalogue/>} />
+                <Route path="/config/audittrail" element={<AuditTrail/>} />
                 {/* <Route path="/signoff" element={<Signoff/>} /> */}
               </Routes>
             </main>
