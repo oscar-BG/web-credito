@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { Box, Typography, useTheme, Checkbox, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Formik } from "formik";
-import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box, useTheme, Checkbox, Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
 import { mockDataDocumentPersonFisica } from "../../../data/mockData";
 import { mockDataDocumentMoralPerson } from "../../../data/mockData";
@@ -11,11 +7,6 @@ import { mockDataDocumentGovernment } from "../../../data/mockData";
 import { mockDataDocumentMultinationalCompanies } from "../../../data/mockData";
 import { mockDataDocumentGroupInfra } from "../../../data/mockData";
 import { mockDataDocumentClientExport } from "../../../data/mockData";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
 import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import Header from "../../../components/Header";
 

@@ -695,3 +695,28 @@ export const mockDataDocumentClientExport = [
         required : false
     }
 ];
+
+export const mockDataAuditTrail = [
+    {
+        id : 1,
+        user: "sreyes",
+        name : "Sonia Reyes",
+        zona : "",
+        sucursal : "",
+        modulo: "Configuración",
+        accion : "Inicio de session",
+        date : "05/25/2024",
+        hora : "9:00:00"
+    },
+    {
+        id : 1,
+        user: "sreyes",
+        name : "Sonia Reyes",
+        zona : "",
+        sucursal : "",
+        modulo: "Configuración",
+        accion : "Creación de Usuario",
+        date : "05/25/2024",
+        hora : "9:00:00"
+    }
+];
