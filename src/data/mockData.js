@@ -136,4 +136,562 @@ export const mockDataTypeClient = [
         id: 3,
         type : "Empresas"
     }
-]
+];
+
+export const mockDataDocumentPersonFisica = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
+
+export const mockDataDocumentMoralPerson = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
+
+export const mockDataDocumentGovernment = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
+
+export const mockDataDocumentMultinationalCompanies = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
+
+export const mockDataDocumentGroupInfra = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
+
+export const mockDataDocumentClientExport = [
+    {
+        id : 1,
+        name : "Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto",
+        required : true
+    },
+    {
+        id : 2,
+        name : "Refrencia Comerciales",
+        required : true
+    },
+    {
+        id : 3,
+        name : "Autorización para solicitar resportes a Buró de Crédito firmada en original por el cliente y aval",
+        required : true
+    },
+    {
+        id : 4,
+        name : "Constancia de situación fiscal vigente",
+        required : false,
+    },
+    {
+        id : 5,
+        name : "Opinión de cumplimiento positiva vigente",
+        required : true
+    },
+    {
+        id : 6,
+        name : "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)",
+        required : true
+    },
+    {
+        id : 7,
+        name : "Copia de indentificación del represante legal",
+        required : true
+    },
+    {
+        id : 8,
+        name : "Acta constitutiva",
+        required : false
+    },
+    {
+        id : 9,
+        name : "Poder notarial (Facultad de otorgar y suscribir títulos de crédito",
+        required : true
+    },
+    {
+        id : 10,
+        name : "Estados financieros",
+        required : true
+    },
+    {
+        id : 11,
+        name : "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud",
+        required : true
+    },
+    {
+        id : 12,
+        name : "Contrato / Pedido / Orden de compra",
+        required : false
+    },
+    {
+        id : 13,
+        name : "Check list firma de contrado",
+        required : true
+    },
+    {
+        id : 14,
+        name : "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto",
+        required : false
+    },
+    {
+        id : 15,
+        name : "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial",
+        required : false
+    },
+    {
+        id : 16,
+        name : "Check list de firma pagare",
+        required : false
+    },
+    {
+        id : 17,
+        name : "Pagaré emitido por INFRA",
+        required : false
+    },
+    {
+        id : 18,
+        name : "Seguro de Crédito / Carta de Crédito",
+        required : false
+    }
+];
