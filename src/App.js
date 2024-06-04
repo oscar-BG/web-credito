@@ -12,6 +12,10 @@ import Creditanalyst from "./scenes/creditanalyst";
 import User from "./scenes/config/user";
 import Catalogue from "./scenes/config/catalogue";
 import AuditTrail from "./scenes/config/auditTrail";
+import FileStatus from "./scenes/config/catalogue/fileStatus";
+import AreaBranches from "./scenes/config/catalogue/areaBranches";
+import TypeClient from "./scenes/config/catalogue/typeClient";
+import TypeDocument from "./scenes/config/catalogue/type_document";
 // import Signoff from "./scenes/Signoff";
 
 function App() {
@@ -34,7 +38,12 @@ function App() {
                 <Route path="/creditanalyst" element={<Creditanalyst/>} />
                 <Route path="/config/user" element={<User/>} />
                 <Route path="/config/catalogue" element={<Catalogue/>} />
+                <Route path="/config/catalogue/zone-branches" element={<AreaBranches/>} />
+                <Route path="/config/catalogue/file-status" element={<FileStatus/>} />
+                <Route path="/config/catalogue/type-client" element={<TypeClient/>} />
+                <Route path="/config/catalogue/type-document" element={<TypeDocument/>} />
                 <Route path="/config/audittrail" element={<AuditTrail/>} />
+                
                 {/* <Route path="/signoff" element={<Signoff/>} /> */}
               </Routes>
             </main>

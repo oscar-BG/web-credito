@@ -84,3 +84,56 @@ export const mockDataUsers = [
         subsidiary : "Querétaro"
     },
 ];
+
+export const mockZoneBranches = [
+    {
+        id: 1,
+        zona: "Bajío",
+        sucursal : "Celaya"
+    },
+    {
+        id: 2,
+        zona: "Bajío",
+        sucursal : "Irapuato"
+    },
+    {
+        id: 3,
+        zona: "Centro",
+        sucursal : "Cuautla"
+    },
+    {
+        id: 4,
+        zona: "Centro",
+        sucursal : "Puebla"
+    }
+];
+
+export const mockDataStatusFile = [
+    {
+        id: 1,
+        status : "Capturado"
+    },
+    {
+        id: 2,
+        status : "Cargado"
+    },
+    {
+        id: 2,
+        status : "Prevalidado"
+    }
+];
+
+export const mockDataTypeClient = [
+    {
+        id: 1,
+        type : "Persona física"
+    },
+    {
+        id: 2,
+        type : "Persona moral"
+    },
+    {
+        id: 3,
+        type : "Empresas"
+    }
+]
