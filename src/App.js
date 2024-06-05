@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Topbar from "./scenes/global/Topbar";
+import Login from "./scenes";
 import Dashboar from "./scenes/dashboard";
 import SidebarPro from "./scenes/global/Sidebar";
 import Config from "./scenes/config";
@@ -16,6 +17,10 @@ import FileStatus from "./scenes/config/catalogue/fileStatus";
 import AreaBranches from "./scenes/config/catalogue/areaBranches";
 import TypeClient from "./scenes/config/catalogue/typeClient";
 import TypeDocument from "./scenes/config/catalogue/type_document";
+import DocumentRequest from "./scenes/commercial/documentRequest";
+import ProfileUser from "./scenes/commercial/profileUser";
+import ShowDocument from "./scenes/commercial/show_document";
+
 // import Signoff from "./scenes/Signoff";
 
 function App() {
@@ -31,9 +36,13 @@ function App() {
             <main className="content">
               <Topbar setIsSidebar={setIsSidebar} />
               <Routes>
-                <Route path="/" element={<Dashboar/>} />
+                <Route path="/" element={<Login/>} />
+                <Route path="/home" element={<Dashboar/>} />
                 <Route path="/config" element={<Config/>} />
                 <Route path="/commercial" element={<Commercial/>} />
+                <Route path="/commercial/new-request-document" element={<DocumentRequest/>} />
+                <Route path="/commercial/profile-user" element={<ProfileUser/>} />
+                <Route path="/commercial/show-document" element={<ShowDocument/>} />
                 <Route path="/briefcase" element={<Briefcase/>} />
                 <Route path="/creditanalyst" element={<Creditanalyst/>} />
                 <Route path="/config/user" element={<User/>} />

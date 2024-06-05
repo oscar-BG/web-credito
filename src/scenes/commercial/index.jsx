@@ -12,6 +12,8 @@ import Header from "../../components/Header";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 const Commercial = () => {
     const theme = useTheme();
@@ -21,6 +23,14 @@ const Commercial = () => {
 
     const handleFormSubmit = (values) => {
       console.log(values);
+    };
+
+    const navigate = useNavigate();
+    const handleButtonClick = () => {
+      navigate('/commercial/new-request-document');
+    };
+    const handleButtonClickExpediente = () => {
+      navigate('/commercial/profile-user');
     };
 
 
@@ -99,20 +109,12 @@ const Commercial = () => {
                 p="5px"
                 display="flex"
                 justifyContent="center"
-                backgroundColor={
-                  expediente === true
-                    ? colors.greenAccent[600]
-                    : expediente === false
-                    ? colors.greenAccent[700]
-                    : colors.greenAccent[700]
-                }
                 borderRadius="4px"
               >
-                {expediente === true && <VisibilityOutlinedIcon />}
-                {expediente === false && <VisibilityOffOutlinedIcon />}
-                <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                  {expediente}
-                </Typography>
+
+                <Button color="secondary" variant="contained" onClick={handleButtonClickExpediente}>
+                  <VisibilityOutlinedIcon /> 
+                </Button>
               </Box>
             );
           },
@@ -121,7 +123,15 @@ const Commercial = () => {
 
     return (
         <Box m="20px">
+          <Box display="flex" justifyContent="space-between" alignItems="center">
             <Header title="Comercial" subtitle="Lista de solicitudes" />
+            <Box display="flex" justifyContent="center" mt="20px">
+              <Button color="secondary" variant="contained" onClick={handleButtonClick}>
+                <PersonAddOutlinedIcon></PersonAddOutlinedIcon>
+                Agregar
+              </Button>
+            </Box>
+          </Box>
 
             <Formik
               onSubmit={handleFormSubmit}
