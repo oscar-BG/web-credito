@@ -36,8 +36,7 @@ function App() {
             <main className="content">
               <Topbar setIsSidebar={setIsSidebar} />
               <Routes>
-                <Route path="/" element={<Login/>} />
-                <Route path="/home" element={<Dashboar/>} />
+                <Route path="/" element={<Dashboar/>} />
                 <Route path="/config" element={<Config/>} />
                 <Route path="/commercial" element={<Commercial/>} />
                 <Route path="/commercial/new-request-document" element={<DocumentRequest/>} />
