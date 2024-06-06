@@ -14,7 +14,7 @@ import Header from "../../components/Header";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
-
+import { useNavigate, Navigate } from 'react-router-dom';
 
 
 const CreditAnalyst = () => {
@@ -22,9 +22,14 @@ const CreditAnalyst = () => {
     const colors = tokens(theme.palette.mode);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [age, setAge] = useState('');
+    const navigate = useNavigate();
 
     const handleFormSubmit = (values) => {
       console.log(values);
+    };
+
+    const handleButtonClickExpediente = () => {
+      navigate('/commercial/profile-user');
     };
 
     const columns = [
@@ -102,20 +107,11 @@ const CreditAnalyst = () => {
                   p="5px"
                   display="flex"
                   justifyContent="center"
-                  backgroundColor={
-                    expediente === true
-                      ? colors.greenAccent[600]
-                      : expediente === false
-                      ? colors.greenAccent[700]
-                      : colors.greenAccent[700]
-                  }
                   borderRadius="4px"
                 >
-                  {expediente === true && <VisibilityOutlinedIcon />}
-                  {expediente === false && <VisibilityOffOutlinedIcon />}
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
+                  <Button color="secondary" sx={{ backgroundColor: "#1380D1" }} variant="contained" onClick={handleButtonClickExpediente}>
+                    <VisibilityOutlinedIcon sx={{ color: '#FFFFFF' }}/>
+                  </Button>
                 </Box>
               );
             },
@@ -132,19 +128,10 @@ const CreditAnalyst = () => {
                   p="5px"
                   display="flex"
                   justifyContent="center"
-                  backgroundColor={
-                    check_out === true
-                      ? colors.greenAccent[600]
-                      : check_out === false
-                      ? colors.greenAccent[700]
-                      : colors.greenAccent[700]
-                  }
+                  backgroundColor="#87CD29"
                   borderRadius="4px"
                 >
-                  {check_out === true && <CheckCircleOutlinedIcon />}
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {check_out}
-                  </Typography>
+                  {check_out === true && <CheckCircleOutlinedIcon sx={{ color: '#FFFFFF' }}  />}
                 </Box>
               );
             },
@@ -161,19 +148,10 @@ const CreditAnalyst = () => {
                   p="5px"
                   display="flex"
                   justifyContent="center"
-                  backgroundColor={
-                    check_int === true
-                      ? colors.greenAccent[600]
-                      : check_int === false
-                      ? colors.greenAccent[700]
-                      : colors.greenAccent[700]
-                  }
+                  backgroundColor="#EF2013"
                   borderRadius="4px"
                 >
-                  {check_int === false && <UnpublishedOutlinedIcon />}
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {check_int}
-                  </Typography>
+                  {check_int === false && <UnpublishedOutlinedIcon sx={{ color: '#FFFFFF' }} />}
                 </Box>
               );
             },

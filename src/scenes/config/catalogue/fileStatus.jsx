@@ -26,7 +26,8 @@ const FileStatus = () => {
     const columns = [
         {
             field: "status",
-            headerName: "Estatus Expediente"
+            headerName: "Estatus Expediente",
+            flex: 1
         },
         {
             field: "editar",
@@ -79,7 +80,7 @@ const FileStatus = () => {
     ];
 
     return <Box m="20px">
-        <Header title="Catalogo" subtitle="Administración de estado de documento"></Header>
+        <Header title="Catálogo" subtitle="Administración de estado de documento"></Header>
 
         <Formik
             onSubmit={handleFormSubmit}

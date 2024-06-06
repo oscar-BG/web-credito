@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { esES } from "@mui/material/locale";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Topbar from "./scenes/global/Topbar";
 import Login from "./scenes";
 import Dashboar from "./scenes/dashboard";

@@ -1,5 +1,6 @@
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
+import { esES } from "@mui/material/locale";
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -182,7 +183,14 @@ export const ColorModeContext = createContext({
         []
     );
 
-    const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+    const theme = useMemo(() => 
+        createTheme(
+          {
+            ...themeSettings(mode), // Tus configuraciones personalizadas del tema
+          },
+          esES // Agrega la configuración de localización en español
+        ), 
+      [mode]);
     return [theme, colorMode];
 };
   

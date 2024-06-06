@@ -146,7 +146,7 @@ export const mockDataDocumentPersonFisica = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -171,7 +171,7 @@ export const mockDataDocumentPersonFisica = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {
@@ -239,7 +239,7 @@ export const mockDataDocumentMoralPerson = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -264,7 +264,7 @@ export const mockDataDocumentMoralPerson = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {
@@ -332,7 +332,7 @@ export const mockDataDocumentGovernment = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -357,7 +357,7 @@ export const mockDataDocumentGovernment = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {
@@ -425,7 +425,7 @@ export const mockDataDocumentMultinationalCompanies = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -450,7 +450,7 @@ export const mockDataDocumentMultinationalCompanies = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {
@@ -518,7 +518,7 @@ export const mockDataDocumentGroupInfra = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -543,7 +543,7 @@ export const mockDataDocumentGroupInfra = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {
@@ -611,7 +611,7 @@ export const mockDataDocumentClientExport = [
     },
     {
         id : 2,
-        name : "Refrencia Comerciales",
+        name : "Referencia Comerciales",
         required : true
     },
     {
@@ -636,7 +636,7 @@ export const mockDataDocumentClientExport = [
     },
     {
         id : 7,
-        name : "Copia de indentificación del represante legal",
+        name : "Copia de identificación del represante legal",
         required : true
     },
     {

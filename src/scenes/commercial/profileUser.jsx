@@ -52,7 +52,7 @@ const ProfileUser = () => {
                             fullWidth
                             variant="filled"
                             type="text"
-                            label="RFC"
+                            label="Nombre/Razón Social"
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values.name}
@@ -448,6 +448,9 @@ const ProfileUser = () => {
                             name="date_aceptacion"
                             error={!!touched.date_aceptacion && !!errors.date_aceptacion}
                             helperText={touched.date_aceptacion && errors.date_aceptacion}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                             sx={{ gridColumn: "span 1" }}
                         />
                         <TextField
@@ -484,6 +487,9 @@ const ProfileUser = () => {
                             name="date_pagare"
                             error={!!touched.date_pagare && !!errors.date_pagare}
                             helperText={touched.date_pagare && errors.date_pagare}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                             sx={{ gridColumn: "span 1" }}
                         />
                         <TextField

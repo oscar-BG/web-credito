@@ -107,7 +107,7 @@ const SidebarPro = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                   >
-                  Ed Roh
+                  Juan Garcia
                   </Typography>
                 </Box>
               </Box>

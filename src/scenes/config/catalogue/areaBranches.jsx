@@ -26,11 +26,13 @@ const AreaBranches = () => {
     const columns = [
         {
             field: "zona",
-            headerName: "Zona"
+            headerName: "Zona",
+            flex: 1
         },
         {
             field: "sucursal",
-            headerName : "Sucursal"
+            headerName : "Sucursal",
+            flex: 1
         },
         {
             field: "editar",
@@ -82,7 +84,7 @@ const AreaBranches = () => {
     ];
 
     return <Box m="20px">
-        <Header title="Catalogo" subtitle="Administración de Zona y Sucursales"></Header>
+        <Header title="Catálogo" subtitle="Administración de Zona y Sucursales"></Header>
 
         <Formik
             onSubmit={handleFormSubmit}

@@ -99,7 +99,7 @@ const Commercial = () => {
         },
         {
           field: "expediente",
-          headerName: "Access Level",
+          headerName: "Expediente",
           flex: 1,
           renderCell: ({ row: { expediente } }) => {
             return (

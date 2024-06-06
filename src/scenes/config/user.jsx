@@ -10,6 +10,7 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import { mockDataUsers } from "../../data/mockData";
+import { esES } from "@mui/material/locale";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';

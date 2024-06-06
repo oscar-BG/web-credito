@@ -26,7 +26,8 @@ const TypeClient = () => {
     const columns = [
         {
             field: "type",
-            headerName: "Estatus Expediente"
+            headerName: "Estatus Expediente",
+            flex: 1
         },
         {
             field: "editar",
@@ -78,7 +79,7 @@ const TypeClient = () => {
     ];
 
     return <Box m="20px">
-        <Header title="Catalogo" subtitle="Administración de tipos de clientes"></Header>
+        <Header title="Catálogo" subtitle="Administración de tipos de clientes"></Header>
 
         <Formik
             onSubmit={handleFormSubmit}

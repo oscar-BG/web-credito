@@ -23,7 +23,7 @@ const Config = () => {
 
     return (
         <Box m="20px">
-            <Header title="Configuracion" subtitle=""></Header>
+            <Header title="Configuración" subtitle=""></Header>
 
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={4} lg={4}>

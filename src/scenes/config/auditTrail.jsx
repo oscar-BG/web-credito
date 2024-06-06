@@ -65,6 +65,9 @@ const AuditTrail = () => {
                             name="date_init"
                             error={!!touched.rfc && !!errors.rfc}
                             helperText={touched.rfc && errors.rfc}
+                            InputLabelProps={{
+                                shrink: true, 
+                            }}
                             sx={{ gridColumn: "span 1" }}
                         />
                         <TextField
@@ -78,6 +81,9 @@ const AuditTrail = () => {
                             name="date_end"
                             error={!!touched.rfc && !!errors.rfc}
                             helperText={touched.rfc && errors.rfc}
+                            InputLabelProps={{
+                                shrink: true, 
+                            }}
                             sx={{ gridColumn: "span 1" }}
                         />
                     </Box>
