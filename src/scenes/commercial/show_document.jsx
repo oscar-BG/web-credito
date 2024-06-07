@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTheme, Box, Grid, Button, Modal, Typography } from "@mui/material";
+import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header"
 import { tokens } from "../../theme";
@@ -27,15 +27,28 @@ const style = {
 const ShowDocument = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [open, setOpen] = useState(false);
-    const handleOpenModal = () => setOpen(true);
-    const handleCloseModal = () => setOpen(false);
+    const [open, setOpen ] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+    // const [open, setOpen] = useState(false);
+    // const handleOpenModal = () => setOpen(true);
+    // const handleCloseModal = () => setOpen(false);
+    
     const columns = [
         {field: "name", headerName : "Documentos", flex : 1},
         {field: "upload", headerName: "Acción",
             renderCell: ({row: {upload}}) => {
                 return (
-                    <Button onClick={handleOpenModal}>
+                    // <Button onClick={handleOpenModal}>
+                    //     <BackupOutlinedIcon></BackupOutlinedIcon>
+                    // </Button>
+                    <Button onClick={handleClickOpen}>
                         <BackupOutlinedIcon></BackupOutlinedIcon>
                     </Button>
                 );
@@ -44,62 +57,63 @@ const ShowDocument = () => {
     ];
 
     // Formulario
-    const [field1, setField1] = useState('');
-    const [field2, setField2] = useState('');
-    const [field4, setField4] = useState('');
-    const [field5, setField5] = useState('');
-    const [file, setFile] = useState(null);
+    // const [field1, setField1] = useState('');
+    // const [field2, setField2] = useState('');
+    // const [field4, setField4] = useState('');
+    // const [field5, setField5] = useState('');
+    // const [file, setFile] = useState(null);
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-    };
+    // const handleFileChange = (e) => {
+    //     setFile(e.target.files[0]);
+    // };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
     
-        let data = new FormData();
-        data.append(
-          'data',
-          JSON.stringify({
-            NewIndex: {
-              values: [
-                { FieldID: 'field1', FieldValue: field1 },
-                { FieldID: 'field2', FieldValue: field2 },
-                { FieldID: 'field4', FieldValue: field4 },
-                { FieldID: 'field5', FieldValue: field5 },
-              ],
-            },
-          })
-        );
+    //     let data = new FormData();
+    //     data.append(
+    //       'data',
+    //       JSON.stringify({
+    //         NewIndex: {
+    //           values: [
+    //             { FieldID: 'field1', FieldValue: field1 },
+    //             { FieldID: 'field2', FieldValue: field2 },
+    //             { FieldID: 'field4', FieldValue: field4 },
+    //             { FieldID: 'field5', FieldValue: field5 },
+    //           ],
+    //         },
+    //       })
+    //     );
     
-        if (file) {
-          data.append('bin', file);
-        }
+    //     if (file) {
+    //       data.append('bin', file);
+    //     }
     
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: 'http://52.1.16.20/AppEnhancerReST/api/AXDataSources/Tester/AXDocs/3',
-          headers: {
-            'Authorization': 'Basic c3lzb3A6eHNjbQ==',
-          },
-          data: data,
-        };
+    //     let config = {
+    //       method: 'post',
+    //       maxBodyLength: Infinity,
+    //       url: 'http://52.1.16.20/AppEnhancerReST/api/AXDataSources/Tester/AXDocs/3',
+    //       headers: {
+    //         'Content-Type': 'application/vnd.emc.ax+json',
+    //         'Authorization': 'Basic c3lzb3A6eHNjbQ==',
+    //       },
+    //       data: data,
+    //     };
     
-        try {
-          const response = await axios.request(config);
-          console.log(JSON.stringify(response.data));
-        } catch (error) {
-          console.error(error);
-        }
-      };
+    //     try {
+    //       const response = await axios.request(config);
+    //       console.log(JSON.stringify(response.data));
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    // };
 
     return (
         <Box m="20px">
             <Header title="Comercial" subtitle="Administración de documentos" />
 
 
-            <Modal
+            {/* <Modal
                 open={open}
                 onClose={handleCloseModal}
                 aria-labelledby="modal-modal-title"
@@ -140,7 +154,81 @@ const ShowDocument = () => {
                     <button type="submit">Submit</button>
                     </form>
                 </Box>
-            </Modal>
+            </Modal> */}
+
+            <Dialog
+                open={open}
+                onClose={handleClose}                
+            >
+                <DialogTitle>Documento</DialogTitle>
+                <DialogContent>
+                    <DialogContent>
+                        Ingrese Información del documento
+                    </DialogContent>
+
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="field1"
+                        name="field1"
+                        label="Field 1"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="field2"
+                        name="field2"
+                        label="Field 2"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="field3"
+                        name="field3"
+                        label="Field 3"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="field4"
+                        name="field4"
+                        label="Field 4"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="field5"
+                        name="field5"
+                        label="Field 5"
+                        type="file"
+                        fullWidth
+                        variant="standard"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Box display="flex" justifyContent="space-between" >
+                        <Button onClick={handleClose}> Cerrar</Button>
+                        <Button> Enviar </Button>
+                    </Box>
+                </DialogActions>
+            </Dialog>
 
             <Box sx={{ flexGrow: 1, padding: 1}}>
                 <Grid container spacing={2}> 

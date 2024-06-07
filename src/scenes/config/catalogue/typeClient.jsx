@@ -46,9 +46,6 @@ const TypeClient = () => {
                 >
                   
                   <EditOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },
@@ -69,9 +66,6 @@ const TypeClient = () => {
                   borderRadius="4px"
                 >
                   <DeleteOutlineOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },

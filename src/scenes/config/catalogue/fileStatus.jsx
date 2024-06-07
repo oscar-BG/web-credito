@@ -46,9 +46,6 @@ const FileStatus = () => {
                 >
                   
                   <EditOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },
@@ -70,9 +67,6 @@ const FileStatus = () => {
                 >
                   
                   <DeleteOutlineOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },

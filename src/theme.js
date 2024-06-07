@@ -1,6 +1,8 @@
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { esES } from "@mui/material/locale";
+import { esES as esGrid } from '@mui/x-data-grid/locales';
+// import { esES as pickersBgBG } from '@mui/x-date-pickers/locales';
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -188,7 +190,8 @@ export const ColorModeContext = createContext({
           {
             ...themeSettings(mode), // Tus configuraciones personalizadas del tema
           },
-          esES // Agrega la configuración de localización en español
+          esES,
+          esGrid
         ), 
       [mode]);
     return [theme, colorMode];

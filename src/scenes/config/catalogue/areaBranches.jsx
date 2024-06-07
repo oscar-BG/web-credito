@@ -37,7 +37,6 @@ const AreaBranches = () => {
         {
             field: "editar",
             headerName: "Editar",
-            flex: 1,
             renderCell: ({ row: { expediente } }) => {
               return (
                 <Box
@@ -51,9 +50,6 @@ const AreaBranches = () => {
                 >
                   
                   <EditOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },
@@ -61,7 +57,6 @@ const AreaBranches = () => {
         {
             field: "eliminar",
             headerName: "Eliminar",
-            flex: 1,
             renderCell: ({ row: { expediente } }) => {
               return (
                 <Box
@@ -74,9 +69,6 @@ const AreaBranches = () => {
                   borderRadius="4px"
                 >
                   <DeleteOutlineOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {expediente}
-                  </Typography>
                 </Box>
               );
             },

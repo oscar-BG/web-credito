@@ -37,115 +37,122 @@ const Briefcase = () => {
       field: "type_client",
       headerName: "Tipo de cliente",
       flex: 1,
+      renderHeader: (params) => (
+        <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+          {params.colDef.headerName}
+        </Box>
+      ),
     },
     {
       field: "zone",
       headerName: "Zona",
       flex: 1,
     },
-      {
-          field: "sucursal",
-          headerName: "Sucursal",
-          flex: 1,
+    {
+      field: "sucursal",
+      headerName: "Sucursal",
+      flex: 1,
+    },
+    {
+      field: "data_rest",
+      headerName: "Fecha Solicitud",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "date",
+      headerName: "Fecha",
+      flex: 1,
+    },
+    {
+      field: "vigencia",
+      headerName: "Vigencia",
+      flex: 1,
+    },
+    {
+      field: "monto",
+      headerName: "Monto",
+      flex: 1,
+    },
+    {
+      field: "date_pagare",
+      headerName: "Fecha Pagaré",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "vigencia_pagare",
+      headerName: "Vigencia Pagaré",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "vigencia_documentos",
+      headerName: "Vigencia Documentos",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "estatus",
+      headerName: "Estado",
+      flex: 1,
+    },
+    {
+      field: "check_out",
+      headerName: "Check Out",
+      flex: 1,
+      renderCell: ({ row: { check_out } }) => {
+        return (
+          <Box
+            width="60%"
+            m="0 auto"
+            p="5px"
+            display="flex"
+            justifyContent="center"
+            backgroundColor="#87CD29"
+            borderRadius="4px"
+          >
+            {check_out === true && <CheckCircleOutlinedIcon  sx={{ color: '#FFFFFF' }}/>}
+          </Box>
+        );
       },
-      {
-          field: "data_rest",
-          headerName: "Fecha Solicitud",
-          flex: 1,
+    },
+    {
+      field: "check_int",
+      headerName: "Check In",
+      flex: 1,
+      renderCell: ({ row: { check_int } }) => {
+        return (
+          <Box
+            width="60%"
+            m="0 auto"
+            p="5px"
+            display="flex"
+            justifyContent="center"
+            backgroundColor="#EF2013"
+            borderRadius="4px"
+          >
+            {check_int === false && <UnpublishedOutlinedIcon  sx={{ color: '#FFFFFF' }} />}
+          </Box>
+        );
       },
-      {
-          field: "date",
-          headerName: "Fecha",
-          flex: 1,
-      },
-      {
-          field: "vigencia",
-          headerName: "Vigencia",
-          flex: 1,
-      },
-      {
-          field: "monto",
-          headerName: "Monto",
-          flex: 1,
-      },
-      {
-          field: "date_pagare",
-          headerName: "Fecha Pagaré",
-          flex: 1,
-      },
-      {
-          field: "vigencia_pagare",
-          headerName: "Vigencia Pagaré",
-          flex: 1,
-      },
-      {
-          field: "vigencia_documentos",
-          headerName: "Vigencia Documentos",
-          flex: 1,
-      },
-      {
-          field: "estatus",
-          headerName: "Estado",
-          flex: 1,
-      },
-      {
-          field: "check_out",
-          headerName: "Check Out",
-          flex: 1,
-          renderCell: ({ row: { check_out } }) => {
-            return (
-              <Box
-                width="60%"
-                m="0 auto"
-                p="5px"
-                display="flex"
-                justifyContent="center"
-                backgroundColor={
-                  check_out === true
-                    ? colors.greenAccent[600]
-                    : check_out === false
-                    ? colors.greenAccent[700]
-                    : colors.greenAccent[700]
-                }
-                borderRadius="4px"
-              >
-                {check_out === true && <CheckCircleOutlinedIcon />}
-                <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                  {check_out}
-                </Typography>
-              </Box>
-            );
-          },
-      },
-      {
-          field: "check_int",
-          headerName: "Check Int",
-          flex: 1,
-          renderCell: ({ row: { check_int } }) => {
-            return (
-              <Box
-                width="60%"
-                m="0 auto"
-                p="5px"
-                display="flex"
-                justifyContent="center"
-                backgroundColor={
-                  check_int === true
-                    ? colors.greenAccent[600]
-                    : check_int === false
-                    ? colors.greenAccent[700]
-                    : colors.greenAccent[700]
-                }
-                borderRadius="4px"
-              >
-                {check_int === false && <UnpublishedOutlinedIcon />}
-                <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                  {check_int}
-                </Typography>
-              </Box>
-            );
-          },
-      },
+    },
   ];
 
   return (
@@ -283,7 +290,7 @@ const Briefcase = () => {
               </FormControl>
 
               <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Cuenta con carta de execpción para entregas de documentos</FormLabel>
+                <FormLabel id="demo-radio-buttons-group-label">¿Cuenta con carta de execpción para entregas de documentos?</FormLabel>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   defaultValue="female"

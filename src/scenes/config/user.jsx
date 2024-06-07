@@ -32,29 +32,32 @@ const User = () => {
             headerName: "Nombre",
             headerAlign: "left",
             align: "left",
+            flex: 1
         },
         {
             field: "type_user",
             headerName: "Tipo de Usuario",
             headerAlign: "left",
             align: "left",
+            flex: 1
         },
         {
             field: "zone",
             headerName: "Zona",
             headerAlign: "left",
             align: "left",
+            flex: 1
         },
         {
             field: "subsidiary",
             headerName: "Sucursal",
             headerAlign: "left",
             align: "left",
+            flex: 1
         },
         {
             field: "editar",
             headerName: "Editar",
-            flex: 1,
             renderCell: ({ row: { editar } }) => {
               return (
                 <Box
@@ -66,10 +69,7 @@ const User = () => {
                   backgroundColor={colors.greenAccent[600]}
                   borderRadius="4px"
                 >
-                  <EditOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {editar}
-                  </Typography>
+                <EditOutlinedIcon />
                 </Box>
               );
             },
@@ -77,7 +77,6 @@ const User = () => {
         {
             field: "eliminar",
             headerName: "Eliminar",
-            flex: 1,
             renderCell: ({ row: { eliminar } }) => {
               return (
                 <Box
@@ -90,9 +89,6 @@ const User = () => {
                   borderRadius="4px"
                 >
                   <DeleteOutlineOutlinedIcon />
-                  <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                    {eliminar}
-                  </Typography>
                 </Box>
               );
             },

@@ -44,61 +44,121 @@ const CreditAnalyst = () => {
           field: "type_client",
           headerName: "Tipo de cliente",
           flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
         },
         {
           field: "zone",
           headerName: "Zona",
           flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
         },
         {
             field: "sucursal",
             headerName: "Sucursal",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "data_rest",
             headerName: "Fecha Solicitud",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "date",
             headerName: "Fecha",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "vigencia",
             headerName: "Vigencia",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "monto",
             headerName: "Monto",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "date_pagare",
             headerName: "Fecha Pagaré",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "vigencia_pagare",
             headerName: "Vigencia Pagaré",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "vigencia_documentos",
             headerName: "Vigencia Documentos",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "estatus",
             headerName: "Estado",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
         },
         {
             field: "expediente",
             headerName: "Expediente",
             flex: 1,
+            renderHeader: (params) => (
+              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+                {params.colDef.headerName}
+              </Box>
+            ),
             renderCell: ({ row: { expediente } }) => {
               return (
                 <Box
@@ -138,7 +198,7 @@ const CreditAnalyst = () => {
         },
         {
             field: "check_int",
-            headerName: "Check Int",
+            headerName: "Check In",
             flex: 1,
             renderCell: ({ row: { check_int } }) => {
               return (
@@ -293,7 +353,7 @@ const CreditAnalyst = () => {
               </FormControl>
 
               <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Cuenta con carta de execpción para entregas de documentos</FormLabel>
+                <FormLabel id="demo-radio-buttons-group-label">¿Cuenta con carta de execpción para entregas de documentos?</FormLabel>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   defaultValue="female"
