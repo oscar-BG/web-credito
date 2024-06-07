@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { esES } from "@mui/material/locale";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Topbar from "./scenes/global/Topbar";
-import Login from "./scenes";
 import Dashboar from "./scenes/dashboard";
 import SidebarPro from "./scenes/global/Sidebar";
 import Config from "./scenes/config";
@@ -54,7 +51,6 @@ function App() {
                 <Route path="/config/catalogue/type-document" element={<TypeDocument/>} />
                 <Route path="/config/audittrail" element={<AuditTrail/>} />
                 
-                {/* <Route path="/signoff" element={<Signoff/>} /> */}
               </Routes>
             </main>
           </div>

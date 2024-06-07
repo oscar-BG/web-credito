@@ -8,7 +8,6 @@ import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplic
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 
 

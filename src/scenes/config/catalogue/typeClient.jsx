@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography, useTheme, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button } from "@mui/material";
+import { Box, useTheme, MenuItem, FormControl, Button } from "@mui/material";
 import Header from "../../../components/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Formik } from "formik";
@@ -7,7 +7,7 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { tokens } from "../../../theme";
 import { mockDataTypeClient } from "../../../data/mockData";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';

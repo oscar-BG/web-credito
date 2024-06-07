@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Box, Typography, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button } from "@mui/material";
+import { Box, TextField, MenuItem, FormControl, Button } from "@mui/material";
 import { Formik } from "formik";
 import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@emotion/react"
@@ -10,7 +10,6 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import { mockDataUsers } from "../../data/mockData";
-import { esES } from "@mui/material/locale";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
