@@ -14,11 +14,14 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
 import { useNavigate } from 'react-router-dom';
+import SidebarPro from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 
 const CreditAnalyst = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const [isSidebar, setIsSidebar] = useState(true);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [age, setAge] = useState('');
     const navigate = useNavigate();
@@ -218,201 +221,208 @@ const CreditAnalyst = () => {
     ];
 
     return (
-      <Box m="20px">
-        <Header title="Analista de credito" subtitle="Lista de solicitudes" />
+      <div className="app">
+        <SidebarPro isSidebar={isSidebar} />
+        <main className="content">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <Box m="20px">
+            <Header title="Analista de credito" subtitle="Lista de solicitudes" />
 
-        <Formik
-          onSubmit={handleFormSubmit}
-          initialValues={initialValues}
-          validationSchema={checkoutSchema}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            handleSubmit,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Box
-                display="grid"
-                gap="30px"
-                gridTemplateColumns="repeat(3, minmax(0, 1fr))"
-                sx={{
-                  "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
-                }}
-              >
+            <Formik
+              onSubmit={handleFormSubmit}
+              initialValues={initialValues}
+              validationSchema={checkoutSchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                    }}
+                  >
 
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="RFC"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.rfc}
-                name="rfc"
-                error={!!touched.rfc && !!errors.rfc}
-                helperText={touched.rfc && errors.rfc}
-                sx={{ gridColumn: "span 1" }}
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="RFC"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.rfc}
+                    name="rfc"
+                    error={!!touched.rfc && !!errors.rfc}
+                    helperText={touched.rfc && errors.rfc}
+                    sx={{ gridColumn: "span 1" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Nombre/Razón social"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.name_social}
+                    name="name_social"
+                    error={!!touched.name_social && !!errors.name_social}
+                    helperText={touched.name_social && errors.name_social}
+                    sx={{ gridColumn: "span 1" }}
+                  />
+
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Zona</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      label="Zona"
+                      value={age}
+                      onChange={handleChange}
+                      name="zone"
+                      error={!!touched.zone && !!errors.zone}
+                      helperText={touched.zone && errors.zone}
+                      sx={{ gridColumn: "span 1" }}
+                    >
+                      <MenuItem value={10}>Zona 1</MenuItem>
+                      <MenuItem value={20}>Zona 2</MenuItem>
+                      <MenuItem value={30}>Zona 3</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Sucursal Cabecera</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      value={age}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      name="zone"
+                      error={!!touched.zone && !!errors.zone}
+                      helperText={touched.zone && errors.zone}
+                      sx={{ gridColumn: "span 1" }}
+                    >
+                      <MenuItem value={10}>Zona 1</MenuItem>
+                      <MenuItem value={20}>Zona 2</MenuItem>
+                      <MenuItem value={30}>Zona 3</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      value={age}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      name="status"
+                      error={!!touched.zone && !!errors.zone}
+                      helperText={touched.zone && errors.zone}
+                      sx={{ gridColumn: "span 1" }}
+                    >
+                      <MenuItem value={10}>Estatus 1</MenuItem>
+                      <MenuItem value={20}>Estatus 2</MenuItem>
+                      <MenuItem value={30}>Estatus 3</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Tipo de cliente</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      value={age}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      name="status"
+                      error={!!touched.zone && !!errors.zone}
+                      helperText={touched.zone && errors.zone}
+                      sx={{ gridColumn: "span 1" }}
+                    >
+                      <MenuItem value={10}>Cliente 1</MenuItem>
+                      <MenuItem value={20}>Cliente 2</MenuItem>
+                      <MenuItem value={30}>Cliente 3</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel id="demo-radio-buttons-group-label">¿Cuenta con carta de execpción para entregas de documentos?</FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      defaultValue="female"
+                      name="radio-buttons-group"
+                    >
+                      <FormControlLabel value="SI" control={<Radio />} label="si" />
+                      <FormControlLabel value="NO" control={<Radio />} label="no" />
+                    </RadioGroup>
+                  </FormControl>
+                  </Box>
+                  <Box display="flex" justifyContent="center" mt="20px">
+                    <Button type="submit" color="secondary" variant="contained">
+                      <PersonSearchOutlinedIcon></PersonSearchOutlinedIcon>
+                      Buscar cliente
+                    </Button>
+                  </Box>
+                </form>
+              )}
+
+            </Formik>
+
+            <Box
+              m="40px 0 0 0"
+              height="75vh"
+              sx={{
+                "& .MuiDataGrid-root": {
+                  border: "none",
+                },
+                "& .MuiDataGrid-cell": {
+                  borderBottom: "none",
+                },
+                "& .name-column--cell": {
+                  color: colors.greenAccent[300],
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  backgroundColor: colors.blueAccent[700],
+                  borderBottom: "none",
+                },
+                "& .MuiDataGrid-virtualScroller": {
+                  backgroundColor: colors.primary[400],
+                },
+                "& .MuiDataGrid-footerContainer": {
+                  borderTop: "none",
+                  backgroundColor: colors.blueAccent[700],
+                },
+                "& .MuiCheckbox-root": {
+                  color: `${colors.greenAccent[200]} !important`,
+                },
+                "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                  color: `${colors.grey[100]} !important`,
+                },
+              }}
+            >
+              <DataGrid
+                rows={mockDataTeam}
+                columns={columns}
+                slots={{ toolbar: GridToolbar }} 
               />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Nombre/Razón social"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.name_social}
-                name="name_social"
-                error={!!touched.name_social && !!errors.name_social}
-                helperText={touched.name_social && errors.name_social}
-                sx={{ gridColumn: "span 1" }}
-              />
+            </Box>
+          </Box>
 
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Zona</InputLabel>
-                <Select
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  label="Zona"
-                  value={age}
-                  onChange={handleChange}
-                  name="zone"
-                  error={!!touched.zone && !!errors.zone}
-                  helperText={touched.zone && errors.zone}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  <MenuItem value={10}>Zona 1</MenuItem>
-                  <MenuItem value={20}>Zona 2</MenuItem>
-                  <MenuItem value={30}>Zona 3</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Sucursal Cabecera</InputLabel>
-                <Select
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  value={age}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="zone"
-                  error={!!touched.zone && !!errors.zone}
-                  helperText={touched.zone && errors.zone}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  <MenuItem value={10}>Zona 1</MenuItem>
-                  <MenuItem value={20}>Zona 2</MenuItem>
-                  <MenuItem value={30}>Zona 3</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
-                <Select
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  value={age}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="status"
-                  error={!!touched.zone && !!errors.zone}
-                  helperText={touched.zone && errors.zone}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  <MenuItem value={10}>Estatus 1</MenuItem>
-                  <MenuItem value={20}>Estatus 2</MenuItem>
-                  <MenuItem value={30}>Estatus 3</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Tipo de cliente</InputLabel>
-                <Select
-                  fullWidth
-                  variant="filled"
-                  type="text"
-                  value={age}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  name="status"
-                  error={!!touched.zone && !!errors.zone}
-                  helperText={touched.zone && errors.zone}
-                  sx={{ gridColumn: "span 1" }}
-                >
-                  <MenuItem value={10}>Cliente 1</MenuItem>
-                  <MenuItem value={20}>Cliente 2</MenuItem>
-                  <MenuItem value={30}>Cliente 3</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">¿Cuenta con carta de execpción para entregas de documentos?</FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="female"
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel value="SI" control={<Radio />} label="si" />
-                  <FormControlLabel value="NO" control={<Radio />} label="no" />
-                </RadioGroup>
-              </FormControl>
-              </Box>
-              <Box display="flex" justifyContent="center" mt="20px">
-                <Button type="submit" color="secondary" variant="contained">
-                  <PersonSearchOutlinedIcon></PersonSearchOutlinedIcon>
-                  Buscar cliente
-                </Button>
-              </Box>
-            </form>
-          )}
-
-        </Formik>
-
-        <Box
-          m="40px 0 0 0"
-          height="75vh"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-              color: `${colors.grey[100]} !important`,
-            },
-          }}
-        >
-          <DataGrid
-            rows={mockDataTeam}
-            columns={columns}
-            slots={{ toolbar: GridToolbar }} 
-          />
-        </Box>
-      </Box>
+        </main>
+      </div>
     );
 }
 

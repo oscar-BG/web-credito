@@ -12,10 +12,13 @@ import InputLabel from '@mui/material/InputLabel';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import SidebarPro from "../../global/Sidebar";
+import Topbar from "../../global/Topbar";
 
 const TypeClient = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const [isSidebar, setIsSidebar] = useState(true);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [age, setAge] = useState('');
 
@@ -72,98 +75,106 @@ const TypeClient = () => {
         },
     ];
 
-    return <Box m="20px">
-        <Header title="Catálogo" subtitle="Administración de tipos de clientes"></Header>
+    return (
+      <div className="app">
+        <SidebarPro isSidebar={isSidebar} />
+        <main className="content">
+          <Topbar setIsSidebar={setIsSidebar} />
+          <Box m="20px">
+              <Header title="Catálogo" subtitle="Administración de tipos de clientes"></Header>
 
-        <Formik
-            onSubmit={handleFormSubmit}
-            initialValues={initialValues}
-            validationSchema={checkoutSchema}
-        >
-            {({
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-            }) => (
-                <form onSubmit={handleSubmit}>
-                    <Box
-                        display="grid"
-                        gap="30px"
-                        gridTemplateColumns="repeat(3, minmax(0, 1fr))"
-                        sx={{
-                        "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
-                        }}
-                    >
+              <Formik
+                  onSubmit={handleFormSubmit}
+                  initialValues={initialValues}
+                  validationSchema={checkoutSchema}
+              >
+                  {({
+                      values,
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      handleSubmit,
+                  }) => (
+                      <form onSubmit={handleSubmit}>
+                          <Box
+                              display="grid"
+                              gap="30px"
+                              gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                              sx={{
+                              "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                              }}
+                          >
 
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Tipo de Cliente</InputLabel>
-                            <Select
-                                fullWidth
-                                variant="filled"
-                                type="text"
-                                label="status"
-                                value={age}
-                                onChange={handleChange}
-                                name="status"
-                                error={!!touched.zone && !!errors.zone}
-                                helperText={touched.zone && errors.zone}
-                                sx={{ gridColumn: "span 4" }}
-                            >
-                                <MenuItem value={10}>Cliente 1</MenuItem>
-                                <MenuItem value={20}>Cliente 2</MenuItem>
-                                <MenuItem value={30}>Cliente 3</MenuItem>
-                            </Select>
-                        </FormControl>
+                              <FormControl fullWidth>
+                                  <InputLabel id="demo-simple-select-label">Tipo de Cliente</InputLabel>
+                                  <Select
+                                      fullWidth
+                                      variant="filled"
+                                      type="text"
+                                      label="status"
+                                      value={age}
+                                      onChange={handleChange}
+                                      name="status"
+                                      error={!!touched.zone && !!errors.zone}
+                                      helperText={touched.zone && errors.zone}
+                                      sx={{ gridColumn: "span 4" }}
+                                  >
+                                      <MenuItem value={10}>Cliente 1</MenuItem>
+                                      <MenuItem value={20}>Cliente 2</MenuItem>
+                                      <MenuItem value={30}>Cliente 3</MenuItem>
+                                  </Select>
+                              </FormControl>
 
-                    </Box>
-                    <Box display="flex" justifyContent="center" mt="20px">
-                        <Button type="submit" color="secondary" variant="contained">
-                        <AddCircleOutlinedIcon></AddCircleOutlinedIcon>
-                            Agregar
-                        </Button>
-                    </Box>
-                </form>
-            )}
-        </Formik>
+                          </Box>
+                          <Box display="flex" justifyContent="center" mt="20px">
+                              <Button type="submit" color="secondary" variant="contained">
+                              <AddCircleOutlinedIcon></AddCircleOutlinedIcon>
+                                  Agregar
+                              </Button>
+                          </Box>
+                      </form>
+                  )}
+              </Formik>
 
-        <Box
-            m="40px 0 0 0"
-            height="75vh"
-            sx={{
-                "& .MuiDataGrid-root": {
-                  border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                  borderBottom: "none",
-                },
-                "& .name-column--cell": {
-                  color: colors.greenAccent[300],
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                  backgroundColor: colors.blueAccent[700],
-                  borderBottom: "none",
-                },
-                "& .MuiDataGrid-virtualScroller": {
-                  backgroundColor: colors.primary[400],
-                },
-                "& .MuiDataGrid-footerContainer": {
-                  borderTop: "none",
-                  backgroundColor: colors.blueAccent[700],
-                },
-                "& .MuiCheckbox-root": {
-                  color: `${colors.greenAccent[200]} !important`,
-                },
-                "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                  color: `${colors.grey[100]} !important`,
-                },
-            }}
-        >
-            <DataGrid  rows={mockDataTypeClient} columns={columns} slots={{ toolbar: GridToolbar }} />
-        </Box>
-    </Box>
+              <Box
+                  m="40px 0 0 0"
+                  height="75vh"
+                  sx={{
+                      "& .MuiDataGrid-root": {
+                        border: "none",
+                      },
+                      "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                      },
+                      "& .name-column--cell": {
+                        color: colors.greenAccent[300],
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[700],
+                        borderBottom: "none",
+                      },
+                      "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                      },
+                      "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[700],
+                      },
+                      "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                      },
+                      "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                        color: `${colors.grey[100]} !important`,
+                      },
+                  }}
+              >
+                  <DataGrid  rows={mockDataTypeClient} columns={columns} slots={{ toolbar: GridToolbar }} />
+              </Box>
+          </Box>
+        </main>
+      </div>
+  )
 }
 
 const checkoutSchema = yup.object().shape({

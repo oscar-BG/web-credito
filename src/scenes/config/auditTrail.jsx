@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Formik } from "formik";
@@ -8,10 +9,13 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSearchOutlined';
 import { mockDataAuditTrail } from "../../data/mockData";
+import SidebarPro from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 const AuditTrail = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const [isSidebar, setIsSidebar] = useState(true);
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const handleFormSubmit = (values) => {
@@ -29,109 +33,117 @@ const AuditTrail = () => {
         {field: "hora", headerName: "Hora", flex: 1,}
     ];
 
-    return <Box m="20px">
-        <Header title="Audit Trail" subtitle="Registros de eventos"></Header>
+    return (
+        <div className="app">
+            <SidebarPro isSidebar={isSidebar} />
+            <main className="content">
+                <Topbar setIsSidebar={setIsSidebar} />
+                <Box m="20px">
+                    <Header title="Audit Trail" subtitle="Registros de eventos"></Header>
 
-        <Formik
-            onSubmit={handleFormSubmit}
-            initialValues={initialValues}
-            validationSchema={checkoutSchema}
-        >
-            {({
-                values,
-                errors,
-                touched,
-                handleBlur,
-                handleChange,
-                handleSubmit,
-            }) => (
-                <form onSubmit={handleSubmit}>
+                    <Formik
+                        onSubmit={handleFormSubmit}
+                        initialValues={initialValues}
+                        validationSchema={checkoutSchema}
+                    >
+                        {({
+                            values,
+                            errors,
+                            touched,
+                            handleBlur,
+                            handleChange,
+                            handleSubmit,
+                        }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Box
+                                    display="grid"
+                                    gap="30px"
+                                    gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                                    sx={{
+                                    "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                                    }}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        variant="filled"
+                                        type="date"
+                                        label="Fecha Inicio"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.rfc}
+                                        name="date_init"
+                                        error={!!touched.rfc && !!errors.rfc}
+                                        helperText={touched.rfc && errors.rfc}
+                                        InputLabelProps={{
+                                            shrink: true, 
+                                        }}
+                                        sx={{ gridColumn: "span 1" }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        variant="filled"
+                                        type="date"
+                                        label="Fecha Fin"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.rfc}
+                                        name="date_end"
+                                        error={!!touched.rfc && !!errors.rfc}
+                                        helperText={touched.rfc && errors.rfc}
+                                        InputLabelProps={{
+                                            shrink: true, 
+                                        }}
+                                        sx={{ gridColumn: "span 1" }}
+                                    />
+                                </Box>
+                                <Box display="flex" justifyContent="center" mt="20px">
+                                    <Button type="submit" color="secondary" variant="contained">
+                                    <ContentPasteSearchOutlinedIcon></ContentPasteSearchOutlinedIcon>
+                                        Buscar
+                                    </Button>
+                                </Box>
+                            </form>
+                        )}
+                    </Formik>
+
                     <Box
-                        display="grid"
-                        gap="30px"
-                        gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                        m="40px 0 0 0"
+                        height="75vh"
                         sx={{
-                        "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                            "& .MuiDataGrid-root": {
+                            border: "none",
+                            },
+                            "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[700],
+                            borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                            },
+                            "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                            color: `${colors.grey[100]} !important`,
+                            },
                         }}
                     >
-                        <TextField
-                            fullWidth
-                            variant="filled"
-                            type="date"
-                            label="Fecha Inicio"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            value={values.rfc}
-                            name="date_init"
-                            error={!!touched.rfc && !!errors.rfc}
-                            helperText={touched.rfc && errors.rfc}
-                            InputLabelProps={{
-                                shrink: true, 
-                            }}
-                            sx={{ gridColumn: "span 1" }}
-                        />
-                        <TextField
-                            fullWidth
-                            variant="filled"
-                            type="date"
-                            label="Fecha Fin"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            value={values.rfc}
-                            name="date_end"
-                            error={!!touched.rfc && !!errors.rfc}
-                            helperText={touched.rfc && errors.rfc}
-                            InputLabelProps={{
-                                shrink: true, 
-                            }}
-                            sx={{ gridColumn: "span 1" }}
-                        />
+                        <DataGrid  rows={mockDataAuditTrail} columns={columns} slots={{ toolbar: GridToolbar }} />
                     </Box>
-                    <Box display="flex" justifyContent="center" mt="20px">
-                        <Button type="submit" color="secondary" variant="contained">
-                        <ContentPasteSearchOutlinedIcon></ContentPasteSearchOutlinedIcon>
-                            Buscar
-                        </Button>
-                    </Box>
-                </form>
-            )}
-        </Formik>
-
-        <Box
-            m="40px 0 0 0"
-            height="75vh"
-            sx={{
-                "& .MuiDataGrid-root": {
-                border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                borderBottom: "none",
-                },
-                "& .name-column--cell": {
-                color: colors.greenAccent[300],
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: colors.blueAccent[700],
-                borderBottom: "none",
-                },
-                "& .MuiDataGrid-virtualScroller": {
-                backgroundColor: colors.primary[400],
-                },
-                "& .MuiDataGrid-footerContainer": {
-                borderTop: "none",
-                backgroundColor: colors.blueAccent[700],
-                },
-                "& .MuiCheckbox-root": {
-                color: `${colors.greenAccent[200]} !important`,
-                },
-                "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                color: `${colors.grey[100]} !important`,
-                },
-            }}
-        >
-            <DataGrid  rows={mockDataAuditTrail} columns={columns} slots={{ toolbar: GridToolbar }} />
-        </Box>
-    </Box>
+                </Box>
+            </main>
+        </div>
+    )
 }
 
 const checkoutSchema = yup.object().shape({

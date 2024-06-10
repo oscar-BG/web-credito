@@ -19,6 +19,7 @@ import TypeDocument from "./scenes/config/catalogue/type_document";
 import DocumentRequest from "./scenes/commercial/documentRequest";
 import ProfileUser from "./scenes/commercial/profileUser";
 import ShowDocument from "./scenes/commercial/show_document";
+import LoginForm from "./scenes/auth/login";
 
 // import Signoff from "./scenes/Signoff";
 
@@ -30,30 +31,25 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline>
-          <div className="app">
-          <SidebarPro isSidebar={isSidebar} />
-            <main className="content">
-              <Topbar setIsSidebar={setIsSidebar} />
-              <Routes>
-                <Route path="/" element={<Dashboar/>} />
-                <Route path="/config" element={<Config/>} />
-                <Route path="/commercial" element={<Commercial/>} />
-                <Route path="/commercial/new-request-document" element={<DocumentRequest/>} />
-                <Route path="/commercial/profile-user" element={<ProfileUser/>} />
-                <Route path="/commercial/show-document" element={<ShowDocument/>} />
-                <Route path="/briefcase" element={<Briefcase/>} />
-                <Route path="/creditanalyst" element={<Creditanalyst/>} />
-                <Route path="/config/user" element={<User/>} />
-                <Route path="/config/catalogue" element={<Catalogue/>} />
-                <Route path="/config/catalogue/zone-branches" element={<AreaBranches/>} />
-                <Route path="/config/catalogue/file-status" element={<FileStatus/>} />
-                <Route path="/config/catalogue/type-client" element={<TypeClient/>} />
-                <Route path="/config/catalogue/type-document" element={<TypeDocument/>} />
-                <Route path="/config/audittrail" element={<AuditTrail/>} />
-                
-              </Routes>
-            </main>
-          </div>
+          <Routes>
+            <Route path="/" element={<LoginForm/>} />
+            <Route path="/home" element={<Dashboar/>} />
+            <Route path="/config" element={<Config/>} />
+            <Route path="/commercial" element={<Commercial/>} />
+            <Route path="/commercial/new-request-document" element={<DocumentRequest/>} />
+            <Route path="/commercial/profile-user" element={<ProfileUser/>} />
+            <Route path="/commercial/show-document" element={<ShowDocument/>} />
+            <Route path="/briefcase" element={<Briefcase/>} />
+            <Route path="/creditanalyst" element={<Creditanalyst/>} />
+            <Route path="/config/user" element={<User/>} />
+            <Route path="/config/catalogue" element={<Catalogue/>} />
+            <Route path="/config/catalogue/zone-branches" element={<AreaBranches/>} />
+            <Route path="/config/catalogue/file-status" element={<FileStatus/>} />
+            <Route path="/config/catalogue/type-client" element={<TypeClient/>} />
+            <Route path="/config/catalogue/type-document" element={<TypeDocument/>} />
+            <Route path="/config/audittrail" element={<AuditTrail/>} />
+          </Routes>
+          
         </CssBaseline>
       </ThemeProvider>
     </ColorModeContext.Provider>
