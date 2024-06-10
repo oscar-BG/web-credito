@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField } from "@mui/material";
+import { useEffect, useState, } from "react";
+import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField, FormControl, InputLabel, Input, FormHelperText } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header"
 import { tokens } from "../../theme";
@@ -9,8 +9,11 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import Rotate90DegreesCcwOutlinedIcon from '@mui/icons-material/Rotate90DegreesCcwOutlined';
 import Rotate90DegreesCwOutlinedIcon from '@mui/icons-material/Rotate90DegreesCwOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import { Formik, useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const style = {
     position: 'absolute',
@@ -37,16 +40,89 @@ const ShowDocument = () => {
     const handleClose = () => {
         setOpen(false);
     }
-    // const [open, setOpen] = useState(false);
-    // const handleOpenModal = () => setOpen(true);
-    // const handleCloseModal = () => setOpen(false);
+    
+    /*
+    const formik = useFormik({
+        initialValues: {
+          file: null,
+        },
+        validationSchema: Yup.object({
+          file: Yup.mixed().required('Archivo obligatorio'),
+        }),
+        onSubmit: (values) => {
+            console.log(values);
+            const formData = new FormData();
+            formData.append("Cliente", "Bautista Oscar");
+            formData.append("IDEXP", "202423");
+            formData.append("TipoDocumento", "Document");
+            formData.append("IDDB", 7);
+            formData.append('binFile', values.file);
+    
+            fetch('https://192.168.1.77:7094/api/AE/UploadDocument', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                console.log('Archivo subido exitosamente', data);
+                //   resetForm();
+                })
+                .catch((error) => {
+                console.error('Error al subir el archivo:', error);
+                //   resetForm();
+            });
+        },
+    });*/
+    const formik = useFormik({
+        initialValues: {
+          file: null,
+        },
+        validationSchema: Yup.object({
+          file: Yup.mixed().required('Archivo obligatorio'),
+        }),
+        onSubmit: (values) => {
+            console.log(values);
+            const formData = new FormData();
+            
+            formData.append('file', values.file);
+    
+            fetch('http://localhost:3001/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                console.log('Archivo subido exitosamente', data);
+                //   resetForm();
+                })
+                .catch((error) => {
+                console.error('Error al subir el archivo:', error);
+                //   resetForm();
+            });
+        },
+    });
+
+    useEffect(() => {
+        return () => {
+          formik.resetForm();
+        };
+    }, [open]);
+
+    const handleFileChange = (event) => {
+        formik.setFieldValue('file', event.currentTarget.files[0]);
+    };
     
     const columns = [
         {field: "name", headerName : "Documentos", flex : 1},
         {field: "upload", headerName: "Acción",
             renderCell: ({row: {upload}}) => {
                 return (
-                    <Button onClick={handleClickOpen}>
+                    upload === true ?
+                    <Button variant="contained" color="info">
+                        <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
+                    </Button>
+                    :
+                    <Button variant="contained" color="success" onClick={handleClickOpen}>
                         <BackupOutlinedIcon></BackupOutlinedIcon>
                     </Button>
                 );
@@ -64,74 +140,28 @@ const ShowDocument = () => {
 
                     <Dialog
                         open={open}
-                        onClose={handleClose}                
+                        onClose={handleClose} 
                     >
                         <DialogTitle>Documento</DialogTitle>
                         <DialogContent>
-                            <DialogContent>
-                                Ingrese Información del documento
-                            </DialogContent>
+                        
+                            <form onSubmit={formik.handleSubmit}>
+                                <FormControl error={formik.touched.file && Boolean(formik.errors.file)} fullWidth>
+                                    <Input id="file" name="file" type="file" onChange={handleFileChange} />
+                                    {formik.touched.file && formik.errors.file ? (
+                                    <FormHelperText>{formik.errors.file}</FormHelperText>
+                                    ) : null}
+                                </FormControl>
+                                <Button type="submit" variant="contained" color="primary" fullWidth>
+                                    Enviar
+                                </Button>
+                            </form>      
 
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                id="field1"
-                                name="field1"
-                                label="Field 1"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                            />
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                id="field2"
-                                name="field2"
-                                label="Field 2"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                            />
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                id="field3"
-                                name="field3"
-                                label="Field 3"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                            />
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                id="field4"
-                                name="field4"
-                                label="Field 4"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                            />
-                            <TextField
-                                autoFocus
-                                required
-                                margin="dense"
-                                id="field5"
-                                name="field5"
-                                label="Field 5"
-                                type="file"
-                                fullWidth
-                                variant="standard"
-                            />
                         </DialogContent>
                         <DialogActions>
                             <Box display="flex" justifyContent="space-between" >
                                 <Button onClick={handleClose}> Cerrar</Button>
-                                <Button> Enviar </Button>
+                                
                             </Box>
                         </DialogActions>
                     </Dialog>
