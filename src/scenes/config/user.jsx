@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, TextField, MenuItem, FormControl, Button } from "@mui/material";
-import { Formik } from "formik";
+import { Formik, useFormik } from "formik";
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import * as yup from "yup";
@@ -22,13 +22,24 @@ const User = () => {
     const [isSidebar, setIsSidebar] = useState(true);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [typeuser, setTypeUser] = useState('');
+    const [zona, setTypeZona] = useState('');
+
+
+    const handleChangeTypeUser = (event) => {
+        setTypeUser(event.target.value);
+    }
+
+    const handleChangeTypeZona = (event) => {
+        setTypeZona(event.target.value);
+    }
 
     const handleFormSubmit = (values) => {
         console.log(values);
     };
 
+
     const columns = [
-        {field: "name_user", headerName: "Usuario"},
+        {field: "username", headerName: "Usuario"},
         {
             field: "name",
             headerName: "Nombre",
@@ -37,21 +48,21 @@ const User = () => {
             flex: 1
         },
         {
-            field: "type_user",
+            field: "permisos",
             headerName: "Tipo de Usuario",
             headerAlign: "left",
             align: "left",
             flex: 1
         },
         {
-            field: "zone",
+            field: "zona",
             headerName: "Zona",
             headerAlign: "left",
             align: "left",
             flex: 1
         },
         {
-            field: "subsidiary",
+            field: "sucursal",
             headerName: "Sucursal",
             headerAlign: "left",
             align: "left",
@@ -155,13 +166,12 @@ const User = () => {
                                         sx={{ gridColumn: "span 1" }}
                                     />
 
-                                    <FormControl fullWidth>
+                                    {/* <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Tipo de Usuario</InputLabel>
                                         <Select
                                             fullWidth
                                             variant="filled"
                                             type="text"
-                                            value={typeuser}
                                             name="type_user"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
@@ -169,33 +179,33 @@ const User = () => {
                                             helperText={touched.type_user && errors.type_user}
                                             sx={{ gridColumn: "span 1" }}
                                         >
-                                            <MenuItem value={10}>Usuario 1</MenuItem>
-                                            <MenuItem value={20}>Usuario 2</MenuItem>
-                                            <MenuItem value={30}>Usuario 3</MenuItem>
+                                            <MenuItem value={10}>Administrado</MenuItem>
+                                            <MenuItem value={20}>Jefes de Cartera</MenuItem>
+                                            <MenuItem value={30}>Ejecutivos Comerciales</MenuItem>
                                         </Select>
-                                    </FormControl>
+                                    </FormControl> */}
 
-                                    <FormControl fullWidth>
+                                    {/* <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Zona</InputLabel>
                                         <Select
                                             fullWidth
                                             variant="filled"
                                             type="text"
-                                            value={typeuser}
+                                            value={zona}
                                             name="zone"
                                             onBlur={handleBlur}
-                                            onChange={handleChange}
+                                            onChange={handleChangeTypeZona}
                                             error={!!touched.zone && !!errors.zone}
                                             helperText={touched.zone && errors.zone}
                                             sx={{ gridColumn: "span 1" }}
                                         >
-                                            <MenuItem value={10}>Usuario 1</MenuItem>
-                                            <MenuItem value={20}>Usuario 2</MenuItem>
-                                            <MenuItem value={30}>Usuario 3</MenuItem>
+                                            <MenuItem value={10}>Zona 1</MenuItem>
+                                            <MenuItem value={20}>Zona 1</MenuItem>
+                                            <MenuItem value={30}>Zona 1</MenuItem>
                                         </Select>
-                                    </FormControl>
+                                    </FormControl> */}
 
-                                    <FormControl fullWidth>
+                                    {/* <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Sucursal</InputLabel>
                                         <Select
                                             fullWidth
@@ -213,7 +223,7 @@ const User = () => {
                                             <MenuItem value={20}>Usuario 2</MenuItem>
                                             <MenuItem value={30}>Usuario 3</MenuItem>
                                         </Select>
-                                    </FormControl>
+                                    </FormControl> */}
 
                                 </Box>
                                 <Box display="flex" justifyContent="center" mt="20px">

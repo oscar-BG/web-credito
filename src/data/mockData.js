@@ -61,28 +61,40 @@ export const mockDataTeam = [
 export const mockDataUsers = [
     {
         id : 1,
-        name_user : "sreyes",
+        username : "sreyes@idare.com",
         name : "Sonia Reyes",
-        type_user : "Administrador",
-        zone : "Occidente",
-        subsidiary : "Morelia"
+        permisos : "admin",
+        zona : "Occidente",
+        sucursal: "Morelia",
+        password : "12345678"
     },
     {
         id : 2,
-        name_user : "aperez",
-        name : "Adolfo Pérez",
-        type_user : "Jefe de Cartera",
-        zone : "Centro",
-        subsidiary : "Toluca"
+        username : "user3@idare.com",
+        name : "Laura Bravo",
+        permisos : "comercial",
+        zona : "Centro",
+        sucursal : "Toluca",
+        password : "12345678"
     },
     {
         id : 3,
-        name_user : "lalvarez",
-        name : "Luis Álvarez",
-        type_user : "Ejecutivo Comercial",
-        zone : "Bajío",
-        subsidiary : "Querétaro"
+        username : "user2@idare.com",
+        name : "Pablo Montes",
+        permisos : "cartera",
+        zona : "Bajío",
+        sucursal : "Querétaro",
+        password : "12345678"
     },
+    {
+        id : 4,
+        username : "user1@idare.com",
+        name : "Juan Garcia",
+        permisos : "admin",
+        zona : "Central",
+        sucursal: "Central",
+        password : "12345678"
+    }
 ];
 
 export const mockZoneBranches = [

@@ -55,7 +55,6 @@ const ShowDocument = () => {
             formData.append("Cliente", "Bautista Oscar");
             formData.append("IDEXP", "202423");
             formData.append("TipoDocumento", "Document");
-            formData.append("IDDB", 7);
             formData.append('binFile', values.file);
     
             fetch('https://192.168.1.77:7094/api/AE/UploadDocument', {

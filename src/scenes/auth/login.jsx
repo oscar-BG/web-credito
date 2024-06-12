@@ -1,7 +1,47 @@
 import React from 'react';
-import { Box, Typography, TextField, Card, CardContent } from '@mui/material';
+import { Box, Typography, TextField, Card, CardContent,
+  FormControl,
+  Button,
+  Input
+ } from '@mui/material';
+import { Formik, useFormik } from 'formik';
+import * as Yup from 'yup';
+// import users from './users.json';
+import { mockDataUsers as users } from '../../data/mockData';
+import { useNavigate } from 'react-router-dom';
+
+
 
 function CenteredComponent() {
+
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues : {
+      username : '',
+      password : ''
+    },
+    validationSchema: Yup.object({
+      username : Yup.mixed().required('Ingrese el nombre del usuario'),
+      password : Yup.mixed().required('Ingre la contraseña del usuario')
+    }),
+    onSubmit: (values) => {
+      // const formData = new FormData();
+      // console.log(values);
+
+      const user = users.find(
+        (user) => user.username === values.username && user.password === values.password
+      );
+
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/home')
+      } else {
+        console.log('Usuarios incorrectos');
+      }
+
+    }
+
+  })
   return (
     <Box
       display="flex"
@@ -16,22 +56,34 @@ function CenteredComponent() {
           Iniciar Sesión
         </Typography>
 
-        <TextField
-          fullWidth
-          variant="filled"
-          type="email"
-          label="Email"
-          name="email"
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          variant="filled"
-          type="password"
-          label="Contraseña"
-          name="password"
-          sx={{ mb: 2 }}
-        />
+        <form onSubmit={formik.handleSubmit}>
+          <FormControl error={formik.touched.username && Boolean(formik.errors.username)} fullWidth>
+
+            <Input id='username' 
+            name='username' 
+            type='text' 
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            />
+          </FormControl>
+
+          <FormControl error={formik.touched.password && Boolean(formik.errors.password)} fullWidth >
+
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </FormControl>
+
+          <Button   type="submit" variant="contained" color="primary" fullWidth>
+            Enviar
+          </Button>
+        </form>
       </CardContent>
     </Card>
 

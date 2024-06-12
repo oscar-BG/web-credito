@@ -192,7 +192,7 @@ const Commercial = () => {
       <div className="app">
         <SidebarPro isSidebar={isSidebar} />
         <main className="content">
-          {/* <Topbar setIsSidebar={setIsSidebar} /> */}
+          <Topbar setIsSidebar={setIsSidebar} />
           <Box m="20px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Header title="Comercial" subtitle="Lista de solicitudes" />

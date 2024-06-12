@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar, SubMenu, Menu, MenuItem } from 'react-pro-sidebar';
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
@@ -13,10 +13,12 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import ContentPasteSearchOutlinedIcon from '@mui/icons-material/ContentPasteSearchOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  
   return (
     <MenuItem
       active={selected === title}
@@ -38,7 +40,26 @@ const SidebarPro = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const { pathname: currentPath } = useLocation()
+  const [isVisible, setIsVisible] = useState(false)
+  const dataUser = JSON.parse(localStorage.getItem('user'));
+  const username = dataUser.username;
+  const name = dataUser.name;
+  // console.log(name);
+
+  const navigate = useNavigate();
+  const handleButtonClick = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
+  useEffect(() => {
+    if (dataUser.permisos === 'comercial' || dataUser.permisos == 'cartera') {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [])
+  // const { pathname: currentPath } = useLocation()
 
   return (
     <Box
@@ -101,12 +122,18 @@ const SidebarPro = () => {
                 </Box>
                 <Box textAlign="center">
                   <Typography
-                  variant="h6"
+                  variant="h5"
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                   >
-                  Juan Garcia
+                  {name}
+                  </Typography>
+                  <Typography
+                  color={colors.grey[100]}
+                  sx={{ m: "10px 0 0 0" }}
+                  >
+                  {username}
                   </Typography>
                 </Box>
               </Box>
@@ -120,30 +147,31 @@ const SidebarPro = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-                
-                <SubMenu defaultOpen label={"Configuración"} icon={<SettingsApplicationsOutlinedIcon />}>
-                  <Item
-                    title="Usuarios"
-                    to="/config/user"
-                    icon={<PersonOutlineOutlinedIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                  <Item
-                    title="Catálogos"
-                    to="/config/catalogue"
-                    icon={<SummarizeOutlinedIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                  <Item
-                    title="Audit Trail"
-                    to="/config/audittrail"
-                    icon={<ContentPasteSearchOutlinedIcon />}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                </SubMenu>
+                {isVisible && (
+                  <SubMenu defaultOpen label={"Configuración"} icon={<SettingsApplicationsOutlinedIcon />}>
+                    <Item
+                      title="Usuarios"
+                      to="/config/user"
+                      icon={<PersonOutlineOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Catálogos"
+                      to="/config/catalogue"
+                      icon={<SummarizeOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <Item
+                      title="Audit Trail"
+                      to="/config/audittrail"
+                      icon={<ContentPasteSearchOutlinedIcon />}
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                  </SubMenu>
+                )}
                 
                 <Item
                   title="Comercial"
@@ -167,13 +195,23 @@ const SidebarPro = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-                <Item
+                <MenuItem
+                active={selected == 'cerrar_sesion'}
+                style={{
+                  color: colors.grey[100]
+                }}
+                icon={<LogoutOutlinedIcon />}
+                onClick={handleButtonClick}
+                >
+                  <Typography> Cerrar sesión </Typography>
+                </MenuItem>
+                {/* <Item
                   title="Cerrar sesión"
                   to="/signoff"
                   icon={<LogoutOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
-                />
+                /> */}
                
             </Box>
         </Menu>
