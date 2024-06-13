@@ -17,24 +17,34 @@ const Dashboar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isSidebar, setIsSidebar] = useState(true);
+  const [namecard, setNamecard] = useState('');
+  const [iconcard, setIconCard] = useState();
 
   const navigate = useNavigate();
   const handleNavigation = (path) => {
     navigate(path);
   };
 
-  const [isVisible, setIsVisible] = useState(false);
   const dataUser = JSON.parse(localStorage.getItem('user'));
-  console.log(dataUser.permisos);
 
   useEffect(() => {
-    if (dataUser.permisos === 'comercial' || dataUser.permisos === 'cartera') {
-      setIsVisible(false);
-    } else {
-      setIsVisible(true);
+    switch (dataUser.permisos) {
+      case 'comercial_matriz':
+      case 'comercial_forenea':
+        setNamecard('Comercial')
+        setIconCard(<ContactsOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "60px" }}/>);
+        break;
+      case 'cartera_forenea':
+      case 'cartera_matriz':
+        setNamecard('Cartera')
+        setIconCard(<ReceiptOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "60px" }}/>);
+        break;
+      case 'analista_credito':
+        setNamecard('Analista de credito');
+        setIconCard(<ManageSearchOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "60px" }}/>);
+        break;
     }
-  }, [])
-
+  }, []);
 
 
   return (
@@ -48,7 +58,6 @@ const Dashboar = () => {
         </Box>
 
         <Grid container spacing={2}>
-            {isVisible && (
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
                 <CardContent>
@@ -77,7 +86,6 @@ const Dashboar = () => {
                 </CardContent>
               </Card>
             </Grid>
-            )}
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
               <CardContent>
@@ -94,20 +102,16 @@ const Dashboar = () => {
                     height="150px"
                   >
                     <StatBox
-                      title="Comercial"
-                      icon={
-                        <ContactsOutlinedIcon
-                          sx={{ color: colors.greenAccent[600], fontSize: "60px" }}
-                        />
-                      }
+                      title={namecard}
+                      icon={iconcard}
                     />
                   </Box>
                 </ButtonBase>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
+          {/* <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
               <CardContent>
                 <ButtonBase
                   onClick={() => handleNavigation('/briefcase')}
@@ -133,9 +137,9 @@ const Dashboar = () => {
                 
               </CardContent>
             </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
+          </Grid> */}
+          {/* <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
               <CardContent>
                 <ButtonBase
                   onClick={() => handleNavigation('/creditanalyst')}
@@ -161,7 +165,7 @@ const Dashboar = () => {
                 
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
 

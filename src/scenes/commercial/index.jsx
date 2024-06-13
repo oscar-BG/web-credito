@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, useTheme, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Formik } from "formik";
@@ -22,6 +22,7 @@ const Commercial = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [age, setAge] = useState('');
     const [isSidebar, setIsSidebar] = useState(true);
+    const [dataTable, setDataTable] = useState([]);
 
     const handleFormSubmit = (values) => {
       console.log(values);
@@ -35,157 +36,180 @@ const Commercial = () => {
       navigate('/commercial/profile-user');
     };
 
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch("https://192.168.1.65:7094/Expediente/", {
+            method: "GET"
+          });
+          const result = await response.json();
+          setDataTable(result);
+          console.log(result);
+        } catch (error) {
+          // Mostrar error
+        } finally {
+          // Detener loading
+        }
+        
+        // .then((response) => response.text())
+        // .then((result) => console.log(result))
+        // .catch((error) => console.error(error));
+      }
+
+      fetchData();
+    }, [])
+
 
     const columns = [
-        { field: "rfc", headerName: "RFC" },
-        {
-          field: "name",
-          headerName: "Nombre",
-          headerAlign: "left",
-          align: "left",
-          renderHeader: (params) => (
-            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-              {params.colDef.headerName}
-            </Box>
-          ),
-        },
-        {
-          field: "type_client",
-          headerName: "Tipo de cliente",
+      { field: "rfc", headerName: "RFC", flex: 1 },
+      {
+        field: "nombreRazonSocial",
+        headerName: "Nombre",
+        headerAlign: "left",
+        align: "left",
+        renderHeader: (params) => (
+          <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+            {params.colDef.headerName}
+          </Box>
+        ),
+      },
+      {
+        field: "tipoCliente",
+        headerName: "Tipo de cliente",
+        flex: 1,
+        renderHeader: (params) => (
+          <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+            {params.colDef.headerName}
+          </Box>
+        ),
+      },
+      {
+        field: "idSucursalZona",
+        headerName: "Zona",
+        flex: 1,
+        renderHeader: (params) => (
+          <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+            {params.colDef.headerName}
+          </Box>
+        ),
+      },
+        // {
+        //     field: "sucursal",
+        //     headerName: "Sucursal",
+        //     flex: 1,
+        //     renderHeader: (params) => (
+        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+        //         {params.colDef.headerName}
+        //       </Box>
+        //     ),
+        // },
+      {
+          field: "fechaSolicitud",
+          headerName: "Fecha Solicitud",
           flex: 1,
           renderHeader: (params) => (
             <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
               {params.colDef.headerName}
             </Box>
           ),
-        },
-        {
-          field: "zone",
-          headerName: "Zona",
+      },
+        // {
+        //     field: "date",
+        //     headerName: "Fecha",
+        //     flex: 1,
+        //     renderHeader: (params) => (
+        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+        //         {params.colDef.headerName}
+        //       </Box>
+        //     ),
+        // },
+        // {
+        //     field: "vigencia",
+        //     headerName: "Vigencia",
+        //     flex: 1,
+        //     renderHeader: (params) => (
+        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+        //         {params.colDef.headerName}
+        //       </Box>
+        //     ),
+        // },
+      {
+          field: "montoCreditoSolicitado",
+          headerName: "Monto",
           flex: 1,
           renderHeader: (params) => (
             <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
               {params.colDef.headerName}
             </Box>
           ),
-        },
-        {
-            field: "sucursal",
-            headerName: "Sucursal",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "data_rest",
-            headerName: "Fecha Solicitud",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "date",
-            headerName: "Fecha",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "vigencia",
-            headerName: "Vigencia",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "monto",
-            headerName: "Monto",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "date_pagare",
-            headerName: "Fecha Pagaré",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "vigencia_pagare",
-            headerName: "Vigencia Pagaré",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "vigencia_documentos",
-            headerName: "Vigencia Documentos",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-            field: "estatus",
-            headerName: "Estado",
-            flex: 1,
-            renderHeader: (params) => (
-              <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-                {params.colDef.headerName}
-              </Box>
-            ),
-        },
-        {
-          field: "expediente",
-          headerName: "Expediente",
+      },
+      // {
+      //     field: "date_pagare",
+      //     headerName: "Fecha Pagaré",
+      //     flex: 1,
+      //     renderHeader: (params) => (
+      //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+      //         {params.colDef.headerName}
+      //       </Box>
+      //     ),
+      // },
+        // {
+        //     field: "vigencia_pagare",
+        //     headerName: "Vigencia Pagaré",
+        //     flex: 1,
+        //     renderHeader: (params) => (
+        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+        //         {params.colDef.headerName}
+        //       </Box>
+        //     ),
+        // },
+        // {
+        //     field: "vigencia_documentos",
+        //     headerName: "Vigencia Documentos",
+        //     flex: 1,
+        //     renderHeader: (params) => (
+        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+        //         {params.colDef.headerName}
+        //       </Box>
+        //     ),
+        // },
+      {
+          field: "estado",
+          headerName: "Estado",
           flex: 1,
           renderHeader: (params) => (
             <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
               {params.colDef.headerName}
             </Box>
           ),
-          renderCell: ({ row: { expediente } }) => {
-            return (
-              <Box
-                width="60%"
-                m="0 auto"
-                p="5px"
-                display="flex"
-                justifyContent="center"
-                borderRadius="4px"
-              >
+      },
+      {
+        field: "id",
+        headerName: "Expediente",
+        flex: 1,
+        renderHeader: (params) => (
+          <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+            {params.colDef.headerName}
+          </Box>
+        ),
+        renderCell: ({ row: { id } }) => {
+          return (
+            <Box
+              width="60%"
+              m="0 auto"
+              p="5px"
+              display="flex"
+              justifyContent="center"
+              borderRadius="4px"
+            >
 
-                <Button color="secondary" variant="contained" onClick={handleButtonClickExpediente}>
-                  <VisibilityOutlinedIcon /> 
-                </Button>
-              </Box>
-            );
-          },
+              <Button color="secondary" variant="contained" onClick={handleButtonClickExpediente}>
+                <VisibilityOutlinedIcon /> 
+              </Button>
+            </Box>
+          );
         },
+      },
     ];
 
     return (
@@ -388,7 +412,7 @@ const Commercial = () => {
                       },
                   }}
               >
-                  <DataGrid  rows={mockDataTeam} columns={columns} slots={{ toolbar: GridToolbar }} />
+                  <DataGrid  rows={dataTable} columns={columns} slots={{ toolbar: GridToolbar }} />
               </Box>
           </Box>
 

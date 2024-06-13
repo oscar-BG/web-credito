@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, useTheme, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, InputLabel, Select, MenuItem, Typography, Button } from "@mui/material";
+import { Box, useTheme, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, InputLabel, Select, MenuItem, Typography, Button, FormGroup, Switch, Grid } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { Formik } from "formik";
@@ -8,6 +8,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import { Form } from "react-router-dom";
 
 const DocumentRequest = () => {
     const theme = useTheme();
@@ -19,13 +20,87 @@ const DocumentRequest = () => {
         console.log(values);
     };
 
+    const [state, setState] = useState({
+        nuevo_credito: false,
+        incremento_credito: false,
+        incremento_plazo: false,
+        incremento_credito_plazo: false,
+        renovacion_vigencia : false,
+        activeSwitch: ''
+      });
+    
+      const handleChange = (event) => {
+        const { name } = event.target;
+        setState({
+          nuevo_credito: false,
+          incremento_credito: false,
+          incremento_plazo: false,
+          incremento_credito_plazo: false,
+          renovacion_vigencia : false,
+          [name]: event.target.checked,
+          activeSwitch: name
+        });
+      };
+
+      console.log(state.activeSwitch);
+
     return (
         <div className="app">
             <SidebarPro isSidebar={isSidebar} />
             <main className="content">
                 <Topbar setIsSidebar={setIsSidebar} />
+
+                
                 <Box m="20px">
                     <Header title="Comercial" subtitle="Generar nuevas solicitudes" />
+
+                    <FormControl component="fieldset" variant="standar">
+                        <FormLabel component="legend">Tipos de líneas de Credito </FormLabel>
+                        <FormGroup>
+                            <Grid container spacing={2}>
+                                <Grid item xs={4}>
+
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={state.nuevo_credito} onChange={handleChange} name="nuevo_credito" />
+                                        }
+                                        label="Nuevo crédito"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={state.incremento_credito} onChange={handleChange} name="incremento_credito" />
+                                        }
+                                        label="Incremento línea de crédito"
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={state.incremento_plazo} onChange={handleChange} name="incremento_plazo" />
+                                        }
+                                        label="Incremento plazo de crédito"
+                                    />
+                                    <FormControlLabel 
+                                        control={
+                                            <Switch checked={state.incremento_credito_plazo} onChange={handleChange} name="incremento_credito_plazo" />   
+                                        }
+                                        label="Incremento en línea y plazo de crédito"
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+
+                                    <FormControlLabel 
+                                        control={
+                                            <Switch checked={state.renovacion_vigencia} onChange={handleChange} name="renovacion_vigencia" />   
+                                        }
+                                        label="Renovación de vigencia"
+                                    />
+                                </Grid>
+                            </Grid>
+                            
+                        </FormGroup>
+                    </FormControl>
 
                     <Formik
                         onSubmit={handleFormSubmit}
@@ -41,21 +116,6 @@ const DocumentRequest = () => {
                             handleSubmit,
                         }) => (
                             <form onSubmit={handleSubmit}>
-                                <FormControl>
-                                    <FormLabel id="demo-radio-buttons-group-label">Tipo de Solicitud</FormLabel>
-                                    <RadioGroup
-                                        aria-labelledby="demo-radio-buttons-group-label"
-                                        defaultValue="female"
-                                        name="radio-buttons-group"
-                                        sx={{ gridColumn : "span 3"}}
-                                    >
-                                        <FormControlLabel value="opcion1" control={<Radio />} label="Nuevo Crédito" />
-                                        <FormControlLabel value="opcion2" control={<Radio />} label="Incremento línea de crédito" />
-                                        <FormControlLabel value="opcion3" control={<Radio />} label="Incremento plazo de crédito" />
-                                        <FormControlLabel value="opcion4" control={<Radio />} label="Incremento en línea y plazo de crédito" />
-                                        <FormControlLabel value="opcion5" control={<Radio />} label="Renovación de vigencia" />
-                                    </RadioGroup>
-                                </FormControl>
 
                                 <Box
                                     mt="50px"
@@ -106,8 +166,6 @@ const DocumentRequest = () => {
                                             onChange={handleChange}
                                             name="sucursal"
                                             error={!!touched.sucursal && !!errors.sucursal}
-                                            helperText={touched.sucursal && errors.sucursal}
-                                            
                                         >
                                             <MenuItem value={10}>Sucursal 1</MenuItem>
                                             <MenuItem value={20}>Sucursal 2</MenuItem>
@@ -124,7 +182,6 @@ const DocumentRequest = () => {
                                             onChange={handleChange}
                                             name="zone"
                                             error={!!touched.zone && !!errors.zone}
-                                            helperText={touched.zone && errors.zone}
                                         >
                                             <MenuItem value={10}>Zona 1</MenuItem>
                                             <MenuItem value={20}>Zona 2</MenuItem>
@@ -142,7 +199,6 @@ const DocumentRequest = () => {
                                             onChange={handleChange}
                                             name="type_client"
                                             error={!!touched.type_client && !!errors.type_client}
-                                            helperText={touched.type_client && errors.type_client}
                                         >
                                             <MenuItem value={10}>Cliente 1</MenuItem>
                                             <MenuItem value={20}>Cliente 2</MenuItem>
@@ -183,7 +239,6 @@ const DocumentRequest = () => {
                                             onChange={handleChange}
                                             name="document"
                                             error={!!touched.document && !!errors.document}
-                                            helperText={touched.document && errors.document}
                                         >
                                             <MenuItem value={10}>Opción 1</MenuItem>
                                             <MenuItem value={20}>Opción 2</MenuItem>

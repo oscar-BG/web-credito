@@ -40,11 +40,13 @@ const SidebarPro = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const [isVisible, setIsVisible] = useState(false)
+  const [username, setUsername] = useState();
+  const [name, setName] = useState();
+  const [titleMenu, setTitleMenu] = useState();
+  const [iconMenu, setIconMenu] = useState(<ContactsOutlinedIcon />);
+  
+
   const dataUser = JSON.parse(localStorage.getItem('user'));
-  const username = dataUser.username;
-  const name = dataUser.name;
-  // console.log(name);
 
   const navigate = useNavigate();
   const handleButtonClick = () => {
@@ -53,13 +55,27 @@ const SidebarPro = () => {
   };
 
   useEffect(() => {
-    if (dataUser.permisos === 'comercial' || dataUser.permisos == 'cartera') {
-      setIsVisible(false);
-    } else {
-      setIsVisible(true);
+
+    setUsername(dataUser.correo);
+    setName(dataUser.nombre);
+
+    switch (dataUser.permisos) {
+      case 'comercial_matriz':
+      case 'comercial_forenea':
+        setTitleMenu('Comercial');
+        setIconMenu(<ContactsOutlinedIcon />);
+        break;
+      case 'cartera_forenea':
+      case 'cartera_matriz':
+        setTitleMenu('Cartera')
+        setIconMenu(<ReceiptOutlinedIcon />);
+        break;
+      case 'analista_credito':
+        setTitleMenu('Analista de credito');
+        setIconMenu(<ManageSearchOutlinedIcon />);
+        break;
     }
   }, [])
-  // const { pathname: currentPath } = useLocation()
 
   return (
     <Box
@@ -109,35 +125,33 @@ const SidebarPro = () => {
               )}
             </MenuItem>
 
-            {!isCollapsed && (
-              <Box mb="25px">
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <img
-                  alt="profile-user"
-                  width="100px"
-                  height="50px"
-                  src={`../../assets/infra.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                  />
-                </Box>
-                <Box textAlign="center">
-                  <Typography
-                  variant="h5"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
-                  >
-                  {name}
-                  </Typography>
-                  <Typography
-                  color={colors.grey[100]}
-                  sx={{ m: "10px 0 0 0" }}
-                  >
-                  {username}
-                  </Typography>
-                </Box>
+            <Box mb="25px">
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <img
+                alt="profile-user"
+                width="100px"
+                height="50px"
+                src={`../../assets/infra.png`}
+                style={{ cursor: "pointer", borderRadius: "50%" }}
+                />
               </Box>
-            )}
+              <Box textAlign="center">
+                <Typography
+                variant="h5"
+                color={colors.grey[100]}
+                fontWeight="bold"
+                sx={{ m: "10px 0 0 0" }}
+                >
+                {name}
+                </Typography>
+                <Typography
+                color={colors.grey[100]}
+                sx={{ m: "10px 0 0 0" }}
+                >
+                {username}
+                </Typography>
+              </Box>
+            </Box>
 
             <Box paddingLeft={isCollapsed ? undefined : "10%"}>
                 <Item
@@ -147,54 +161,53 @@ const SidebarPro = () => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-                {isVisible && (
-                  <SubMenu defaultOpen label={"Configuración"} icon={<SettingsApplicationsOutlinedIcon />}>
-                    <Item
-                      title="Usuarios"
-                      to="/config/user"
-                      icon={<PersonOutlineOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
-                    <Item
-                      title="Catálogos"
-                      to="/config/catalogue"
-                      icon={<SummarizeOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
-                    <Item
-                      title="Audit Trail"
-                      to="/config/audittrail"
-                      icon={<ContentPasteSearchOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
-                  </SubMenu>
-                )}
+                
+                <SubMenu defaultOpen label={"Configuración"} icon={<SettingsApplicationsOutlinedIcon />}>
+                  <Item
+                    title="Usuarios"
+                    to="/config/user"
+                    icon={<PersonOutlineOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Catálogos"
+                    to="/config/catalogue"
+                    icon={<SummarizeOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Audit Trail"
+                    to="/config/audittrail"
+                    icon={<ContentPasteSearchOutlinedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </SubMenu>
                 
                 <Item
-                  title="Comercial"
+                  title={titleMenu}
                   to="/commercial"
-                  icon={<ContactsOutlinedIcon />}
+                  icon={iconMenu}
                   selected={selected}
                   setSelected={setSelected}
                 />
-                <Item
+                {/* <Item
                   title="Cartera"
                   to="/briefcase"
                   icon={<ReceiptOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
-                />
+                /> */}
 
-                <Item
+                {/* <Item
                   title="Analista de crédito"
                   to="/creditanalyst"
                   icon={<ManageSearchOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
-                />
+                /> */}
                 <MenuItem
                 active={selected == 'cerrar_sesion'}
                 style={{
