@@ -15,6 +15,7 @@ import Topbar from "../global/Topbar";
 import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
 
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -31,7 +32,11 @@ const ShowDocument = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [open, setOpen ] = useState(false);
+    const [base64, setbase64] = useState('');
     const [isSidebar, setIsSidebar] = useState(true);
+
+    // Información de documento
+    // const 
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -41,7 +46,9 @@ const ShowDocument = () => {
         setOpen(false);
     }
     
-    /*
+
+    // const base64 = "data:application/pdf;base64,JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwogIC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAvTWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0KPj4KZW5kb2JqCgozIDAgb2JqCjw8CiAgL1R5cGUgL1BhZ2UKICAvUGFyZW50IDIgMCBSCiAgL1Jlc291cmNlcyA8PAogICAgL0ZvbnQgPDwKICAgICAgL0YxIDQgMCBSIAogICAgPj4KICA+PgogIC9Db250ZW50cyA1IDAgUgo+PgplbmRvYmoKCjQgMCBvYmoKPDwKICAvVHlwZSAvRm9udAogIC9TdWJ0eXBlIC9UeXBlMQogIC9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCgo1IDAgb2JqICAlIHBhZ2UgY29udGVudAo8PAogIC9MZW5ndGggNDQKPj4Kc3RyZWFtCkJUCjcwIDUwIFRECi9GMSAxMiBUZgooSGVsbG8sIHdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNzkgMDAwMDAgbiAKMDAwMDAwMDE3MyAwMDAwMCBuIAowMDAwMDAwMzAxIDAwMDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G";
+    
     const formik = useFormik({
         initialValues: {
           file: null,
@@ -71,35 +78,30 @@ const ShowDocument = () => {
                 //   resetForm();
             });
         },
-    });*/
-    const formik = useFormik({
-        initialValues: {
-          file: null,
-        },
-        validationSchema: Yup.object({
-          file: Yup.mixed().required('Archivo obligatorio'),
-        }),
-        onSubmit: (values) => {
-            console.log(values);
-            const formData = new FormData();
-            
-            formData.append('file', values.file);
-    
-            fetch('http://localhost:3001/api/upload', {
-                method: 'POST',
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                console.log('Archivo subido exitosamente', data);
-                //   resetForm();
-                })
-                .catch((error) => {
-                console.error('Error al subir el archivo:', error);
-                //   resetForm();
-            });
-        },
     });
+
+    const show_documentExpediente = () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "idexp": "1",
+            "iddb": "2",
+            "tipoDoc": "Estados financieros"
+        });
+
+          
+        fetch("https://192.168.1.65:7094/api/AE/GetDocumento", {
+            method: "POST",
+            body: raw,
+            headers: myHeaders
+        })
+        .then((response) => response.text())
+        .then((result) => {
+            setbase64(result);
+        })
+        .catch((error) => console.error(error));
+    }
 
     useEffect(() => {
         return () => {
@@ -114,10 +116,11 @@ const ShowDocument = () => {
     const columns = [
         {field: "name", headerName : "Documentos", flex : 1},
         {field: "upload", headerName: "Acción",
-            renderCell: ({row: {upload}}) => {
+            renderCell: ({row: {upload, name}}) => {
+                console.log(name);
                 return (
                     upload === true ?
-                    <Button variant="contained" color="info">
+                    <Button variant="contained" color="info" onClick={show_documentExpediente}>
                         <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
                     </Button>
                     :
@@ -208,7 +211,7 @@ const ShowDocument = () => {
                                     width="100%"
                                     height="75vh"
                                 >
-                                    <Box display="flex" justifyContent="center" mt="20px">
+                                    {/* <Box display="flex" justifyContent="center" mt="20px">
                                         <Button type="submit" color="secondary" variant="contained">
                                             <AddOutlinedIcon></AddOutlinedIcon>
                                         </Button>
@@ -221,6 +224,16 @@ const ShowDocument = () => {
                                         <Button type="submit" color="secondary" variant="contained">
                                             <Rotate90DegreesCwOutlinedIcon></Rotate90DegreesCwOutlinedIcon>
                                         </Button>
+                                    </Box> */}
+
+                                    <Box display="flex" justifyContent="center" mt="20">
+                                        <object data={"data:application/pdf;base64," + base64}
+                                        type="application/pdf"
+                                        width="400"
+                                        height="750"
+                                        >
+
+                                        </object>
                                     </Box>
 
                                 </Box>
