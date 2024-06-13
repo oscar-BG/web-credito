@@ -61,10 +61,12 @@ function CenteredComponent() {
 
             <Input id='username' 
             name='username' 
-            type='text' 
+            type='text'
+            placeholder='usuario@host.com'
             value={formik.values.username}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            sx={{ m: 2}}
             />
           </FormControl>
 
@@ -74,14 +76,16 @@ function CenteredComponent() {
               id="password"
               name="password"
               type="password"
+              placeholder='Contraseña'
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              sx={{ m: 2}}
             />
           </FormControl>
 
-          <Button   type="submit" variant="contained" color="primary" fullWidth>
-            Enviar
+          <Button  sx={{ mt: 3 }} type="submit" variant="contained" color='success' fullWidth>
+            Enviar 
           </Button>
         </form>
       </CardContent>

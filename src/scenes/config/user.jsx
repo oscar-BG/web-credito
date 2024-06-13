@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, TextField, MenuItem, FormControl, Button } from "@mui/material";
+import { Box, TextField, MenuItem, FormControl, Button, FormHelperText } from "@mui/material";
 import { Formik, useFormik } from "formik";
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -16,27 +16,47 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 
+
+
+
+
+
 const User = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [isSidebar, setIsSidebar] = useState(true);
     const isNonMobile = useMediaQuery("(min-width:600px)");
-    const [typeuser, setTypeUser] = useState('');
-    const [zona, setTypeZona] = useState('');
+    const [users, setUsers] = useState(mockDataUsers);
 
-
-    const handleChangeTypeUser = (event) => {
-        setTypeUser(event.target.value);
-    }
-
-    const handleChangeTypeZona = (event) => {
-        setTypeZona(event.target.value);
-    }
-
-    const handleFormSubmit = (values) => {
+    const handleFormSubmit = (values, {resetForm}) => {
         console.log(values);
+        const formData = new FormData();
+        formData.append("username", values.username);
+        formData.append("name", values.name);
+        formData.append("sucursal", values.sucursal);
+        formData.append("type_user", values.type_user);
+        formData.append("zona", values.zona);
+    
+        console.log(formData);
+    
+        const newUser = {
+            id : mockDataUsers.length + 1,
+            username: values.username,
+            name: values.name,
+            permisos : values.permisos,
+            zona : values.zona,
+            sucursal: values.sucursal,
+            password : "12345678"
+        }
+    
+        mockDataUsers.push(newUser);
+        
+        setUsers([...users, newUser]);
+        console.log(mockDataUsers);
+    
+        resetForm();
+    
     };
-
 
     const columns = [
         {field: "username", headerName: "Usuario"},
@@ -128,6 +148,7 @@ const User = () => {
                             handleBlur,
                             handleChange,
                             handleSubmit,
+                            resetForm
                         }) => (
                             <form onSubmit={handleSubmit}>
                                 <Box
@@ -143,87 +164,92 @@ const User = () => {
                                         fullWidth
                                         variant="filled"
                                         type="text"
-                                        label="Nombre de Usuario"
+                                        label="Usuario"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        value={values.name_user}
-                                        name="name_user"
-                                        error={!!touched.name_user && !!errors.name_user}
-                                        helperText={touched.name_user && errors.name_user}
+                                        value={values.username}
+                                        name="username"
+                                        id="username"
+                                        error={!!touched.username && !!errors.username}
+                                        helperText={touched.username && errors.username}
                                         sx={{ gridColumn: "span 1" }}
                                     />
                                     <TextField
                                         fullWidth
                                         variant="filled"
                                         type="text"
-                                        label="Nombre"
+                                        label="Nombre usuario"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.name}
                                         name="name"
+                                        id="name"
                                         error={!!touched.name && !!errors.name}
                                         helperText={touched.name && errors.name}
                                         sx={{ gridColumn: "span 1" }}
                                     />
 
-                                    {/* <FormControl fullWidth>
+                                    <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Tipo de Usuario</InputLabel>
                                         <Select
                                             fullWidth
                                             variant="filled"
                                             type="text"
                                             name="type_user"
+                                            value={values.type_user}
                                             onBlur={handleBlur}
                                             onChange={handleChange}
                                             error={!!touched.type_user && !!errors.type_user}
-                                            helperText={touched.type_user && errors.type_user}
                                             sx={{ gridColumn: "span 1" }}
                                         >
-                                            <MenuItem value={10}>Administrado</MenuItem>
-                                            <MenuItem value={20}>Jefes de Cartera</MenuItem>
-                                            <MenuItem value={30}>Ejecutivos Comerciales</MenuItem>
+                                            <MenuItem value="admin">Administrado</MenuItem>
+                                            <MenuItem value="cartera">Jefe de Cartera Foráneo</MenuItem>
+                                            <MenuItem value="comercial">Ejecutivos Comerciales</MenuItem>
+                                            <MenuItem value="comercial">Analista de Credito</MenuItem>
+                                            <MenuItem value="cartera">Analista de Cartera</MenuItem>
                                         </Select>
-                                    </FormControl> */}
+                                    </FormControl>
 
-                                    {/* <FormControl fullWidth>
+                                    <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Zona</InputLabel>
                                         <Select
                                             fullWidth
                                             variant="filled"
                                             type="text"
-                                            value={zona}
-                                            name="zone"
+                                            // value={zona}
+                                            name="zona"
+                                            id="zona"
                                             onBlur={handleBlur}
-                                            onChange={handleChangeTypeZona}
-                                            error={!!touched.zone && !!errors.zone}
-                                            helperText={touched.zone && errors.zone}
+                                            onChange={handleChange}
+                                            error={!!touched.zona && !!errors.zona}
                                             sx={{ gridColumn: "span 1" }}
                                         >
-                                            <MenuItem value={10}>Zona 1</MenuItem>
-                                            <MenuItem value={20}>Zona 1</MenuItem>
-                                            <MenuItem value={30}>Zona 1</MenuItem>
+                                            <MenuItem value="1">Zona 1</MenuItem>
+                                            <MenuItem value="2">Zona 1</MenuItem>
+                                            <MenuItem value="3">Zona 1</MenuItem>
                                         </Select>
-                                    </FormControl> */}
+                                    </FormControl> 
 
-                                    {/* <FormControl fullWidth>
+                                    <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Sucursal</InputLabel>
                                         <Select
                                             fullWidth
                                             variant="filled"
                                             type="text"
-                                            value={typeuser}
-                                            name="subsidiary"
+                                            // value={typeuser}
+                                            name="sucursal"
+                                            id="sucursal"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
-                                            error={!!touched.subsidiary && !!errors.subsidiary}
-                                            helperText={touched.subsidiary && errors.subsidiary}
+                                            error={!!touched.sucursal && !!errors.sucursal}
+                                            helperText={touched.sucursal && errors.sucursal}
                                             sx={{ gridColumn: "span 1" }}
                                         >
-                                            <MenuItem value={10}>Usuario 1</MenuItem>
-                                            <MenuItem value={20}>Usuario 2</MenuItem>
-                                            <MenuItem value={30}>Usuario 3</MenuItem>
+                                            <MenuItem value="1">Usuario 1</MenuItem>
+                                            <MenuItem value="2">Usuario 2</MenuItem>
+                                            <MenuItem value="3">Usuario 3</MenuItem>
                                         </Select>
-                                    </FormControl> */}
+                                    </FormControl>
 
                                 </Box>
                                 <Box display="flex" justifyContent="center" mt="20px">
@@ -268,7 +294,7 @@ const User = () => {
                             },
                         }}
                     >
-                        <DataGrid  rows={mockDataUsers} columns={columns} slots={{ toolbar: GridToolbar }} />
+                        <DataGrid  rows={users} columns={columns} slots={{ toolbar: GridToolbar }} />
                     </Box>
                 </Box>
             </main>
@@ -277,19 +303,19 @@ const User = () => {
 }
 
 const checkoutSchema = yup.object().shape({
-    name_user: yup.string().required("required"),
+    username: yup.string().required("required"),
     name: yup.string().required("required"),
     type_user: yup.string().required("required"),
-    zone: yup.string().required("required"),
-    subsidiary: yup.string().required("required"),
+    zona: yup.string().required("required"),
+    sucursal: yup.string().required("required"),
 });
 
 const initialValues = {
-    name_user: "",
+    username: "",
     name: "",
-    type_user: "",
-    zone: "",
-    subsidiary: "",
+    type_user: "1",
+    zona: "",
+    sucursal: "",
 };
 
 export default User;
