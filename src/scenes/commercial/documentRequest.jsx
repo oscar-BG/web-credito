@@ -1,5 +1,26 @@
 import { useState } from "react";
-import { Box, useTheme, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, InputLabel, Select, MenuItem, Typography, Button, FormGroup, Switch, Grid } from "@mui/material";
+import { 
+    Box, 
+    useTheme, 
+    FormControl, 
+    FormControlLabel, 
+    FormLabel, 
+    RadioGroup, 
+    Radio, 
+    TextField, 
+    InputLabel, 
+    Select, 
+    MenuItem, 
+    Typography, 
+    Button, 
+    FormGroup, 
+    Switch, 
+    Grid,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
+} from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { Formik } from "formik";
@@ -14,8 +35,9 @@ const DocumentRequest = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [isSidebar, setIsSidebar] = useState(true);
-
+    const [activeBusqueda, setActiveBusqueda] = useState(false);
     const isNonMobile = useMediaQuery("(min-width:600px)");
+    const [open, setOpen] = useState(false);
     const handleFormSubmit = (values) => {
         console.log(values);
     };
@@ -40,9 +62,16 @@ const DocumentRequest = () => {
           [name]: event.target.checked,
           activeSwitch: name
         });
+        setOpen(true);
       };
 
       console.log(state.activeSwitch);
+
+      const options = [
+        {value: 10, label: 'Sucursal 1'},
+        {value: 20, label: 'Sucursal 2'},
+        {value: 30, label: 'Sucursal 3'}
+      ]
 
     return (
         <div className="app">
@@ -101,6 +130,17 @@ const DocumentRequest = () => {
                             
                         </FormGroup>
                     </FormControl>
+
+                    <Dialog open={open} >
+                        <DialogTitle>Formulario</DialogTitle>
+                        <DialogContent>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button  color="primary">
+                            Cerrar
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
 
                     <Formik
                         onSubmit={handleFormSubmit}
@@ -165,6 +205,7 @@ const DocumentRequest = () => {
                                             onBlur={handleBlur}
                                             onChange={handleChange}
                                             name="sucursal"
+                                            id="sucursal"
                                             error={!!touched.sucursal && !!errors.sucursal}
                                         >
                                             <MenuItem value={10}>Sucursal 1</MenuItem>
