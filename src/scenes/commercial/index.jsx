@@ -50,10 +50,6 @@ const Commercial = () => {
         } finally {
           // Detener loading
         }
-        
-        // .then((response) => response.text())
-        // .then((result) => console.log(result))
-        // .catch((error) => console.error(error));
       }
 
       fetchData();
