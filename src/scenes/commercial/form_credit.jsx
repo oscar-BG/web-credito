@@ -13,7 +13,8 @@ import {
     Select, 
     MenuItem, 
     Button,
-    FormHelperText
+    FormHelperText,
+    Typography
 } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -46,6 +47,10 @@ const FormNuevoCredito = ({dataUser}) => {
     const [listCarta, setListCarta] = useState([]);
     const [carta, setCarta] = useState(dataUser.cartaExpedicionDocumentos);
     const [loadingCarta, setLoadingCarta] = useState(true);
+
+    const [listSector, setListSector] = useState([]);
+    const [ sector, setSector] = useState(dataUser.idSector);
+    const [loadingSector, setLoadingSector] = useState(true);
 
 
     const handleFormSubmit = (values) => {
@@ -109,10 +114,26 @@ const FormNuevoCredito = ({dataUser}) => {
             }
         }
 
+        const fetchSector = async () => {
+            try {
+                const response = await fetch("https://192.168.1.65:5555/Catalogos/Sector", {
+                    method: "GET"
+                });
+                const result = await response.json();
+                setListSector(result);
+
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoadingSector(false);
+            }
+        }
+
         fetchSucursales();
         fetchTipoCliente();
         fetchZona();
         fetchCarta();
+        fetchSector();
     }, []);
 
     const handleSelectChange = (event, setFieldValue) => {
@@ -133,6 +154,11 @@ const FormNuevoCredito = ({dataUser}) => {
     const handleSelectCarta = (event, setFieldValue) => {
         setCarta(event.target.value);
         setFieldValue("cartaExpedicionDocumentos", event.target.value);
+    }
+
+    const handleSelectSector = (event, setFieldValue) => {
+        setSector(event.target.value);
+        setFieldValue("idSector", event.target.value);
     }
 
     return (
@@ -364,6 +390,9 @@ const FormNuevoCredito = ({dataUser}) => {
                             name="fechaSolicitud"
                             error={!!touched.fechaSolicitud && !!errors.fechaSolicitud}
                             helperText={touched.fechaSolicitud && errors.fechaSolicitud}
+                            InputLabelProps={{
+                                shrink: true, 
+                            }}
                             sx={{ gridColumn: "span 2" }}
                         />
 
@@ -388,29 +417,40 @@ const FormNuevoCredito = ({dataUser}) => {
                                 fullWidth
                                 variant="filled"
                                 type="text"
+                                value={sector}
                                 onBlur={handleBlur}
-                                onChange={handleChange}
-                                name="sector"
-                                error={!!touched.sector && !!errors.sector}
-                                helperText={touched.sector && errors.sector}
+                                onChange={(event) => handleSelectSector(event, setFieldValue)}
+                                name="idSector"
+                                error={!!touched.idSector && !!errors.idSector}
                             >
-                                <MenuItem value={10}>Opción 1</MenuItem>
-                                <MenuItem value={20}>Opción 2</MenuItem>
-                                <MenuItem value={30}>Opción 3</MenuItem>
+                                {loadingSector ? (
+                                    <MenuItem>Cargando</MenuItem>
+                                ) : (
+                                    listSector.map((sector) => (
+                                        <MenuItem key={sector.id} value={sector.id}>
+                                            {sector.sectorNombre}
+                                        </MenuItem>
+                                    ))
+                                )}
                             </Select>
+                            {touched.idSector && errors.idSector && (
+                                <FormHelperText style={{color : "red"}}>{errors.idSector}</FormHelperText>
+                            )}
                         </FormControl>
 
-                        {/*
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Giro Empresarial"
+                            value={values.giroEmpresarial}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="giro_empresarial"
-                            error={!!touched.giro_empresarial && !!errors.giro_empresarial}
-                            helperText={touched.giro_empresarial && errors.giro_empresarial}
+                            name="giroEmpresarial"
+                            id="giroEmpresarial"
+                            error={!!touched.giroEmpresarial && !!errors.giroEmpresarial}
+                            helperText={touched.giroEmpresarial && errors.giroEmpresarial}
                             sx={{ gridColumn: "span 2" }}
                         />
                         
@@ -428,44 +468,52 @@ const FormNuevoCredito = ({dataUser}) => {
                             variant="filled"
                             type="text"
                             label="Calle"
+                            value={values.calle}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             name="calle"
+                            id="calle"
                             error={!!touched.calle && !!errors.calle}
                             helperText={touched.calle && errors.calle}
                             sx={{ gridColumn: "span 2" }}
                         />
 
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Núm. Exterior"
+                            value={values.numeroExterior}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="num_exterior"
-                            error={!!touched.num_exterior && !!errors.num_exterior}
-                            helperText={touched.num_exterior && errors.num_exterior}
+                            name="numeroExterior"
+                            error={!!touched.numeroExterior && !!errors.numeroExterior}
+                            helperText={touched.numeroExterior && errors.numeroExterior}
                             sx={{ gridColumn: "span 2" }}
                         />
 
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Núm. Interior"
+                            value={values.numeroInterior}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="num_interior"
-                            error={!!touched.num_interior && !!errors.num_interior}
-                            helperText={touched.num_interior && errors.num_interior}
+                            name="numeroInterior"
+                            error={!!touched.numeroInterior && !!errors.numeroInterior}
+                            helperText={touched.numeroInterior && errors.numeroInterior}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Colonia"
+                            value={values.colonia}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             name="colonia"
@@ -473,23 +521,28 @@ const FormNuevoCredito = ({dataUser}) => {
                             helperText={touched.colonia && errors.colonia}
                             sx={{ gridColumn: "span 2" }}
                         />
+
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Alcaldía o Municipio"
+                            value={values.municipio}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="alcaldia"
-                            error={!!touched.alcaldia && !!errors.alcaldia}
-                            helperText={touched.alcaldia && errors.alcaldia}
+                            name="municipio"
+                            error={!!touched.municipio && !!errors.municipio}
+                            helperText={touched.municipio && errors.municipio}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Estado"
+                            value={values.estado}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             name="estado"
@@ -497,11 +550,14 @@ const FormNuevoCredito = ({dataUser}) => {
                             helperText={touched.estado && errors.estado}
                             sx={{ gridColumn: "span 2" }}
                         />
+
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="País"
+                            value={values.pais}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             name="pais"
@@ -509,19 +565,22 @@ const FormNuevoCredito = ({dataUser}) => {
                             helperText={touched.pais && errors.pais}
                             sx={{ gridColumn: "span 2" }}
                         />
+
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="C.P"
+                            value={values.cp}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="codigo_postal"
-                            error={!!touched.codigo_postal && !!errors.codigo_postal}
-                            helperText={touched.codigo_postal && errors.codigo_postal}
+                            name="cp"
+                            error={!!touched.cp && !!errors.cp}
+                            helperText={touched.cp && errors.cp}
                             sx={{ gridColumn: "span 2" }}
                         />
-
+                        
                         <Typography
                             variant="h5"
                             color={colors.grey[100]}
@@ -536,73 +595,85 @@ const FormNuevoCredito = ({dataUser}) => {
                             variant="filled"
                             type="text"
                             label="Nombre del Solicitante"
+                            value={values.nombreSolicitante}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="name_solicitante"
-                            error={!!touched.name_solicitante && !!errors.name_solicitante}
-                            helperText={touched.name_solicitante && errors.name_solicitante}
+                            name="nombreSolicitante"
+                            error={!!touched.nombreSolicitante && !!errors.nombreSolicitante}
+                            helperText={touched.nombreSolicitante && errors.nombreSolicitante}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Nombre Ejecutivo Integral"
+                            value={values.nombreEjecutivo}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="name_ejecutivo"
-                            error={!!touched.name_ejecutivo && !!errors.name_ejecutivo}
-                            helperText={touched.name_ejecutivo && errors.name_ejecutivo}
+                            name="nombreEjecutivo"
+                            error={!!touched.nombreEjecutivo && !!errors.nombreEjecutivo}
+                            helperText={touched.nombreEjecutivo && errors.nombreEjecutivo}
                             sx={{ gridColumn: "span 2" }}
                         />
+
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Núm. Nómina Ejecutivo"
+                            value={values.nominaEjecutivo}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="num_ejecutivo"
-                            error={!!touched.num_ejecutivo && !!errors.num_ejecutivo}
-                            helperText={touched.num_ejecutivo && errors.num_ejecutivo}
+                            name="nominaEjecutivo"
+                            error={!!touched.nominaEjecutivo && !!errors.nominaEjecutivo}
+                            helperText={touched.nominaEjecutivo && errors.nominaEjecutivo}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Nombre Gerente de Ventas"
+                            value={values.nombreGerenteVentas}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="name_gerente"
-                            error={!!touched.name_gerente && !!errors.name_gerente}
-                            helperText={touched.name_gerente && errors.name_gerente}
+                            name="nombreGerenteVentas"
+                            error={!!touched.nombreGerenteVentas && !!errors.nombreGerenteVentas}
+                            helperText={touched.nombreGerenteVentas && errors.nombreGerenteVentas}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="text"
                             label="Núm. Nómina Gerente"
+                            value={values.nominaGerenteVentas}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="num_gerente"
-                            error={!!touched.num_gerente && !!errors.num_gerente}
-                            helperText={touched.num_gerente && errors.num_gerente}
+                            name="nominaGerenteVentas"
+                            error={!!touched.nominaGerenteVentas && !!errors.nominaGerenteVentas}
+                            helperText={touched.nominaGerenteVentas && errors.nominaGerenteVentas}
                             sx={{ gridColumn: "span 2" }}
                         />
+                        
                         <TextField
                             fullWidth
                             variant="filled"
                             type="number"
                             label="Monto de crédito solicitado"
+                            value={values.montoCreditoSolicitado}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            name="monto_credito"
-                            error={!!touched.monto_credito && !!errors.monto_credito}
-                            helperText={touched.monto_credito && errors.monto_credito}
+                            name="montoCreditoSolicitado"
+                            error={!!touched.montoCreditoSolicitado && !!errors.montoCreditoSolicitado}
+                            helperText={touched.montoCreditoSolicitado && errors.montoCreditoSolicitado}
                             sx={{ gridColumn: "span 2" }}
-                        /> */}
+                        />
                     </Box>
                     <Box display="flex" justifyContent="center" mt="20px">
                         <Button type="submit" color="secondary" variant="contained">
@@ -618,26 +689,40 @@ const FormNuevoCredito = ({dataUser}) => {
 }
 
 const checkoutSchema = yup.object().shape({
-    rfc: yup.string().required("Valor requerido"),
-    nombreRazonSocial: yup.string().required("Valor requerido"),
-    idSucursalZona: yup.string().required("Valor requerido"),
-    tipoCliente: yup.string().required("Valor requerido"),
-    numeroZona: yup.string().required("Valor requerido"),
-    actaConstitutiva : yup.string().required("Seleccione uno de los valores"),
-    cartaExpedicion : yup.string().required("Seleccione uno de los valores"),
+    rfc:                        yup.string().required("Valor requerido"),
+    nombreRazonSocial:          yup.string().required("Valor requerido"),
+    idSucursalZona:             yup.string().required("Valor requerido"),
+    tipoCliente:                yup.string().required("Valor requerido"),
+    numeroZona:                 yup.string().required("Valor requerido"),
+    actaConstitutiva :          yup.string().required("Seleccione uno de los valores"),
+    cartaExpedicion :           yup.string().required("Seleccione uno de los valores"),
     cartaExpedicionDocumentos : yup.string().required("Valor requerido"),
-    fechaSolicitud: yup.date().required("Valor requerido"),
-    numeroCliente: yup.number().required("Valor requerido")
+    fechaSolicitud:             yup.date().required("Valor requerido"),
+    numeroCliente:              yup.number().required("Valor requerido"),
+    idSector:                   yup.string().required("Valor requerido"),
+    giroEmpresarial :           yup.string().required("Valor requerido"),
+    calle :                     yup.string().required("Valor requerido"),
+    numeroExterior :            yup.string().required("Valor requerido"),
+    numeroInterior :            yup.string().required("Valor requerido"),
+    colonia:                    yup.string().required("Valor requerido"),
+    municipio:                  yup.string().required("Valor requerido"),
+    estado:                     yup.string().required("Valor requerido"),
+    pais:                       yup.string().required("Valor requerido"),
+    cp:                         yup.string().required("Valor requerido"),
+    nombreSolicitante:          yup.string().required("Valor requerido"),
+    nombreEjecutivo:            yup.string().required("Valor requerido"),
+    nominaEjecutivo:            yup.string().required("Valor requerido"),
+    nombreGerenteVentas:        yup.string().required("Valor requerido"),
+    nominaGerenteVentas:        yup.string().required("Valor requerido"),
+    montoCreditoSolicitado:     yup.number().required("Valor requerido")
     // date_request: yup.string().required("required"),
     // number_client: yup.string().required("required"),
     // giro_empresarial: yup.string().required("required"),
     // calle: yup.string().required("required"),
     // num_exterior: yup.string().required("required"),
     // num_interior: yup.string().required("required"),
-    // colonia: yup.string().required("required"),
     // alcaldia: yup.string().required("required"),
     // estado: yup.string().required("required"),
-    // pais: yup.string().required("required"),
     // codigo_postal: yup.string().required("required"),
     // name_solicitante: yup.string().required("required"),
     // name_ejecutivo: yup.string().required("required"),
