@@ -715,23 +715,6 @@ const checkoutSchema = yup.object().shape({
     nombreGerenteVentas:        yup.string().required("Valor requerido"),
     nominaGerenteVentas:        yup.string().required("Valor requerido"),
     montoCreditoSolicitado:     yup.number().required("Valor requerido")
-    // date_request: yup.string().required("required"),
-    // number_client: yup.string().required("required"),
-    // giro_empresarial: yup.string().required("required"),
-    // calle: yup.string().required("required"),
-    // num_exterior: yup.string().required("required"),
-    // num_interior: yup.string().required("required"),
-    // alcaldia: yup.string().required("required"),
-    // estado: yup.string().required("required"),
-    // codigo_postal: yup.string().required("required"),
-    // name_solicitante: yup.string().required("required"),
-    // name_ejecutivo: yup.string().required("required"),
-    // num_ejecutivo: yup.string().required("required"),
-    // name_gerente: yup.string().required("required"),
-    // num_gerente: yup.string().required("required"),
-    // monto_credito: yup.string().required("required"),
 });
-  
-// const initialValues = ;
 
 export default FormNuevoCredito;

@@ -24,6 +24,10 @@ const Commercial = () => {
     const [isSidebar, setIsSidebar] = useState(true);
     const [dataTable, setDataTable] = useState([]);
 
+    const [listZona, setListZona] = useState([]);
+    const [zona, setZona] = useState();
+    const [loadingZona, setLoadingZona] = useState(true);
+
     const handleFormSubmit = (values) => {
       console.log(values);
     };
@@ -37,22 +41,38 @@ const Commercial = () => {
     };
 
     useEffect(() => {
-      const fetchData = async () => {
+      // Ejecutar con el boton de Buscar Cliente
+      // const fetchData = async () => {
+      //   try {
+      //     const response = await fetch("https://192.168.1.65:7094/Expediente/", {
+      //       method: "GET"
+      //     });
+      //     const result = await response.json();
+      //     setDataTable(result);
+      //     console.log(result);
+      //   } catch (error) {
+      //     // Mostrar error
+      //   } finally {
+      //     // Detener loading
+      //   }
+      // }
+
+      const fetchZona = async () => {
         try {
-          const response = await fetch("https://192.168.1.65:7094/Expediente/", {
+          const response = await fetch("https://192.168.1.65:5555/Sucursales/Zonas", {
             method: "GET"
-          });
+          })
           const result = await response.json();
-          setDataTable(result);
-          console.log(result);
+          setListZona(result);
         } catch (error) {
-          // Mostrar error
+            console.log(error);
         } finally {
-          // Detener loading
+            setLoadingZona(false);
         }
       }
 
-      fetchData();
+      // fetchData();
+      fetchZona();
     }, [])
 
 
@@ -80,7 +100,7 @@ const Commercial = () => {
         ),
       },
       {
-        field: "idSucursalZona",
+        field: "numeroZona",
         headerName: "Zona",
         flex: 1,
         renderHeader: (params) => (
@@ -89,16 +109,16 @@ const Commercial = () => {
           </Box>
         ),
       },
-        // {
-        //     field: "sucursal",
-        //     headerName: "Sucursal",
-        //     flex: 1,
-        //     renderHeader: (params) => (
-        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-        //         {params.colDef.headerName}
-        //       </Box>
-        //     ),
-        // },
+      {
+          field: "idSucursalZona",
+          headerName: "Sucursal",
+          flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
+      },
       {
           field: "fechaSolicitud",
           headerName: "Fecha Solicitud",
@@ -119,16 +139,16 @@ const Commercial = () => {
         //       </Box>
         //     ),
         // },
-        // {
-        //     field: "vigencia",
-        //     headerName: "Vigencia",
-        //     flex: 1,
-        //     renderHeader: (params) => (
-        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-        //         {params.colDef.headerName}
-        //       </Box>
-        //     ),
-        // },
+      {
+          field: "vigencia",
+          headerName: "Vigencia",
+          flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
+      },
       {
           field: "montoCreditoSolicitado",
           headerName: "Monto",
@@ -139,36 +159,36 @@ const Commercial = () => {
             </Box>
           ),
       },
-      // {
-      //     field: "date_pagare",
-      //     headerName: "Fecha Pagaré",
-      //     flex: 1,
-      //     renderHeader: (params) => (
-      //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-      //         {params.colDef.headerName}
-      //       </Box>
-      //     ),
-      // },
-        // {
-        //     field: "vigencia_pagare",
-        //     headerName: "Vigencia Pagaré",
-        //     flex: 1,
-        //     renderHeader: (params) => (
-        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-        //         {params.colDef.headerName}
-        //       </Box>
-        //     ),
-        // },
-        // {
-        //     field: "vigencia_documentos",
-        //     headerName: "Vigencia Documentos",
-        //     flex: 1,
-        //     renderHeader: (params) => (
-        //       <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
-        //         {params.colDef.headerName}
-        //       </Box>
-        //     ),
-        // },
+      {
+          field: "fechaPagare",
+          headerName: "Fecha Pagaré",
+          flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
+      },
+      {
+          field: "vigenciaPagare",
+          headerName: "Vigencia Pagaré",
+          flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
+      },
+      {
+          field: "vigenciaDocumentos",
+          headerName: "Vigencia Documentos",
+          flex: 1,
+          renderHeader: (params) => (
+            <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}>
+              {params.colDef.headerName}
+            </Box>
+          ),
+      },
       {
           field: "estado",
           headerName: "Estado",
@@ -236,6 +256,7 @@ const Commercial = () => {
                   handleBlur,
                   handleChange,
                   handleSubmit,
+                  setFieldValue
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <Box
@@ -260,6 +281,7 @@ const Commercial = () => {
                         helperText={touched.rfc && errors.rfc}
                         sx={{ gridColumn: "span 1" }}
                       />
+
                       <TextField
                         fullWidth
                         variant="filled"
@@ -267,13 +289,13 @@ const Commercial = () => {
                         label="Nombre/Razón social"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.name_social}
-                        name="name_social"
-                        error={!!touched.name_social && !!errors.name_social}
-                        helperText={touched.name_social && errors.name_social}
+                        value={values.nombreRazonSocial}
+                        name="nombreRazonSocial"
+                        error={!!touched.nombreRazonSocial && !!errors.nombreRazonSocial}
+                        helperText={touched.nombreRazonSocial && errors.nombreRazonSocial}
                         sx={{ gridColumn: "span 1" }}
                       />
-
+                       
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Zona</InputLabel>
                         <Select
@@ -281,19 +303,26 @@ const Commercial = () => {
                           variant="filled"
                           type="text"
                           label="Zona"
-                          value={age}
-                          onChange={handleChange}
-                          name="zone"
-                          error={!!touched.zone && !!errors.zone}
-                          helperText={touched.zone && errors.zone}
+                          value={zona}
+                          onChange={(event) => handleSelectZona(event, setFieldValue)}
+                          name="numeroZona"
+                          error={!!touched.numeroZona && !!errors.numeroZona}
                           sx={{ gridColumn: "span 1" }}
                         >
-                          <MenuItem value={10}>Zona 1</MenuItem>
-                          <MenuItem value={20}>Zona 2</MenuItem>
-                          <MenuItem value={30}>Zona 3</MenuItem>
+                          {loadingZona ? (
+                            <MenuItem>Cargando ...</MenuItem>
+                          ) : (
+                            listZona.map((zona) => (
+                              <MenuItem key={zona.numeroZona} value={zona.numeroZona}>
+                                {zona.zona}
+                              </MenuItem>
+                            ))
+                          )}
                         </Select>
+
                       </FormControl>
 
+                      
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Sucursal Cabecera</InputLabel>
                         <Select
@@ -313,6 +342,8 @@ const Commercial = () => {
                           <MenuItem value={30}>Zona 3</MenuItem>
                         </Select>
                       </FormControl>
+
+                      {/*
 
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
@@ -364,7 +395,7 @@ const Commercial = () => {
                           <FormControlLabel value="SI" control={<Radio />} label="si" />
                           <FormControlLabel value="NO" control={<Radio />} label="no" />
                         </RadioGroup>
-                      </FormControl>
+                      </FormControl> */}
                     </Box>
                     <Box display="flex" justifyContent="center" mt="20px">
                       <Button type="submit" color="secondary" variant="contained">
@@ -408,7 +439,7 @@ const Commercial = () => {
                       },
                   }}
               >
-                  <DataGrid  rows={dataTable} columns={columns} slots={{ toolbar: GridToolbar }} />
+                <DataGrid  rows={dataTable} columns={columns} slots={{ toolbar: GridToolbar }} />
               </Box>
           </Box>
 
@@ -418,16 +449,15 @@ const Commercial = () => {
 }
 
 const checkoutSchema = yup.object().shape({
-  rfc: yup.string().required("required"),
-  sucursal_cabecera: yup.string(),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  rfc:                yup.string().required("Valor requerido"),
+  nombreRazonSocial : yup.string(),
+  numeroZona:         yup.string(),
 });
 
 const initialValues = {
   rfc: "",
-  name_social: "",
-  zone: "",
+  nombreRazonSocial: "",
+  numeroZona: "",
   sucursal_cabecera: "",
   address1: "",
   address2: "",
