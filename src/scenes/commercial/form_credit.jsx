@@ -25,6 +25,7 @@ import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import { Form } from "react-router-dom";
+import configURL from "../../config";
 
 
 const FormNuevoCredito = ({dataUser}) => {
@@ -54,13 +55,35 @@ const FormNuevoCredito = ({dataUser}) => {
 
 
     const handleFormSubmit = (values) => {
-        console.log(values);
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify(values);
+
+        console.log(raw);
+
+        fetch(configURL.apiBaseUrl+"/Expediente", {
+            method: "POST",
+            body: raw,
+            headers : myHeaders
+        })
+        .then((response) => {
+            if (response.status === 201) {
+                return response.text();
+            } else {
+                alert("Error al enviar el formulario");
+            }
+
+        })
+        .then((result) => console.log(result))
+        .catch((error) => console.error(error));
     };
 
     useEffect(() => {
         const fetchSucursales = async () => {
             try {
-                const response = await fetch("https://192.168.1.65:5555/Sucursales", {
+                const response = await fetch(configURL.apiBaseUrl+"/Sucursales", {
                     method: "GET"
                 });
                 const result = await response.json();
@@ -74,7 +97,7 @@ const FormNuevoCredito = ({dataUser}) => {
 
         const fetchZona = async () => {
             try {
-                const response = await fetch("https://192.168.1.65:5555/Sucursales/Zonas", {
+                const response = await fetch(configURL.apiBaseUrl+"/Sucursales/Zonas", {
                     method: "GET"
                 })
                 const result = await response.json();
@@ -88,7 +111,7 @@ const FormNuevoCredito = ({dataUser}) => {
 
         const fetchTipoCliente = async () => {
             try {
-                const response = await fetch("https://192.168.1.65:5555/Catalogos/TipoCliente", {
+                const response = await fetch(configURL.apiBaseUrl+"/Catalogos/TipoCliente", {
                     method: "GET"
                 });
                 const result = await response.json();
@@ -102,7 +125,7 @@ const FormNuevoCredito = ({dataUser}) => {
 
         const fetchCarta = async () => {
             try {
-                const response = await fetch("https://192.168.1.65:5555/Catalogos/Cartas", {
+                const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Cartas", {
                     method: "GET"
                 });
                 const result = await response.json();
@@ -116,7 +139,7 @@ const FormNuevoCredito = ({dataUser}) => {
 
         const fetchSector = async () => {
             try {
-                const response = await fetch("https://192.168.1.65:5555/Catalogos/Sector", {
+                const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Sector", {
                     method: "GET"
                 });
                 const result = await response.json();
@@ -163,7 +186,10 @@ const FormNuevoCredito = ({dataUser}) => {
 
     return (
         <Formik
-            onSubmit={handleFormSubmit}
+            onSubmit={(values, { resetForm }) => {
+                handleFormSubmit(values);
+                resetForm();  // Opcional: Resetea el formulario después de enviarlo
+            }}
             initialValues= {dataUser}
             validationSchema={checkoutSchema}
         >
@@ -174,6 +200,7 @@ const FormNuevoCredito = ({dataUser}) => {
                 handleBlur,
                 handleChange,
                 handleSubmit,
+                handleReset,
                 setFieldValue
             }) => (
                 <form onSubmit={handleSubmit}>
@@ -400,7 +427,7 @@ const FormNuevoCredito = ({dataUser}) => {
                         <TextField
                             fullWidth
                             variant="filled"
-                            type="number"
+                            type="text"
                             label="Número de Cliente"
                             value={values.numeroCliente}
                             onBlur={handleBlur}
@@ -698,7 +725,7 @@ const checkoutSchema = yup.object().shape({
     cartaExpedicion :           yup.string().required("Seleccione uno de los valores"),
     cartaExpedicionDocumentos : yup.string().required("Valor requerido"),
     fechaSolicitud:             yup.date().required("Valor requerido"),
-    numeroCliente:              yup.number().required("Valor requerido"),
+    numeroCliente:              yup.string().required("Valor requerido"),
     idSector:                   yup.string().required("Valor requerido"),
     giroEmpresarial :           yup.string().required("Valor requerido"),
     calle :                     yup.string().required("Valor requerido"),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme, Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button } from "@mui/material";
 import Header from "../../components/Header";
 import { Formik } from "formik";
@@ -7,15 +7,21 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { tokens } from "../../theme";
 import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import configURL from "../../config";
 
 const ProfileUser = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const [isSidebar, setIsSidebar] = useState(true);
+    const { userID } = useParams();
+
+    const [dataUser, setDataUser] = useState({"nombreRazonSocial": "OSCAR",});
+
+    // console.log(`USER ID: ${userID}`);
     const handleFormSubmit = (values) => {
         console.log(values);
     };
@@ -24,6 +30,23 @@ const ProfileUser = () => {
     const handleButtonClickShowDocument = () => {
         navigate('/commercial/show-document');
     };
+
+    useEffect(() => {
+        const fetchProfileUser = async () => {
+            try {
+                const response = await fetch(configURL.apiBaseUrl+"/Expediente/"+userID, {
+                    method : "GET"
+                });
+                const result = await response.json();
+                console.log(result);
+                setDataUser(result);
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+        fetchProfileUser();
+    }, [])
 
     return (
         <div className="app">
@@ -35,7 +58,7 @@ const ProfileUser = () => {
 
                     <Formik
                         onSubmit={handleFormSubmit}
-                        initialValues={initialValues}
+                        initialValues={dataUser}
                         validationSchema={checkoutSchema}
                     >
                         {({
@@ -63,10 +86,10 @@ const ProfileUser = () => {
                                     label="Nombre/Razón Social"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.name}
-                                    name="name"
-                                    error={!!touched.name && !!errors.name}
-                                    helperText={touched.name && errors.name}
+                                    value={values.nombreRazonSocial}
+                                    name="nombreRazonSocial"
+                                    error={!!touched.nombreRazonSocial && !!errors.nombreRazonSocial}
+                                    helperText={touched.nombreRazonSocial && errors.nombreRazonSocial}
                                     sx={{ gridColumn: "span 1" }}
                                 />
                                 <TextField
@@ -549,7 +572,7 @@ const ProfileUser = () => {
 
 
 const checkoutSchema = yup.object().shape({
-    name: yup.string().required("required"),
+    nombreRazonSocial: yup.string().required("required"),
     rfc: yup.string().required("required"),
     num_client: yup.string().required("required"),
     date_solicitud: yup.string().required("required"),

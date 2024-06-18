@@ -1,15 +1,13 @@
 import React from 'react';
-import { Box, Typography, TextField, Card, CardContent,
+import { Box, Typography,  Card, CardContent,
   FormControl,
   Button,
   Input
  } from '@mui/material';
 import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
-// import users from './users.json';
-import { mockDataUsers as users } from '../../data/mockData';
 import { useNavigate } from 'react-router-dom';
-import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
+import configURL from '../../config';
 
 
 
@@ -26,24 +24,11 @@ function CenteredComponent() {
       password : Yup.mixed().required('Ingre la contraseña del usuario')
     }),
     onSubmit: (values) => {
-      const formData = new FormData();
-      // console.log(values);
-
-      // const user = users.find(
-      //   (user) => user.username === values.username && user.password === values.password
-      // );
-
-      // if (user) {
-      //   localStorage.setItem('user', JSON.stringify(user));
-      //   // navigate('/home')
-      // } else {
-      //   console.log('Usuarios incorrectos');
-      // }
 
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
-      fetch("https://192.168.1.65:7094/Usuarios/Login", {
+      fetch(configURL.apiBaseUrl+"/Usuarios/Login", {
         method: "POST",
         body : JSON.stringify({
           "correo" : values.username,
@@ -54,6 +39,7 @@ function CenteredComponent() {
       .then((response) => response.text())
       .then((result) => {
         console.log(typeof result );
+        console.log(result);
         localStorage.setItem('user', result);
         navigate('/home')
       })

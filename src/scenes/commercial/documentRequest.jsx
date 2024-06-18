@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { 
     Box, 
-    useTheme, 
     FormControl, 
     FormControlLabel, 
-    FormLabel, 
-    RadioGroup, 
-    Radio, 
+    FormLabel,
     TextField, 
-    InputLabel, 
-    Select, 
-    MenuItem, 
-    Typography, 
     Button, 
     FormGroup, 
     Switch, 
@@ -19,31 +12,20 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions,
-    FormHelperText,
-    Input
+    DialogActions
 } from "@mui/material";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { Formik, useFormik } from "formik";
-import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
-import { Form } from "react-router-dom";
 import FormNuevoCredito from "./form_credit";
-import { MergeType } from "@mui/icons-material";
+import configURL from "../../config";
 
 
 
 
 const DocumentRequest = () => {
-    // const theme = useTheme();
-    // const colors = tokens(theme.palette.mode);
     const [isSidebar, setIsSidebar] = useState(true);
     const [activeBusqueda, setActiveBusqueda] = useState(false);
-    // const isNonMobile = useMediaQuery("(min-width:600px)");
     const [open, setOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [dataUser, setDataUser] = useState({
@@ -74,21 +56,12 @@ const DocumentRequest = () => {
         "nominaGerenteVentas": "",
         "montoCreditoSolicitado": "",
         "idEstatus": 0,
-        "fechaCreacion": "",
-        "fechaModificacion": "",
         "categoria": "",
         "calificacion": "",
         "montoCreditoAceptado": 0.00,
-        "fechaAceptacion": "",
-        "vigencia": "",
-        "fechaPagare": "",
-        "vigenciaPagare": "",
-        "vigenciaDocumentos": "",
         "numeroZona": ""
     });
-    // const handleFormSubmit = (values) => {
-    //     console.log(values);
-    // };
+   
 
     const [state, setState] = useState({
         nuevo_credito: false,
@@ -207,7 +180,7 @@ const DocumentRequest = () => {
 
                                 const raw = JSON.stringify(formJson);
 
-                                fetch("https://192.168.1.65:5555/Expediente/BuscarExpedientes", {
+                                fetch(configURL.apiBaseUrl+"/Expediente/BuscarExpedientes", {
                                     method: "POST",
                                     body: raw,
                                     headers: myHeaders

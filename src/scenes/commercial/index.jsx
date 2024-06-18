@@ -5,7 +5,6 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { tokens } from "../../theme";
-import { mockDataTeam } from "../../data/mockData";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Header from "../../components/Header";
 import Select from '@mui/material/Select';
@@ -15,6 +14,7 @@ import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import { useNavigate } from 'react-router-dom';
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import configURL from "../../config";
 
 const Commercial = () => {
     const theme = useTheme();
@@ -25,41 +25,61 @@ const Commercial = () => {
     const [dataTable, setDataTable] = useState([]);
 
     const [listZona, setListZona] = useState([]);
-    const [zona, setZona] = useState();
+    const [zona, setZona] = useState("");
     const [loadingZona, setLoadingZona] = useState(true);
 
+    const [listSucursales, setListSucursales] = useState([]);
+    const [sucursal, setSucursal] = useState("");
+    const [loadingSucursal, setLoadingSucursal] = useState(true);
+
+    const [listStatus, setListStatus] = useState([]);
+    const [status, setStatus ] = useState("");
+    const [loadingStatus, setLoadingStatus] = useState(true);
+
+    const [listTipoCliente, setListTipoCliente] = useState([]);
+    const [tipoCliente, setTipoCliente ] = useState("");
+    const [loadingTipoCliente, setLoadingTipoCliente] = useState(true);
+
     const handleFormSubmit = (values) => {
-      console.log(values);
+      // console.log(values);
+
+      const filteredValues = Object.fromEntries(
+        Object.entries(values).filter(([_, value]) => value !== '')
+      );
+
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify(filteredValues);
+
+      const requestOptions = {
+        method: "POST",
+        body: raw,
+        headers: myHeaders,
+      };
+
+      fetch(configURL.apiBaseUrl+"/Expediente/BuscarExpedientes", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setDataTable(result);
+      })
+      .catch((error) => console.error(error));
     };
 
     const navigate = useNavigate();
     const handleButtonClick = () => {
       navigate('/commercial/new-request-document');
     };
-    const handleButtonClickExpediente = () => {
-      navigate('/commercial/profile-user');
+    const handleButtonClickExpediente = (userID) => {
+      navigate(`/commercial/profile-user/${userID}`);
     };
 
     useEffect(() => {
-      // Ejecutar con el boton de Buscar Cliente
-      // const fetchData = async () => {
-      //   try {
-      //     const response = await fetch("https://192.168.1.65:7094/Expediente/", {
-      //       method: "GET"
-      //     });
-      //     const result = await response.json();
-      //     setDataTable(result);
-      //     console.log(result);
-      //   } catch (error) {
-      //     // Mostrar error
-      //   } finally {
-      //     // Detener loading
-      //   }
-      // }
+      
 
       const fetchZona = async () => {
         try {
-          const response = await fetch("https://192.168.1.65:5555/Sucursales/Zonas", {
+          const response = await fetch(configURL.apiBaseUrl+"/Sucursales/Zonas", {
             method: "GET"
           })
           const result = await response.json();
@@ -71,10 +91,73 @@ const Commercial = () => {
         }
       }
 
-      // fetchData();
+      const fetchSucursales = async () => {
+        try {
+          const response = await fetch(configURL.apiBaseUrl+"/Sucursales", {
+            method: "GET"
+          });
+          const result = await response.json();
+          setListSucursales(result);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoadingSucursal(false);
+        }
+      }
+
+      const fetchStatus = async () => {
+        try {
+          const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Estatus", {
+            method: "GET"
+          });
+          const result = await response.json();
+          setListStatus(result);
+        } catch (error) {
+          alert(error);
+        } finally {
+          setLoadingStatus(false);
+        }
+      }
+
+      const fetchTipoCliente = async () => {
+        try {
+          const response = await fetch(configURL.apiBaseUrl+"/Catalogos/TipoCliente", {
+            method: "GET"
+          });
+          const result = await response.json();
+          setListTipoCliente(result);
+        } catch (error) {
+          alert(error)
+        } finally {
+          setLoadingTipoCliente(false);
+        }
+      }
+
       fetchZona();
+      fetchSucursales();
+      fetchStatus();
+      fetchTipoCliente();
     }, [])
 
+    const handleSelectZona = (event, setFieldValue) => {
+      setZona(event.target.value);
+      setFieldValue("numeroZona", event.target.value);
+    }
+
+    const handleSelectSucursal = (event, setFieldValue) => {
+      setSucursal(event.target.value);
+      setFieldValue("idSucursalZona", event.target.value);
+    }
+
+    const handleSelectStatus = (event, setFieldValue) => {
+      setStatus(event.target.value);
+      setFieldValue("idEstatus", event.target.value);
+    }
+
+    const handleSelectTipoCliente = (event, setFieldValue) => {
+      setTipoCliente(event.target.value);
+      setFieldValue("tipoCliente", event.target.value);
+    }
 
     const columns = [
       { field: "rfc", headerName: "RFC", flex: 1 },
@@ -219,7 +302,7 @@ const Commercial = () => {
               borderRadius="4px"
             >
 
-              <Button color="secondary" variant="contained" onClick={handleButtonClickExpediente}>
+              <Button color="secondary" variant="contained" onClick={() => handleButtonClickExpediente(id)}>
                 <VisibilityOutlinedIcon /> 
               </Button>
             </Box>
@@ -329,21 +412,25 @@ const Commercial = () => {
                           fullWidth
                           variant="filled"
                           type="text"
-                          value={age}
+                          value={sucursal}
                           onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="zone"
-                          error={!!touched.zone && !!errors.zone}
-                          helperText={touched.zone && errors.zone}
+                          onChange={(event) => handleSelectSucursal(event, setFieldValue)}
+                          name="idSucursalZona"
+                          id="idSucursalZona"
+                          error={!!touched.idSucursalZona && !!errors.idSucursalZona}
                           sx={{ gridColumn: "span 1" }}
                         >
-                          <MenuItem value={10}>Zona 1</MenuItem>
-                          <MenuItem value={20}>Zona 2</MenuItem>
-                          <MenuItem value={30}>Zona 3</MenuItem>
+                          {loadingSucursal ? (
+                            <MenuItem>Cargando ...</MenuItem>
+                          ) : (
+                            listSucursales.map((sucursal) => (
+                              <MenuItem key={sucursal.id} value={sucursal.numeroSucursal}>
+                                {sucursal.sucursalNombre}
+                              </MenuItem>
+                            ))
+                          )}
                         </Select>
                       </FormControl>
-
-                      {/*
 
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
@@ -351,37 +438,48 @@ const Commercial = () => {
                           fullWidth
                           variant="filled"
                           type="text"
-                          value={age}
+                          value={status}
                           onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="status"
-                          error={!!touched.zone && !!errors.zone}
-                          helperText={touched.zone && errors.zone}
+                          onChange={(event) => handleSelectStatus(event, setFieldValue)}
+                          name="idEstatus"
+                          error={!!touched.idEstatus && !!errors.idEstatus}
                           sx={{ gridColumn: "span 1" }}
                         >
-                          <MenuItem value={10}>Estatus 1</MenuItem>
-                          <MenuItem value={20}>Estatus 2</MenuItem>
-                          <MenuItem value={30}>Estatus 3</MenuItem>
+                          {loadingStatus ? (
+                            <MenuItem>Cargando ...</MenuItem>
+                          ) : (
+                            listStatus.map((status) => (
+                              <MenuItem key={status.id} value={status.id}>
+                                {status.estatusNombre}
+                              </MenuItem>
+                            ))
+                          )}
                         </Select>
                       </FormControl>
-
+                        
+                        
                       <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Tipo de cliente</InputLabel>
                         <Select
                           fullWidth
                           variant="filled"
                           type="text"
-                          value={age}
+                          value={tipoCliente}
                           onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="status"
-                          error={!!touched.zone && !!errors.zone}
-                          helperText={touched.zone && errors.zone}
+                          onChange={(event) => handleSelectTipoCliente(event, setFieldValue)}
+                          name="tipoCliente"
+                          error={!!touched.tipoCliente && !!errors.tipoCliente}
                           sx={{ gridColumn: "span 1" }}
                         >
-                          <MenuItem value={10}>Cliente 1</MenuItem>
-                          <MenuItem value={20}>Cliente 2</MenuItem>
-                          <MenuItem value={30}>Cliente 3</MenuItem>
+                          {loadingTipoCliente ? (
+                            <MenuItem>Cargando ...</MenuItem>
+                          ) : (
+                            listTipoCliente.map((cliente) => (
+                              <MenuItem key={cliente.id} value={cliente.id}>
+                                {cliente.tipo}
+                              </MenuItem>
+                            ))
+                          )}
                         </Select>
                       </FormControl>
 
@@ -389,13 +487,16 @@ const Commercial = () => {
                         <FormLabel id="demo-radio-buttons-group-label">¿Cuenta con carta de execpción para entregas de documentos?</FormLabel>
                         <RadioGroup
                           aria-labelledby="demo-radio-buttons-group-label"
-                          defaultValue="female"
-                          name="radio-buttons-group"
+                          name="cartaExpedicion"
+                          value={values.cartaExpedicion}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
                         >
                           <FormControlLabel value="SI" control={<Radio />} label="si" />
                           <FormControlLabel value="NO" control={<Radio />} label="no" />
                         </RadioGroup>
-                      </FormControl> */}
+
+                      </FormControl>
                     </Box>
                     <Box display="flex" justifyContent="center" mt="20px">
                       <Button type="submit" color="secondary" variant="contained">
@@ -452,15 +553,20 @@ const checkoutSchema = yup.object().shape({
   rfc:                yup.string().required("Valor requerido"),
   nombreRazonSocial : yup.string(),
   numeroZona:         yup.string(),
+  idSucursalZona:     yup.string(),
+  idEstatus:          yup.string(),
+  tipoCliente:        yup.string(),
+  cartaExpedicion:    yup.string()
 });
 
 const initialValues = {
   rfc: "",
   nombreRazonSocial: "",
   numeroZona: "",
-  sucursal_cabecera: "",
-  address1: "",
-  address2: "",
+  idSucursalZona: "",
+  idEstatus: "",
+  tipoCliente: "",
+  cartaExpedicion: ""
 };
 
 export default Commercial;
