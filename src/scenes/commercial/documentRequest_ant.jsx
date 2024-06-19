@@ -6,8 +6,9 @@ import Topbar from "../global/Topbar";
 import FormNuevoCredito from "./form_credit";
 import configURL from "../../config";
 
-const DocumentRequest = () => {
+const DocumentRequestAnt = () => {
   const [isSidebar, setIsSidebar] = useState(true);
+  const [activeBusqueda, setActiveBusqueda] = useState(false);
   const [open, setOpen] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [dataUser, setDataUser] = useState({
@@ -44,8 +45,41 @@ const DocumentRequest = () => {
     numeroZona: "",
   });
 
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const [user, setUser] = useState(userData);
+  const resetForm = () => {
+    setDataUser({
+      id: 0,
+      rfc: "",
+      nombreRazonSocial: "",
+      idSucursalZona: "",
+      tipoCliente: "",
+      actaConstitutiva: "",
+      cartaExpedicion: "",
+      cartaExpedicionDocumentos: "",
+      fechaSolicitud: "",
+      numeroCliente: "",
+      idSector: "",
+      giroEmpresarial: "",
+      calle: "",
+      numeroExterior: "",
+      numeroInterior: "",
+      colonia: "",
+      municipio: "",
+      estado: "",
+      pais: "",
+      cp: "",
+      nombreSolicitante: "",
+      nombreEjecutivo: "",
+      nominaEjecutivo: "",
+      nombreGerenteVentas: "",
+      nominaGerenteVentas: "",
+      montoCreditoSolicitado: "",
+      idEstatus: 0,
+      categoria: "",
+      calificacion: "",
+      montoCreditoAceptado: 0.0,
+      numeroZona: "",
+    });
+  };
 
   const [state, setState] = useState({
     nuevo_credito: false,
@@ -58,8 +92,7 @@ const DocumentRequest = () => {
 
   const handleChange = (event) => {
     const { name } = event.target;
-    setState((prevState) => ({
-      ...prevState,
+    setState({
       nuevo_credito: false,
       incremento_credito: false,
       incremento_plazo: false,
@@ -67,51 +100,30 @@ const DocumentRequest = () => {
       renovacion_vigencia: false,
       [name]: event.target.checked,
       activeSwitch: name,
-    }));
+    });
 
-    if ((name === "incremento_credito" && event.target.checked) || (name === "incremento_plazo" && event.target.checked) || (name === "incremento_credito_plazo" && event.target.checked) || (name === "renovacion_vigencia" && event.target.checked)) {
+    if ((name == "incremento_credito" && event.target.checked) || (name == "incremento_plazo" && event.target.checked) || (name == "incremento_credito_plazo" && event.target.checked) || (name == "renovacion_vigencia" && event.target.checked)) {
       setOpen(true);
       setShowForm(false);
     } else {
       setShowForm(false);
       setOpen(false);
     }
+
+    // resetForm();
   };
 
-  const switchConfigurations = [
-    {
-      Switch: 'nuevo_credito',
-      label: 'Nuevo crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
-    },
-    {
-      Switch: 'incremento_credito',
-      label: 'Incremento línea de crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
-    },
-    {
-      Switch: 'incremento_plazo',
-      label: 'Incremento plazo de crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
-    },
-    {
-      Switch: 'incremento_credito_plazo',
-      label: 'Incremento en línea y plazo de crédito',
-      permisos: ['comercial_forenea'],
-    },
-    {
-      Switch: 'renovacion_vigencia',
-      label: 'Renovación de vigencia',
-      permisos: ['comercial_forenea'],
-    },
-  ];
-
-  const filteredSwitches = switchConfigurations.filter((config) =>
-    config.permisos.includes(user.permisos)
-  );
-
   const handleClose = () => {
+    // resetForm();
     setOpen(false);
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setDataUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (event) => {
@@ -121,7 +133,9 @@ const DocumentRequest = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({ rfc: formJson.rfc });
+    const raw = JSON.stringify({
+      rfc: formJson.rfc,
+    });
 
     const requestOptions = {
       method: "POST",
@@ -132,9 +146,11 @@ const DocumentRequest = () => {
     fetch(`${configURL.apiBaseUrl}/Expediente/BuscarExpedientes`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log("result", result[0]);
         if (result.length > 0) {
-          setDataUser(result[0]);
+          console.log(result[0]);
           setShowForm(true);
+          setDataUser(result[0]);
           handleClose();
         }
       })
@@ -142,51 +158,14 @@ const DocumentRequest = () => {
   };
 
   const renderFormulario = () => {
+    console.log(state.nuevo_credito);
     if (state.nuevo_credito) {
-      return (
-        <FormNuevoCredito
-          dataUser={{
-            id: 0,
-            rfc: "",
-            nombreRazonSocial: "",
-            idSucursalZona: 0,
-            tipoCliente: "",
-            actaConstitutiva: "",
-            cartaExpedicion: "",
-            cartaExpedicionDocumentos: "",
-            fechaSolicitud: "",
-            numeroCliente: "",
-            idSector: "",
-            giroEmpresarial: "",
-            calle: "",
-            numeroExterior: "",
-            numeroInterior: "",
-            colonia: "",
-            municipio: "",
-            estado: "",
-            pais: "",
-            cp: "",
-            nombreSolicitante: "",
-            nombreEjecutivo: "",
-            nominaEjecutivo: "",
-            nombreGerenteVentas: "",
-            nominaGerenteVentas: "",
-            montoCreditoSolicitado: "",
-            idEstatus: 0,
-            categoria: "",
-            calificacion: "",
-            montoCreditoAceptado: 0.0,
-            numeroZona: "",
-          }}
-        />
-      );
+      return <FormNuevoCredito dataUser={dataUser}></FormNuevoCredito>;
     }
 
-    if (showForm) {
-      return <FormNuevoCredito dataUser={dataUser} />;
+    if (showForm === true) {
+      return <FormNuevoCredito dataUser={dataUser}></FormNuevoCredito>;
     }
-
-    return null;
   };
 
   return (
@@ -194,28 +173,14 @@ const DocumentRequest = () => {
       <SidebarPro isSidebar={isSidebar} />
       <main className="content">
         <Topbar setIsSidebar={setIsSidebar} />
+
         <Box m="20px">
           <Header title="Comercial" subtitle="Generar nuevas solicitudes" />
+
           <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Tipos de líneas de Credito</FormLabel>
+            <FormLabel component="legend">Tipos de líneas de Credito </FormLabel>
             <FormGroup>
-            <Grid container spacing={10}>
-                {filteredSwitches.map((config, index) => (
-                  <Grid item xs={4} key={index}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state[config.Switch]}
-                          onChange={handleChange}
-                          name={config.Switch}
-                        />
-                      }
-                      label={config.label}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-              {/* <Grid container spacing={2}>
+              <Grid container spacing={2}>
                 <Grid item xs={4}>
                   <FormControlLabel control={<Switch checked={state.nuevo_credito} onChange={handleChange} name="nuevo_credito" />} label="Nuevo crédito" />
                   <FormControlLabel control={<Switch checked={state.incremento_credito} onChange={handleChange} name="incremento_credito" />} label="Incremento línea de crédito" />
@@ -227,7 +192,7 @@ const DocumentRequest = () => {
                 <Grid item xs={4}>
                   <FormControlLabel control={<Switch checked={state.renovacion_vigencia} onChange={handleChange} name="renovacion_vigencia" />} label="Renovación de vigencia" />
                 </Grid>
-              </Grid> */}
+              </Grid>
             </FormGroup>
           </FormControl>
 
@@ -251,7 +216,6 @@ const DocumentRequest = () => {
               </Button>
             </DialogActions>
           </Dialog>
-
           {renderFormulario()}
         </Box>
       </main>
