@@ -18,6 +18,8 @@ const ProfileUser = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [isSidebar, setIsSidebar] = useState(true);
   const { userID } = useParams();
+  const [carta, setCarta] = useState("");
+  const [rfcCliente, setRfc] = useState("");
   const [formData, setFormData] = useState({
     id: 0,
     rfc: "",
@@ -50,9 +52,8 @@ const ProfileUser = () => {
     calificacion: "",
     montoCreditoAceptado: 0.0,
     numeroZona: "",
+    tipoSolicitud: "",
   });
-
-  // const [dataUser, setDataUser] = useState({"nombreRazonSocial": "OSCAR",});
 
   const handleFormSubmit = (values) => {
     console.log(values);
@@ -60,26 +61,92 @@ const ProfileUser = () => {
 
   const navigate = useNavigate();
 
-  const handleButtonClickShowDocument = () => {
-    navigate("/commercial/show-document");
+  const fetchSucursales = async () => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl + "/Sucursales", {
+        method: "GET",
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const fetchZona = async () => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl + "/Sucursales/Zonas", {
+        method: "GET",
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTipoCliente = async () => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl + "/Catalogos/TipoCliente", {
+        method: "GET",
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   useEffect(() => {
-    const fetchProfileUser = async () => {
-      try {
-        const response = await fetch(configURL.apiBaseUrl + "/Expediente/" + userID, {
-          method: "GET",
-        });
-        const result = await response.json();
-        console.log(result);
-        setFormData(result);
-      } catch (error) {
-        alert(error);
-      }
+    var sucursales = [];
+    var zonas = [];
+    var tipos_cliente = [];
+    const fetchData = async () => {
+      sucursales = await fetchSucursales();
+      zonas = await fetchZona();
+      tipos_cliente = await fetchTipoCliente();
+      await fetchProfileUser(sucursales, zonas, tipos_cliente);
     };
 
-    fetchProfileUser();
+    fetchData();
   }, []);
+
+  const fetchProfileUser = async (sucs, zonas, tipos) => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl + "/Expediente/" + userID, {
+        method: "GET",
+      });
+      const result = await response.json();
+
+      var sucursal = sucs.find((sucursal) => sucursal.id === result.idSucursalZona);
+      var tipocliente = tipos.find((tipo) => tipo.id === result.tipoCliente);
+      var zona = zonas.find((zona) => zona.numeroZona === result.numeroZona);
+
+      result.fechaSolicitud = formatDate(result.fechaSolicitud);
+      result.idSucursalZona = `${sucursal.sucursalNombre} [${sucursal.numeroSucursal}]`;
+      result.tipoCliente = tipocliente.tipo;
+      result.numeroZona = zona.zona;
+      setFormData(result);
+      setCarta(result.cartaExpedicion);
+      setRfc(result.rfc);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const month = ("0" + (d.getMonth() + 1)).slice(-2);
+    const day = ("0" + d.getDate()).slice(-2);
+    const year = d.getFullYear();
+    return [year, month, day].join("-");
+  };
+
+  const handleButtonClickShowDocument = () => {
+    navigate(`/commercial/show-document/${userID}/${carta}/${rfcCliente}`);
+  };
 
   return (
     <div className="app">
@@ -97,55 +164,64 @@ const ProfileUser = () => {
                   gap="30px"
                   gridTemplateColumns="repeat(3, minmax(0, 1fr))"
                   sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                    "& > div": { gridColumn: "span 1" },
                   }}
                 >
-                  <TextField fullWidth variant="filled" type="text" label="Nombre/Razón Social" onBlur={handleBlur} onChange={handleChange} value={values.nombreRazonSocial} name="nombreRazonSocial" error={!!touched.nombreRazonSocial && !!errors.nombreRazonSocial} helperText={touched.nombreRazonSocial && errors.nombreRazonSocial} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="RFC" onBlur={handleBlur} onChange={handleChange} value={values.rfc} name="rfc" error={!!touched.rfc && !!errors.rfc} helperText={touched.rfc && errors.rfc} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Número Cliente" onBlur={handleBlur} onChange={handleChange} value={values.numeroCliente} name="numeroCliente" error={!!touched.numeroCliente && !!errors.numeroCliente} helperText={touched.numeroCliente && errors.numeroCliente} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Fecha de Solicitud" onBlur={handleBlur} onChange={handleChange} value={values.fechaSolicitud} name="fechaSolicitud" error={!!touched.fechaSolicitud && !!errors.fechaSolicitud} helperText={touched.fechaSolicitud && errors.fechaSolicitud} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Tipo Solicitud" onBlur={handleBlur} onChange={handleChange} value={values.type_solicitud} name="type_solicitud" error={!!touched.type_solicitud && !!errors.type_solicitud} helperText={touched.type_solicitud && errors.type_solicitud} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Tipo de Cliente" onBlur={handleBlur} onChange={handleChange} value={values.type_client} name="type_client" error={!!touched.type_client && !!errors.type_client} helperText={touched.type_client && errors.type_client} sx={{ gridColumn: "span 1" }} />
-
-                  <TextField fullWidth variant="filled" type="text" label="Zona" onBlur={handleBlur} onChange={handleChange} value={values.zona} name="zona" error={!!touched.zona && !!errors.zona} helperText={touched.zona && errors.zona} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Sucursal Cabecera" onBlur={handleBlur} onChange={handleChange} value={values.sucursal} name="sucursal" error={!!touched.sucursal && !!errors.sucursal} helperText={touched.sucursal && errors.sucursal} sx={{ gridColumn: "span 1" }} />
-
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Capturado </InputLabel>
-                    <Select fullWidth variant="filled" type="text" onBlur={handleBlur} onChange={handleChange} name="capturado" error={!!touched.zone && !!errors.zone} helperText={touched.zone && errors.zone} sx={{ gridColumn: "span 1" }}>
-                      <MenuItem value={10}>opcion 1</MenuItem>
-                      <MenuItem value={20}>opcion 2</MenuItem>
-                      <MenuItem value={30}>opcion 3</MenuItem>
+                  <TextField fullWidth variant="filled" type="text" label="Nombre/Razón Social" onBlur={handleBlur} onChange={handleChange} value={values.nombreRazonSocial} name="nombreRazonSocial" error={!!touched.nombreRazonSocial && !!errors.nombreRazonSocial} helperText={touched.nombreRazonSocial && errors.nombreRazonSocial} />
+                  <TextField fullWidth variant="filled" type="text" label="RFC" onBlur={handleBlur} onChange={handleChange} value={values.rfc} name="rfc" error={!!touched.rfc && !!errors.rfc} helperText={touched.rfc && errors.rfc} />
+                  <TextField fullWidth variant="filled" type="text" label="Número Cliente" onBlur={handleBlur} onChange={handleChange} value={values.numeroCliente} name="numeroCliente" error={!!touched.numeroCliente && !!errors.numeroCliente} helperText={touched.numeroCliente && errors.numeroCliente} />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="date"
+                    label="Fecha de Solicitud"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.fechaSolicitud}
+                    name="fechaSolicitud"
+                    error={!!touched.fechaSolicitud && !!errors.fechaSolicitud}
+                    helperText={touched.fechaSolicitud && errors.fechaSolicitud}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <TextField fullWidth variant="filled" type="text" label="Tipo Solicitud" onBlur={handleBlur} onChange={handleChange} value={values.tipoSolicitud} name="tipoSolicitud" error={!!touched.tipoSolicitud && !!errors.tipoSolicitud} helperText={touched.tipoSolicitud && errors.tipoSolicitud} />
+                  <TextField fullWidth variant="filled" type="text" label="Tipo de Cliente" onBlur={handleBlur} onChange={handleChange} value={values.tipoCliente} name="tipoCliente" error={!!touched.tipoCliente && !!errors.tipoCliente} helperText={touched.tipoCliente && errors.tipoCliente} />
+                  <TextField fullWidth variant="filled" type="text" label="Zona" onBlur={handleBlur} onChange={handleChange} value={values.numeroZona} name="numeroZona" error={!!touched.numeroZona && !!errors.numeroZona} helperText={touched.numeroZona && errors.numeroZona} />
+                  <TextField fullWidth variant="filled" type="text" label="Sucursal Cabecera" onBlur={handleBlur} onChange={handleChange} value={values.idSucursalZona} name="idSucursalZona" error={!!touched.idSucursalZona && !!errors.idSucursalZona} helperText={touched.idSucursalZona && errors.idSucursalZona} />
+                  <FormControl fullWidth variant="filled" error={!!touched.cartaExpedicion && !!errors.cartaExpedicion}>
+                    <InputLabel id="demo-simple-select-label">Capturado</InputLabel>
+                    <Select labelId="demo-simple-select-label" id="demo-simple-select" value={values.cartaExpedicion} name="cartaExpedicion" onBlur={handleBlur} onChange={handleChange}>
+                      <MenuItem value={"SI"}>Sí</MenuItem>
+                      <MenuItem value={"NO"}>No</MenuItem>
                     </Select>
+                    {touched.cartaExpedicion && errors.cartaExpedicion && <Typography color="error">{errors.cartaExpedicion}</Typography>}
                   </FormControl>
-
-                  <TextField fullWidth variant="filled" type="text" label="Giro Empresarial" onBlur={handleBlur} onChange={handleChange} value={values.giro_empresarial} name="giro_empresarial" error={!!touched.giro_empresarial && !!errors.giro_empresarial} helperText={touched.giro_empresarial && errors.giro_empresarial} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Cambios en acta constitutiva" onBlur={handleBlur} onChange={handleChange} value={values.acta_constitutiva} name="acta_constitutiva" error={!!touched.acta_constitutiva && !!errors.acta_constitutiva} helperText={touched.acta_constitutiva && errors.acta_constitutiva} sx={{ gridColumn: "span 1" }} />
-
-                  <Typography variant="h5" color={colors.grey[100]} fontWeight="bold" sx={{ gridColumn: "span 3" }}>
+                  <TextField fullWidth variant="filled" type="text" label="Giro Empresarial" onBlur={handleBlur} onChange={handleChange} value={values.giroEmpresarial} name="giroEmpresarial" error={!!touched.giroEmpresarial && !!errors.giroEmpresarial} helperText={touched.giroEmpresarial && errors.giroEmpresarial} />
+                  <TextField fullWidth variant="filled" type="text" label="Cambios en acta constitutiva" onBlur={handleBlur} onChange={handleChange} value={values.actaConstitutiva} name="actaConstitutiva" error={!!touched.actaConstitutiva && !!errors.actaConstitutiva} helperText={touched.actaConstitutiva && errors.actaConstitutiva} />
+                  <Typography variant="h5" fontWeight="bold" sx={{ gridColumn: "span 3" }}>
                     Domicilio
                   </Typography>
 
-                  <TextField fullWidth variant="filled" type="text" label="Calle" onBlur={handleBlur} onChange={handleChange} value={values.calle} name="calle" error={!!touched.calle && !!errors.calle} helperText={touched.calle && errors.calle} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Núm. Interior" onBlur={handleBlur} onChange={handleChange} value={values.num_interior} name="num_interior" error={!!touched.num_interior && !!errors.num_interior} helperText={touched.num_interior && errors.num_interior} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Núm. Exterior" onBlur={handleBlur} onChange={handleChange} value={values.num_exterior} name="num_exterior" error={!!touched.num_exterior && !!errors.num_exterior} helperText={touched.num_exterior && errors.num_exterior} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Colonia" onBlur={handleBlur} onChange={handleChange} value={values.colonia} name="colonia" error={!!touched.colonia && !!errors.colonia} helperText={touched.colonia && errors.colonia} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Municipio" onBlur={handleBlur} onChange={handleChange} value={values.municipio} name="municipio" error={!!touched.municipio && !!errors.municipio} helperText={touched.municipio && errors.municipio} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Estado" onBlur={handleBlur} onChange={handleChange} value={values.estado} name="estado" error={!!touched.estado && !!errors.estado} helperText={touched.estado && errors.estado} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="País" onBlur={handleBlur} onChange={handleChange} value={values.pais} name="pais" error={!!touched.pais && !!errors.pais} helperText={touched.pais && errors.pais} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="C.P" onBlur={handleBlur} onChange={handleChange} value={values.codigo_postal} name="codigo_postal" error={!!touched.codigo_postal && !!errors.codigo_postal} helperText={touched.codigo_postal && errors.codigo_postal} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Teléfono" onBlur={handleBlur} onChange={handleChange} value={values.telefono} name="telefono" error={!!touched.telefono && !!errors.telefono} helperText={touched.telefono && errors.telefono} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Calle" onBlur={handleBlur} onChange={handleChange} value={values.calle} name="calle" error={!!touched.calle && !!errors.calle} helperText={touched.calle && errors.calle} />
+                  <TextField fullWidth variant="filled" type="text" label="Núm. Interior" onBlur={handleBlur} onChange={handleChange} value={values.numeroInterior} name="numeroInterior" error={!!touched.numeroInterior && !!errors.numeroInterior} helperText={touched.numeroInterior && errors.numeroInterior} />
+                  <TextField fullWidth variant="filled" type="text" label="Núm. Exterior" onBlur={handleBlur} onChange={handleChange} value={values.numeroExterior} name="numeroExterior" error={!!touched.numeroExterior && !!errors.numeroExterior} helperText={touched.numeroExterior && errors.numeroExterior} />
+                  <TextField fullWidth variant="filled" type="text" label="Colonia" onBlur={handleBlur} onChange={handleChange} value={values.colonia} name="colonia" error={!!touched.colonia && !!errors.colonia} helperText={touched.colonia && errors.colonia} />
+                  <TextField fullWidth variant="filled" type="text" label="Municipio" onBlur={handleBlur} onChange={handleChange} value={values.municipio} name="municipio" error={!!touched.municipio && !!errors.municipio} helperText={touched.municipio && errors.municipio} />
+                  <TextField fullWidth variant="filled" type="text" label="Estado" onBlur={handleBlur} onChange={handleChange} value={values.estado} name="estado" error={!!touched.estado && !!errors.estado} helperText={touched.estado && errors.estado} />
+                  <TextField fullWidth variant="filled" type="text" label="País" onBlur={handleBlur} onChange={handleChange} value={values.pais} name="pais" error={!!touched.pais && !!errors.pais} helperText={touched.pais && errors.pais} />
+                  <TextField fullWidth variant="filled" type="text" label="Código Postal" onBlur={handleBlur} onChange={handleChange} value={values.cp} name="cp" error={!!touched.cp && !!errors.cp} helperText={touched.cp && errors.cp} />
 
                   <Typography variant="h5" color={colors.grey[100]} fontWeight="bold" sx={{ gridColumn: "span 3" }}>
                     Información del Solicitante
                   </Typography>
 
-                  <TextField fullWidth variant="filled" type="text" label="Solicitante" onBlur={handleBlur} onChange={handleChange} value={values.name_solicitante} name="name_solicitante" error={!!touched.name_solicitante && !!errors.name_solicitante} helperText={touched.name_solicitante && errors.name_solicitante} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Ejecutivo" onBlur={handleBlur} onChange={handleChange} value={values.ejecutivo} name="ejecutivo" error={!!touched.ejecutivo && !!errors.ejecutivo} helperText={touched.ejecutivo && errors.ejecutivo} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Núm. Nómina Ejecutivo" onBlur={handleBlur} onChange={handleChange} value={values.num_ejecutivo} name="num_ejecutivo" error={!!touched.num_ejecutivo && !!errors.num_ejecutivo} helperText={touched.num_ejecutivo && errors.num_ejecutivo} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Gerente de Ventas" onBlur={handleBlur} onChange={handleChange} value={values.gerente_ventas} name="gerente_ventas" error={!!touched.gerente_ventas && !!errors.gerente_ventas} helperText={touched.gerente_ventas && errors.gerente_ventas} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Núm. Nómina Gerente Ventas" onBlur={handleBlur} onChange={handleChange} value={values.num_gerente_ventas} name="num_gerente_ventas" error={!!touched.num_gerente_ventas && !!errors.num_gerente_ventas} helperText={touched.num_gerente_ventas && errors.num_gerente_ventas} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Monto  de Crédito Solicitado" onBlur={handleBlur} onChange={handleChange} value={values.credito_solicitado} name="credito_solicitado" error={!!touched.credito_solicitado && !!errors.credito_solicitado} helperText={touched.credito_solicitado && errors.credito_solicitado} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Solicitante" onBlur={handleBlur} onChange={handleChange} value={values.nombreSolicitante} name="nombreSolicitante" error={!!touched.nombreSolicitante && !!errors.nombreSolicitante} helperText={touched.nombreSolicitante && errors.nombreSolicitante} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Ejecutivo" onBlur={handleBlur} onChange={handleChange} value={values.nombreEjecutivo} name="nombreEjecutivo" error={!!touched.nombreEjecutivo && !!errors.nombreEjecutivo} helperText={touched.nombreEjecutivo && errors.nombreEjecutivo} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Núm. Nómina Ejecutivo" onBlur={handleBlur} onChange={handleChange} value={values.nominaEjecutivo} name="nominaEjecutivo" error={!!touched.nominaEjecutivo && !!errors.nominaEjecutivo} helperText={touched.nominaEjecutivo && errors.nominaEjecutivo} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Gerente de Ventas" onBlur={handleBlur} onChange={handleChange} value={values.nombreGerenteVentas} name="nombreGerenteVentas" error={!!touched.nombreGerenteVentas && !!errors.nombreGerenteVentas} helperText={touched.nombreGerenteVentas && errors.nombreGerenteVentas} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Núm. Nómina Gerente Ventas" onBlur={handleBlur} onChange={handleChange} value={values.nominaGerenteVentas} name="nominaGerenteVentas" error={!!touched.nominaGerenteVentas && !!errors.nominaGerenteVentas} helperText={touched.nominaGerenteVentas && errors.nominaGerenteVentas} sx={{ gridColumn: "span 1" }} />
+                  <TextField fullWidth variant="filled" type="text" label="Monto  de Crédito Solicitado" onBlur={handleBlur} onChange={handleChange} value={values.montoCreditoSolicitado} name="montoCreditoSolicitado" error={!!touched.montoCreditoSolicitado && !!errors.montoCreditoSolicitado} helperText={touched.montoCreditoSolicitado && errors.montoCreditoSolicitado} sx={{ gridColumn: "span 1" }} />
                   <TextField fullWidth variant="filled" type="text" label="Categoría" onBlur={handleBlur} onChange={handleChange} name="categoria" error={!!touched.categoria && !!errors.categoria} helperText={touched.categoria && errors.categoria} sx={{ gridColumn: "span 1" }} />
                   <TextField fullWidth variant="filled" type="text" label="Calificación" onBlur={handleBlur} onChange={handleChange} name="calificacion" error={!!touched.calificacion && !!errors.calificacion} helperText={touched.calificacion && errors.calificacion} sx={{ gridColumn: "span 1" }} />
                   <TextField
@@ -207,8 +283,8 @@ const checkoutSchema = yup.object().shape({
   rfc: yup.string().required("required"),
   numeroCliente: yup.string().required("required"),
   fechaSolicitud: yup.string().required("required"),
-  type_solicitud: yup.string().required("required"),
-  type_solicitud: yup.string().required("required"),
+  tipoSolicitud: yup.string().required("required"),
+  tipoSolicitud: yup.string().required("required"),
   zona: yup.string().required("required"),
   sucursal: yup.string().required("required"),
   giro_empresarial: yup.string().required("required"),
@@ -222,12 +298,12 @@ const checkoutSchema = yup.object().shape({
   pais: yup.string().required("required"),
   codigo_postal: yup.string().required("required"),
   telefono: yup.string().required("required"),
-  name_solicitante: yup.string().required("required"),
-  ejecutivo: yup.string().required("required"),
-  num_ejecutivo: yup.string().required("required"),
+  nombreSolicitante: yup.string().required("required"),
+  nombreEjecutivo: yup.string().required("required"),
+  nominaEjecutivo: yup.string().required("required"),
   gerente_ventas: yup.string().required("required"),
-  num_gerente_ventas: yup.string().required("required"),
-  credito_solicitado: yup.string().required("required"),
+  nominaGerenteVentas: yup.string().required("required"),
+  montoCreditoSolicitado: yup.string().required("required"),
   categoria: yup.string().required("required"),
   calificacion: yup.string().required("required"),
   date_aceptacion: yup.string().required("required"),
@@ -237,41 +313,5 @@ const checkoutSchema = yup.object().shape({
   vigencia_pagare: yup.string().required("required"),
   vigencia_documentos: yup.string().required("required"),
 });
-
-const initialValues = {
-  name: "Persona 1",
-  rfc: "SDR5455FDF",
-  numeroCliente: "234",
-  fechaSolicitud: "05/05/2024",
-  type_solicitud: "Aumento línea crédito",
-  type_client: "Persona moral",
-  zona: "Metro",
-  sucursal: "Matriz",
-  giro_empresarial: "Tecnología",
-  acta_constitutiva: "NO",
-  calle: "Avenida 1",
-  num_interior: "400",
-  num_exterior: "100",
-  colonia: "Centro",
-  municipio: "Cuauhtémoc",
-  estado: "Ciudad de México",
-  pais: "México",
-  codigo_postal: "3434",
-  telefono: "5555555555",
-  name_solicitante: "Juan Pérez López",
-  ejecutivo: "Santiago Mendoza Juárez",
-  num_ejecutivo: "4344332",
-  gerente_ventas: "Fernando Rodríguez Ulloa",
-  num_gerente_ventas: "4343",
-  credito_solicitado: "$3443",
-  categoria: "",
-  calificacion: "",
-  date_aceptacion: "",
-  vigencia: "",
-  monto_credito: "",
-  date_pagare: "",
-  vigencia_pagare: "",
-  vigencia_documentos: "",
-};
 
 export default ProfileUser;

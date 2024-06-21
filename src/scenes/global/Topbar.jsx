@@ -18,22 +18,22 @@ const Topbar = () => {
     return <Box display="flex" justifyContent="flex-end" p={3}>
         {/* ICONS */}
         <Box display="flex">
-            <IconButton onClick={colorMode.toggleColorMode}>
+            {/* <IconButton onClick={colorMode.toggleColorMode}>
             {theme.palette.mode === "dark" ? (
                 <DarkModeOutlinedIcon />
             ) : (
                 <LightModeOutlinedIcon />
             )}
-            </IconButton>
+            </IconButton> */}
             <IconButton>
-                <NotificationsOutlinedIcon />
+                <NotificationsOutlinedIcon xs={{color: "#003773"}}/>
             </IconButton>
-            <IconButton>
+            {/* <IconButton>
                 <SettingsOutlinedIcon />
             </IconButton>
             <IconButton>
                 <PersonOutlinedIcon />
-            </IconButton>
+            </IconButton> */}
         </Box>
     </Box>
 }

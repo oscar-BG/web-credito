@@ -42,11 +42,12 @@ const DocumentRequest = () => {
     calificacion: "",
     montoCreditoAceptado: 0.0,
     numeroZona: "",
+    tipoSolicitud: "",
   });
 
   const userData = JSON.parse(localStorage.getItem("user"));
   const [user, setUser] = useState(userData);
-
+  const [tipoSolicitud, setTipoSol] = useState("");
   const [state, setState] = useState({
     nuevo_credito: false,
     incremento_credito: false,
@@ -58,6 +59,9 @@ const DocumentRequest = () => {
 
   const handleChange = (event) => {
     const { name } = event.target;
+    const switchConfig = switchConfigurations.find((config) => config.Switch === name);
+    const label = switchConfig ? switchConfig.label : "";
+    setTipoSol(label);
     setState((prevState) => ({
       ...prevState,
       nuevo_credito: false,
@@ -80,35 +84,33 @@ const DocumentRequest = () => {
 
   const switchConfigurations = [
     {
-      Switch: 'nuevo_credito',
-      label: 'Nuevo crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
+      Switch: "nuevo_credito",
+      label: "Nuevo crédito",
+      permisos: ["comercial_matriz", "comercial_foranea"],
     },
     {
-      Switch: 'incremento_credito',
-      label: 'Incremento línea de crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
+      Switch: "incremento_credito",
+      label: "Incremento línea de crédito",
+      permisos: ["comercial_matriz", "comercial_foranea"],
     },
     {
-      Switch: 'incremento_plazo',
-      label: 'Incremento plazo de crédito',
-      permisos: ['comercial_matriz', 'comercial_forenea'],
+      Switch: "incremento_plazo",
+      label: "Incremento plazo de crédito",
+      permisos: ["comercial_matriz", "comercial_foranea"],
     },
     {
-      Switch: 'incremento_credito_plazo',
-      label: 'Incremento en línea y plazo de crédito',
-      permisos: ['comercial_forenea'],
+      Switch: "incremento_credito_plazo",
+      label: "Incremento en línea y plazo de crédito",
+      permisos: ["comercial_foranea"],
     },
     {
-      Switch: 'renovacion_vigencia',
-      label: 'Renovación de vigencia',
-      permisos: ['comercial_forenea'],
+      Switch: "renovacion_vigencia",
+      label: "Renovación de vigencia",
+      permisos: ["comercial_foranea"],
     },
   ];
 
-  const filteredSwitches = switchConfigurations.filter((config) =>
-    config.permisos.includes(user.permisos)
-  );
+  const filteredSwitches = switchConfigurations.filter((config) => config.permisos.includes(user.permisos));
 
   const handleClose = () => {
     setOpen(false);
@@ -133,6 +135,7 @@ const DocumentRequest = () => {
       .then((response) => response.json())
       .then((result) => {
         if (result.length > 0) {
+          result[0].tipoSolicitud = tipoSolicitud;
           setDataUser(result[0]);
           setShowForm(true);
           handleClose();
@@ -149,7 +152,7 @@ const DocumentRequest = () => {
             id: 0,
             rfc: "",
             nombreRazonSocial: "",
-            idSucursalZona: 0,
+            idSucursalZona: "",
             tipoCliente: "",
             actaConstitutiva: "",
             cartaExpedicion: "",
@@ -172,17 +175,20 @@ const DocumentRequest = () => {
             nombreGerenteVentas: "",
             nominaGerenteVentas: "",
             montoCreditoSolicitado: "",
-            idEstatus: 0,
+            idEstatus: "",
             categoria: "",
             calificacion: "",
             montoCreditoAceptado: 0.0,
             numeroZona: "",
+            tipoSolicitud: "Nuevo Crédito",
+            uid: user.id
           }}
         />
       );
     }
 
     if (showForm) {
+      // dataUser.uid 
       return <FormNuevoCredito dataUser={dataUser} />;
     }
 
@@ -199,19 +205,10 @@ const DocumentRequest = () => {
           <FormControl component="fieldset" variant="standard">
             <FormLabel component="legend">Tipos de líneas de Credito</FormLabel>
             <FormGroup>
-            <Grid container spacing={10}>
+              <Grid container spacing={2}>
                 {filteredSwitches.map((config, index) => (
                   <Grid item xs={4} key={index}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state[config.Switch]}
-                          onChange={handleChange}
-                          name={config.Switch}
-                        />
-                      }
-                      label={config.label}
-                    />
+                    <FormControlLabel control={<Switch checked={state[config.Switch]} onChange={handleChange} name={config.Switch} text={config.label} />} label={config.label} />
                   </Grid>
                 ))}
               </Grid>

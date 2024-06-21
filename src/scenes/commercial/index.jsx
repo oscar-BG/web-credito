@@ -43,6 +43,8 @@ const Commercial = () => {
   const [tipoCliente, setTipoCliente] = useState("");
   const [loadingTipoCliente, setLoadingTipoCliente] = useState(true);
 
+  const [titleView, setTitle] = useState("");
+
   const handleFormSubmit = (values) => {
     // console.log(values);
 
@@ -87,6 +89,23 @@ const Commercial = () => {
         console.log(error);
       } finally {
         setLoadingZona(false);
+      }
+
+      switch (user.permisos) {
+        case "comercial_matriz":
+        case "comercial_foranea":
+          setTitle("Comercial");
+          // setIconMenu(<ContactsOutlinedIcon />);
+          break;
+        case "cartera_foranea":
+        case "cartera_matriz":
+          setTitle("Cartera");
+          // setIconMenu(<ReceiptOutlinedIcon />);
+          break;
+        case "analista_credito":
+          setTitle("Analista de crédito");
+          // setIconMenu(<ManageSearchOutlinedIcon />);
+          break;
       }
     };
 
@@ -261,9 +280,9 @@ const Commercial = () => {
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Header title="Comercial" subtitle="Lista de solicitudes" />
+            <Header title={titleView} subtitle="Lista de solicitudes" />
             <Box display="flex" justifyContent="center" mt="20px">
-              {["comercial_matriz", "otro_permiso"].includes(user.permisos) && (
+              {["comercial_matriz", "comercial_foranea"].includes(user.permisos) && (
                 <Button color="secondary" variant="contained" onClick={handleButtonClick}>
                   <PersonAddOutlinedIcon></PersonAddOutlinedIcon>
                   Agregar

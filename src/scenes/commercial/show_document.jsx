@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField, FormControl, InputLabel, Input, FormHelperText } from "@mui/material";
+import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField, FormControl, InputLabel, Input, FormHelperText, MenuItem } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import { mockDataDocumentPersonFisica } from "../../data/mockData";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import Rotate90DegreesCcwOutlinedIcon from "@mui/icons-material/Rotate90DegreesCcwOutlined";
-import Rotate90DegreesCwOutlinedIcon from "@mui/icons-material/Rotate90DegreesCwOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate, useParams } from "react-router-dom";
+import configURL from "../../config";
+import Select from "@mui/material/Select";
 
 const style = {
   position: "absolute",
@@ -28,26 +27,41 @@ const style = {
 };
 
 const ShowDocument = () => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(userData);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
+  const { userID, carta, rfc } = useParams();
   const [base64, setbase64] = useState("iVBORw0KGgoAAAANSUhEUgAAAJsAAABgCAYAAAAKNABWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABJ0RVh0U29mdHdhcmUAR3JlZW5zaG90XlUIBQAAAQBJREFUeF7t0jENADAQA7Hyxxzpy+ImD2bgt+2gIBsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsRHYfQZmZzI7xpikAAAAASUVORK5CYII=");
   const [mmTyoe, setMimeType] = useState("image/png");
   const [isSidebar, setIsSidebar] = useState(true);
-  //   iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==
+  const [docsClient, setDocsClient] = useState([]);
+  const [nameDoc, setNameDoc] = useState("");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const [montoSolicitado, setMonto] = useState(0);
+  const [listStatus, setListStatus] = useState([]);
+  const [status, setStatus] = useState("");
+  const [loadingStatus, setLoadingStatus] = useState(true);
+  const [perfilUsuario, setPerfil] = useState(user.permisos);
+  const [documents, setDocuments] = useState([]);
 
-  // Información de documento
-  // const
+  var initialDocuments = [];
 
-  const handleClickOpen = () => {
+  const doctosCredito = ["Pagaré", "Seguro de Crédito / Carta de Crédito", "Carta de Aceptación de condiciones Crediticias", "Caratulas actas constitutivas", "Reporte Historial SISCOM", "Determinación de la línea de crédito", "Análisis de estados Financieros", "Análisis Buró de Crédito", "Validación INE", "Referencias Comerciales"];
+
+  const doctosParciales = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Constancia de situación fiscal vigente", "Opinión de cumplimiento positiva vigente", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Estados financieros", "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud", "Contrato / Pedido / Orden de compra", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Formato Autorización Buró de Crédito", "Identificación Oficial", "Check List Firma de Contrato", "Check List Firma de Pagaré", "Perfil del Cliente"];
+
+  const requiredDocuments = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Copia de identificación del represante legal", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Contrato / Pedido / Orden de compra", "Check list firma de contrado", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial", "Check list de firma pagare", "Pagaré emitido por INFRA", "Seguro de Crédito / Carta de Crédito"];
+
+  const handleClickOpen = (nameDoc) => {
+    setNameDoc(nameDoc);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-
-  //   setbase64("data:application/pdf;base64,JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwogIC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAvTWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0KPj4KZW5kb2JqCgozIDAgb2JqCjw8CiAgL1R5cGUgL1BhZ2UKICAvUGFyZW50IDIgMCBSCiAgL1Jlc291cmNlcyA8PAogICAgL0ZvbnQgPDwKICAgICAgL0YxIDQgMCBSIAogICAgPj4KICA+PgogIC9Db250ZW50cyA1IDAgUgo+PgplbmRvYmoKCjQgMCBvYmoKPDwKICAvVHlwZSAvRm9udAogIC9TdWJ0eXBlIC9UeXBlMQogIC9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCgo1IDAgb2JqICAlIHBhZ2UgY29udGVudAo8PAogIC9MZW5ndGggNDQKPj4Kc3RyZWFtCkJUCjcwIDUwIFRECi9GMSAxMiBUZgooSGVsbG8sIHdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNzkgMDAwMDAgbiAKMDAwMDAwMDE3MyAwMDAwMCBuIAowMDAwMDAwMzAxIDAwMDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G");
 
   const formik = useFormik({
     initialValues: {
@@ -59,73 +73,200 @@ const ShowDocument = () => {
     onSubmit: (values) => {
       console.log(values);
       const formData = new FormData();
-      formData.append("Cliente", "Bautista Oscar");
-      formData.append("IDEXP", "202423");
-      formData.append("TipoDocumento", "Document");
+      formData.append("Cliente", rfc);
+      formData.append("IDEXP", rfc);
+      formData.append("TipoDocumento", nameDoc);
       formData.append("binFile", values.file);
 
-      fetch("https://192.168.1.77:7094/api/AE/UploadDocument", {
+      fetch(`${configURL.apiBaseUrl}/api/AE/UploadDocument`, {
         method: "POST",
         body: formData,
       })
         .then((response) => response.json())
         .then((data) => {
           console.log("Archivo subido exitosamente", data);
-          //   resetForm();
         })
         .catch((error) => {
           console.error("Error al subir el archivo:", error);
-          //   resetForm();
         });
     },
   });
 
-  const show_documentExpediente = () => {
+  const getClientDocuments = function () {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch(`${configURL.apiBaseUrl}/Expediente/Documentos/${rfc}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        initialDocuments = result;
+        const updatedDocuments = initialDocuments.map((result) => ({
+          ...result,
+          requerido: carta == "SI" ? requiredDocuments.includes(result.documentoNombre) : true,
+        }));
+
+        setDocuments(updatedDocuments);
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const getExpediente = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    try {
+      const response = await fetch(`${configURL.apiBaseUrl}/Expediente/BuscarExpedientes`, {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({ rfc: rfc }),
+      });
+      const result = await response.json();
+      // console.log("result", result);
+
+      setStatus(result[0].idEstatus);
+      setMonto(20000000);
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
+
+  const fetchStatus = async () => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl + "/Catalogos/Estatus", {
+        method: "GET",
+      });
+      const result = await response.json();
+      setListStatus(result);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
+
+  const show_documentExpediente = (documento, iddb) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      idexp: "1",
-      iddb: "2",
-      tipoDoc: "Estados financieros",
+      idexp: rfc,
+      iddb: iddb.toString(),
+      tipoDoc: documento,
     });
 
-    fetch("https://192.168.1.65:7094/api/AE/GetDocumento", {
+    const requestOptions = {
       method: "POST",
-      body: raw,
       headers: myHeaders,
-    })
+      body: raw,
+    };
+
+    fetch(`${configURL.apiBaseUrl}/api/AE/GetDocumento`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        setMimeType("");
+        setMimeType("application/pdf");
         setbase64(result);
       })
       .catch((error) => console.error(error));
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      await fetchStatus();
+      await getExpediente();
+    };
+
+    fetchData();
+    getClientDocuments();
     return () => {
       formik.resetForm();
     };
   }, [open]);
 
+  useEffect(() => {
+    determinePermissions();
+  }, [montoSolicitado, perfilUsuario, documents]);
+
+  const determinePermissions = () => {
+    let allowedDocuments = [];
+    console.log(montoSolicitado, perfilUsuario, documents);
+    if (montoSolicitado > 2000000) {
+      if (perfilUsuario.includes("comercial_matriz") || perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
+        allowedDocuments = doctosParciales;
+      } else if (perfilUsuario.includes("analista_credito")) {
+        allowedDocuments = doctosCredito;
+      }
+    } else {
+      if (perfilUsuario.includes("comercial_matriz")) {
+        allowedDocuments = doctosParciales;
+      } else if (perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
+        allowedDocuments = doctosCredito;
+      } else if (perfilUsuario.includes("analista_credito")) {
+        allowedDocuments = [];
+      }
+    }
+
+    const updatedDocuments = documents
+      .filter((doc) => allowedDocuments.includes(doc.documentoNombre))
+      .map((doc) => ({
+        ...doc,
+        permitido: true,
+      }));
+    setDocsClient(updatedDocuments);
+  };
+
   const handleFileChange = (event) => {
     formik.setFieldValue("file", event.currentTarget.files[0]);
   };
 
+  const handleSelectStatus = (event, setFieldValue) => {
+    console.log("event", event.target.value);
+    // setStatus(event.target.value);
+    // setFieldValue("idEstatus", event.target.value);
+    actulalizaEstatus(event.target.value);
+  };
+
+  const actulalizaEstatus = (idActualizaEstatus) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      idEstatus: idActualizaEstatus,
+    });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    var idExp = parseInt(userID);
+    console.log("idExp", idExp);
+
+    fetch(`${configURL.apiBaseUrl}/Expediente/Actualizar/${idExp}`, requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
+  };
+
+  const hideiddb = true;
+
   const columns = [
-    { field: "name", headerName: "Documentos", flex: 1 },
+    { field: "documentoNombre", headerName: "Documento", flex: 1 },
+    { field: "requerido", headerName: "Requerido", flex: 1, renderCell: (params) => (params.value ? "SI" : "NO") },
+    ...(hideiddb ? [] : { headerName: "IDDB", field: "iddb" }),
     {
-      field: "upload",
+      field: "cargado",
       headerName: "Acción",
-      renderCell: ({ row: { upload, name } }) => {
-        console.log(upload);
-        return upload === true ? (
-          <Button variant="contained" color="info" onClick={show_documentExpediente}>
+      renderCell: ({ row: { cargado, documentoNombre, id, iddb } }) => {
+        return cargado ? (
+          <Button variant="contained" color="info" onClick={() => show_documentExpediente(documentoNombre, iddb)}>
             <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
           </Button>
         ) : (
-          <Button variant="contained" color="success" onClick={handleClickOpen}>
+          <Button variant="contained" color="success" onClick={() => handleClickOpen(documentoNombre)}>
             <BackupOutlinedIcon></BackupOutlinedIcon>
           </Button>
         );
@@ -140,6 +281,37 @@ const ShowDocument = () => {
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
           <Header title="Comercial" subtitle="Administración de documentos" />
+          <span>{montoSolicitado}</span>
+          {/* onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema} */}
+          <Formik>
+            {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap="30px"
+                  gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": { gridColumn: isNonMobile ? undefined : "span 3" },
+                  }}
+                >
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
+                    <Select fullWidth variant="filled" type="text" value={status} onBlur={handleBlur} onChange={(event) => handleSelectStatus(event, setFieldValue)} name="idEstatus" sx={{ gridColumn: "span 1" }}>
+                      {loadingStatus ? (
+                        <MenuItem>Cargando ...</MenuItem>
+                      ) : (
+                        listStatus.map((status) => (
+                          <MenuItem key={status.id} value={status.id}>
+                            {status.estatusNombre}
+                          </MenuItem>
+                        ))
+                      )}
+                    </Select>
+                  </FormControl>
+                </Box>
+              </form>
+            )}
+          </Formik>
 
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Documento</DialogTitle>
@@ -196,28 +368,12 @@ const ShowDocument = () => {
                     },
                   }}
                 >
-                  <DataGrid rows={mockDataDocumentPersonFisica} columns={columns} />
+                  <DataGrid rows={docsClient} columns={columns} />
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Box width="100%" height="75vh">
-                  {/* <Box display="flex" justifyContent="center" mt="20px">
-                                        <Button type="submit" color="secondary" variant="contained">
-                                            <AddOutlinedIcon></AddOutlinedIcon>
-                                        </Button>
-                                        <Button type="submit" color="secondary" variant="contained">
-                                            <RemoveOutlinedIcon></RemoveOutlinedIcon>
-                                        </Button>
-                                        <Button type="submit" color="secondary" variant="contained">
-                                            <Rotate90DegreesCcwOutlinedIcon></Rotate90DegreesCcwOutlinedIcon>
-                                        </Button>
-                                        <Button type="submit" color="secondary" variant="contained">
-                                            <Rotate90DegreesCwOutlinedIcon></Rotate90DegreesCwOutlinedIcon>
-                                        </Button>
-                                    </Box> */}
-
                   <Box display="flex" justifyContent="center" mt="20">
-                    {/* <object data={"data:application/pdf;base64," + base64} type="application/pdf" width="400" height="750"></object> */}
                     <object data={`data:${mmTyoe};base64, ${base64}`} type={`${mmTyoe}`} width="400" height="750" alt="red dot"></object>
                   </Box>
                 </Box>
