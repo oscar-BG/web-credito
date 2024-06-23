@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography, TextField, FormControl, InputLabel, Input, FormHelperText, MenuItem } from "@mui/material";
+import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Input, FormHelperText, MenuItem } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -28,7 +28,7 @@ const style = {
 
 const ShowDocument = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
-  const [user, setUser] = useState(userData);
+  const [user] = useState(userData);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
@@ -37,22 +37,26 @@ const ShowDocument = () => {
   const [mmTyoe, setMimeType] = useState("image/png");
   const [isSidebar, setIsSidebar] = useState(true);
   const [docsClient, setDocsClient] = useState([]);
+  const [docsClientCredit, setDocsClientCredit] = useState([]);
   const [nameDoc, setNameDoc] = useState("");
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [montoSolicitado, setMonto] = useState(0);
   const [listStatus, setListStatus] = useState([]);
   const [status, setStatus] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(true);
-  const [perfilUsuario, setPerfil] = useState(user.permisos);
+  const [perfilUsuario] = useState(user.permisos);
   const [documents, setDocuments] = useState([]);
+  const [visibleDocCredit, setVisibleDocCredit] = useState(false);
+  const [visibleUploadDocCredit, setVisibleUploadDocCredit] = useState(false);
+  // const [uploadDocument, setUploadDocument] = useState(false);
 
   var initialDocuments = [];
 
-  const doctosCredito = ["Pagaré", "Seguro de Crédito / Carta de Crédito", "Carta de Aceptación de condiciones Crediticias", "Caratulas actas constitutivas", "Reporte Historial SISCOM", "Determinación de la línea de crédito", "Análisis de estados Financieros", "Análisis Buró de Crédito", "Validación INE", "Referencias Comerciales"];
+  const doctosCredito = ["Pagaré emitido por INFRA", "Seguro de Crédito / Carta de Crédito", "Carta de Aceptación de condiciones Crediticias", "Caratulas actas constitutivas", "Reporte Historial SISCOM", "Determinación de la línea de crédito", "Análisis de estados Financieros", "Análisis Buró de Crédito", "Validación INE", "Referencias Comerciales"];
 
   const doctosParciales = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Constancia de situación fiscal vigente", "Opinión de cumplimiento positiva vigente", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Estados financieros", "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud", "Contrato / Pedido / Orden de compra", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Formato Autorización Buró de Crédito", "Identificación Oficial", "Check List Firma de Contrato", "Check List Firma de Pagaré", "Perfil del Cliente"];
 
-  const requiredDocuments = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Copia de identificación del represante legal", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Contrato / Pedido / Orden de compra", "Check list firma de contrado", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial", "Check list de firma pagare", "Pagaré emitido por INFRA", "Seguro de Crédito / Carta de Crédito"];
+  const requiredDocuments = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Copia de identificación del represante legal", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Contrato / Pedido / Orden de compra", "Check list firma de contrado", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial", "Check list de firma pagare"];
 
   const handleClickOpen = (nameDoc) => {
     setNameDoc(nameDoc);
@@ -85,10 +89,12 @@ const ShowDocument = () => {
         .then((response) => response.json())
         .then((data) => {
           console.log("Archivo subido exitosamente", data);
+          setOpen(false);
         })
         .catch((error) => {
           console.error("Error al subir el archivo:", error);
-        });
+        }
+      );
     },
   });
 
@@ -122,10 +128,11 @@ const ShowDocument = () => {
         body: JSON.stringify({ rfc: rfc }),
       });
       const result = await response.json();
-      // console.log("result", result);
+      // console.log("result expediente", result);
 
       setStatus(result[0].idEstatus);
-      setMonto(20000000);
+      setMonto(1000000);
+      // setMonto(result[0].montoCreditoSolicitado);
     } catch (error) {
       console.log(error);
     } finally {
@@ -172,6 +179,32 @@ const ShowDocument = () => {
   };
 
   useEffect(() => {
+    console.info("Permisos: ", perfilUsuario);
+    switch (perfilUsuario) {
+      case 'comercial_matriz':
+        setVisibleDocCredit(false);
+        break;
+      case 'comercial_foranea':
+        setVisibleDocCredit(false);
+        break;
+      case 'cartera_foranea':
+        if (montoSolicitado < 2000000) {
+          setVisibleDocCredit(true);
+        }
+        break;
+      case 'cartera_matriz':
+        // setVisibleDocCredit(false);
+        if (montoSolicitado < 2000000) {
+          setVisibleDocCredit(true);
+        }
+        break;
+      case 'analista_credito':
+        setVisibleDocCredit(true);
+        break;
+    }
+  }, [])
+
+  useEffect(() => {
     const fetchData = async () => {
       await fetchStatus();
       await getExpediente();
@@ -190,18 +223,21 @@ const ShowDocument = () => {
 
   const determinePermissions = () => {
     let allowedDocuments = [];
+    let allowedDocumentsCredit = [];
     console.log(montoSolicitado, perfilUsuario, documents);
     if (montoSolicitado > 2000000) {
       if (perfilUsuario.includes("comercial_matriz") || perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
         allowedDocuments = doctosParciales;
       } else if (perfilUsuario.includes("analista_credito")) {
-        allowedDocuments = doctosCredito;
+        // allowedDocuments = doctosCredito;
+        allowedDocumentsCredit = doctosCredito;
       }
     } else {
       if (perfilUsuario.includes("comercial_matriz")) {
         allowedDocuments = doctosParciales;
       } else if (perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
-        allowedDocuments = doctosCredito;
+        // allowedDocuments = doctosCredito;
+        allowedDocumentsCredit = doctosCredito;
       } else if (perfilUsuario.includes("analista_credito")) {
         allowedDocuments = [];
       }
@@ -213,7 +249,17 @@ const ShowDocument = () => {
         ...doc,
         permitido: true,
       }));
+    
+    const updatedDocumentsCredit = documents
+      .filter((doc) => allowedDocumentsCredit.includes(doc.documentoNombre))
+      .map((doc) => ({
+        ...doc,
+        permitido: true
+      }));
+
     setDocsClient(updatedDocuments);
+    setDocsClientCredit(updatedDocumentsCredit);
+    console.table(docsClientCredit);
   };
 
   const handleFileChange = (event) => {
@@ -221,13 +267,20 @@ const ShowDocument = () => {
   };
 
   const handleSelectStatus = (event, setFieldValue) => {
-    console.log("event", event.target.value);
-    // setStatus(event.target.value);
+    console.log("event status", event.target.value);
+    setStatus(event.target.value);
+    setFieldValue("idEstatus", event.target.value);
+    // actualizaEstatus(event.target.value);
     // setFieldValue("idEstatus", event.target.value);
-    actulalizaEstatus(event.target.value);
   };
 
-  const actulalizaEstatus = (idActualizaEstatus) => {
+  const handleDocumentCredit = () => {
+    // Actualizar el status del expediente  a "check out"
+    setVisibleUploadDocCredit(true);
+    actualizaEstatus(6);
+  }
+
+  const actualizaEstatus = (idActualizaEstatus) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -296,7 +349,7 @@ const ShowDocument = () => {
                 >
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Estatus</InputLabel>
-                    <Select fullWidth variant="filled" type="text" value={status} onBlur={handleBlur} onChange={(event) => handleSelectStatus(event, setFieldValue)} name="idEstatus" sx={{ gridColumn: "span 1" }}>
+                    <Select fullWidth variant="filled" type="text" value={status} onBlur={handleBlur} onChange={(event) => handleSelectStatus(event, setFieldValue)} name="idEstatus" id="idEstatus" sx={{ gridColumn: "span 1" }}>
                       {loadingStatus ? (
                         <MenuItem>Cargando ...</MenuItem>
                       ) : (
@@ -337,7 +390,7 @@ const ShowDocument = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Box
-                  m="40px 0 150px 0"
+                  m="40px 0 40px 0"
                   height="75vh"
                   sx={{
                     "& .MuiDataGrid-root": {
@@ -370,6 +423,58 @@ const ShowDocument = () => {
                 >
                   <DataGrid rows={docsClient} columns={columns} />
                 </Box>
+                {
+                  visibleDocCredit ? (
+                    <Box display="flex" justifyContent="center">
+                      <Button variant="contained" size="large" color="secondary" onClick={handleDocumentCredit}>
+                        Agregar documentos de análisis
+                      </Button>
+                    </Box>
+                  ) : ``
+                }
+                
+                {
+                  visibleUploadDocCredit ? (
+
+                    <Box
+                      m="40px 0 40px 0"
+                      height="75vh"
+                      sx={{
+                        "& .MuiDataGrid-root": {
+                          border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                          borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                          color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: colors.blueAccent[700],
+                          borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                          backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                          borderTop: "none",
+                          backgroundColor: colors.blueAccent[700],
+                        },
+                        "& .MuiCheckbox-root": {
+                          color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                          color: `${colors.grey[100]} !important`,
+                        },
+                      }}
+                    >
+                      {/* Mostrar documentos de crédito */}
+                      <DataGrid rows={docsClientCredit} columns={columns} />
+                    </Box>
+                  ) : ``
+                }
+
+
               </Grid>
               <Grid item xs={12} md={6}>
                 <Box width="100%" height="75vh">
