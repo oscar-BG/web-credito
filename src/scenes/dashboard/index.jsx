@@ -19,6 +19,7 @@ const Dashboar = () => {
   const [isSidebar, setIsSidebar] = useState(true);
   const [namecard, setNamecard] = useState("");
   const [iconcard, setIconCard] = useState();
+  const [showMenu, setMenu] = useState(false);
 
   const navigate = useNavigate();
   const handleNavigation = (path) => {
@@ -42,6 +43,7 @@ const Dashboar = () => {
       case "analista_credito":
         setNamecard("Analista de credito");
         setIconCard(<ManageSearchOutlinedIcon sx={{ color: "#003773", fontSize: "60px" }} />);
+        setMenu(true);
         break;
     }
   }, []);
@@ -53,52 +55,28 @@ const Dashboar = () => {
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Header title="Inicio" subtitle="Bienvenido ..." sx={{color: "#003773"}}></Header>
+            <Header title="Inicio" subtitle="Bienvenido ..." sx={{ color: "#003773" }}></Header>
           </Box>
 
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
-                <CardContent>
-                  <ButtonBase onClick={() => handleNavigation("/config")} sx={{ width: "100%", height: "100%" }}>
-                    {/* <Box backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center" height="150px">
-                      <StatBox
-                        title="Configuración"
-                        icon={
-                          <Box
-                            component="img"
-                            src="../../icons/config_azul.png" // Ruta relativa de la imagen en la carpeta public
-                            sx={{ width: 60, height: 60 }}
-                            alt="PDF Icon"
-                          />
-                        }
-                          sx={{ color: "#003773" }}
-                      />
-                    </Box> */}
-                    <Box backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center" height="150px">
-                      <StatBox title="Configuración" icon={<SettingsApplicationsOutlinedIcon sx={{ color: "#003773", fontSize: "60px" }} />} />
-                    </Box>
-                  </ButtonBase>
-                </CardContent>
-              </Card>
-            </Grid>
+            {showMenu && (
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
+                  <CardContent>
+                    <ButtonBase onClick={() => handleNavigation("/config")} sx={{ width: "100%", height: "100%" }}>
+                      <Box backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center" height="150px">
+                        <StatBox title="Configuración" icon={<SettingsApplicationsOutlinedIcon sx={{ color: "#003773", fontSize: "60px" }} />} />
+                      </Box>
+                    </ButtonBase>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
+
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Card sx={{ backgroundColor: colors.primary[400], maxWidth: 260 }}>
                 <CardContent>
                   <ButtonBase onClick={() => handleNavigation("/commercial")} sx={{ width: "100%", height: "100%" }}>
-                    {/* <Box backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center" height="150px">
-                      <StatBox
-                        title="Configuración"
-                        icon={
-                          <Box
-                            component="img"
-                            src="../../icons/comercial_azul.png" // Ruta relativa de la imagen en la carpeta public
-                            sx={{ width: 60, height: 60 }}
-                            alt="PDF Icon"
-                          />
-                        }
-                      />
-                    </Box> */}
                     <Box backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center" height="150px">
                       <StatBox title={namecard} icon={iconcard} />
                     </Box>
