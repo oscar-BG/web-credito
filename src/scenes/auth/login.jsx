@@ -4,10 +4,7 @@ import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import configURL from "../../config";
-// import { messaging } from "../../firebase";
-// import { initializeApp } from "firebase/app";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 
 function CenteredComponent() {
   const navigate = useNavigate();

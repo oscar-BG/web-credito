@@ -20,6 +20,7 @@ const ProfileUser = () => {
   const { userID } = useParams();
   const [carta, setCarta] = useState("");
   const [rfcCliente, setRfc] = useState("");
+  const [documentStatus, setDocumentStatus] = useState([]);
   const [formData, setFormData] = useState({
     id: 0,
     rfc: "",
@@ -97,17 +98,34 @@ const ProfileUser = () => {
     }
   };
 
+  const fetchStatusDocument = async () => {
+    try {
+      const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Estatus", {
+        method: "GET"
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log(error)
+    }
+
+    return [];
+  }
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
-    var sucursales = [];
-    var zonas = [];
-    var tipos_cliente = [];
+    let sucursales = [];
+    let zonas = [];
+    let tipos_cliente = [];
+    let status = [];
     const fetchData = async () => {
       sucursales = await fetchSucursales();
       zonas = await fetchZona();
       tipos_cliente = await fetchTipoCliente();
       await fetchProfileUser(sucursales, zonas, tipos_cliente);
+      status = await fetchStatusDocument();
+      setDocumentStatus(status);
     };
 
     fetchData();
@@ -199,6 +217,8 @@ const ProfileUser = () => {
                   </FormControl>
                   <TextField fullWidth variant="filled" type="text" label="Giro Empresarial" onBlur={handleBlur} onChange={handleChange} value={values.giroEmpresarial} name="giroEmpresarial" error={!!touched.giroEmpresarial && !!errors.giroEmpresarial} helperText={touched.giroEmpresarial && errors.giroEmpresarial} />
                   <TextField fullWidth variant="filled" type="text" label="Cambios en acta constitutiva" onBlur={handleBlur} onChange={handleChange} value={values.actaConstitutiva} name="actaConstitutiva" error={!!touched.actaConstitutiva && !!errors.actaConstitutiva} helperText={touched.actaConstitutiva && errors.actaConstitutiva} />
+
+                  
                   <Typography variant="h5" fontWeight="bold" sx={{ gridColumn: "span 3" }}>
                     Domicilio
                   </Typography>
@@ -312,6 +332,7 @@ const checkoutSchema = yup.object().shape({
   date_pagare: yup.string().required("required"),
   vigencia_pagare: yup.string().required("required"),
   vigencia_documentos: yup.string().required("required"),
+  idEstatus : yup.string().required("Valor requerido")
 });
 
 export default ProfileUser;

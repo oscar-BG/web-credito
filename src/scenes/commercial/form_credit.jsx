@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Box, useTheme, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, InputLabel, Input, Select, MenuItem, Button, FormHelperText, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, useTheme, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, TextField, InputLabel, Input, Select, MenuItem, Button, FormHelperText, Typography, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import { tokens } from "../../theme";
 // import Header from "../../components/Header";
@@ -18,7 +18,7 @@ import withReactContent from "sweetalert2-react-content";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FormNuevoCredito = ({ dataUser }) => {
-  console.log("DataUSer", dataUser);
+  // console.log("DataUSer", dataUser);
   const navigate = useNavigate();
   // const [info_user, setInfoUser] = useState(dataUser);
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -50,7 +50,7 @@ const FormNuevoCredito = ({ dataUser }) => {
   const [open, setOpen] = useState(false);
   // const [warning, setWarning] = useState(false);
   const [nameDoc, setNameDoc] = useState("");
-  const [rfc, setRFC] = useState("");
+  const [rfc, setRFC] = useState();
 
   const [cartaUploaded, setCartaUploaded] = useState(false);
 
@@ -226,6 +226,36 @@ const FormNuevoCredito = ({ dataUser }) => {
     setRFC(event.target.value);
   };
 
+  const handleBuscarRFC = (event) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "rfc": event.target.value
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+
+    fetch(configURL.apiBaseUrl+"/Expediente/BuscarExpedientes", requestOptions)
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            title: "RFC registrado",
+            text: "El RFC ingresado ya se encuentra registrado",
+            icon: "info",
+            confirmButtonText: "OK.",
+          });
+        }
+      })
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
+
+  }
+
   // const handleChangeCuentaCarta = (event) => {
   //   setCuentaCarta(event.target.value);
   // };
@@ -347,13 +377,15 @@ const FormNuevoCredito = ({ dataUser }) => {
               variant="filled"
               type="text"
               label="RFC"
-              onBlur={handleBlur}
+              onBlur={handleBuscarRFC}
               onChange={(event) => {
                 handleChange(event);
                 handleChangeRFC(event);
               }}
               value={values.rfc}
               name="rfc"
+              id="rfc"
+              autoComplete="off"
               error={!!touched.rfc && !!errors.rfc}
               helperText={touched.rfc && errors.rfc}
               sx={{ gridColumn: "span 2" }}
