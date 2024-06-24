@@ -21,6 +21,8 @@ const ProfileUser = () => {
   const [carta, setCarta] = useState("");
   const [rfcCliente, setRfc] = useState("");
   const [documentStatus, setDocumentStatus] = useState([]);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+  const [status, setStatus] = useState("");
   const [formData, setFormData] = useState({
     id: 0,
     rfc: "",
@@ -98,19 +100,7 @@ const ProfileUser = () => {
     }
   };
 
-  const fetchStatusDocument = async () => {
-    try {
-      const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Estatus", {
-        method: "GET"
-      });
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.log(error)
-    }
-
-    return [];
-  }
+ 
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -118,17 +108,30 @@ const ProfileUser = () => {
     let sucursales = [];
     let zonas = [];
     let tipos_cliente = [];
-    let status = [];
     const fetchData = async () => {
       sucursales = await fetchSucursales();
       zonas = await fetchZona();
       tipos_cliente = await fetchTipoCliente();
       await fetchProfileUser(sucursales, zonas, tipos_cliente);
-      status = await fetchStatusDocument();
-      setDocumentStatus(status);
     };
 
+    const fetchStatusDocument = async () => {
+      try {
+        const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Estatus", {
+          method: "GET"
+        });
+        const result = await response.json();
+        console.log(result);
+        setDocumentStatus(result);
+      } catch (error) {
+        console.log(error)
+      } finally {
+        // setLoadingStatus(false);
+      }
+    }
+
     fetchData();
+    fetchStatusDocument();
   }, []);
 
   const fetchProfileUser = async (sucs, zonas, tipos) => {
@@ -149,6 +152,7 @@ const ProfileUser = () => {
       setFormData(result);
       setCarta(result.cartaExpedicion);
       setRfc(result.rfc);
+      setStatus(result.idEstatus)
     } catch (error) {
       alert(error);
     }
@@ -218,7 +222,35 @@ const ProfileUser = () => {
                   <TextField fullWidth variant="filled" type="text" label="Giro Empresarial" onBlur={handleBlur} onChange={handleChange} value={values.giroEmpresarial} name="giroEmpresarial" error={!!touched.giroEmpresarial && !!errors.giroEmpresarial} helperText={touched.giroEmpresarial && errors.giroEmpresarial} />
                   <TextField fullWidth variant="filled" type="text" label="Cambios en acta constitutiva" onBlur={handleBlur} onChange={handleChange} value={values.actaConstitutiva} name="actaConstitutiva" error={!!touched.actaConstitutiva && !!errors.actaConstitutiva} helperText={touched.actaConstitutiva && errors.actaConstitutiva} />
 
-                  
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Estatus </InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      onBlur={handleBlur}
+                      value={values.idEstatus}
+                      onChange={handleChange}
+                      name="idEstatus"
+                      id="idEstatus"
+                      error={!!touched.idEstatus && !!errors.idEstatus}
+                    >
+                      
+                      {
+                        loadingStatus ? (
+                          <MenuItem>Cargando ...</MenuItem>
+                        ) : (
+                          documentStatus.map((status) => {
+                            console.log(status);
+                            <MenuItem key={status.id} value={status.id}>
+                              {status.estatusNombre}
+                            </MenuItem>
+                          })
+                        )
+                      }
+
+                    </Select>
+                  </FormControl>
                   <Typography variant="h5" fontWeight="bold" sx={{ gridColumn: "span 3" }}>
                     Domicilio
                   </Typography>
