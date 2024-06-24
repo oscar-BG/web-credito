@@ -14,12 +14,11 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import { useNavigate } from "react-router-dom";
-import ImageComponent from '../../components/ImageComponent';
+import ImageComponent from "../../components/ImageComponent";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   return (
     <MenuItem
       active={selected === title}
@@ -45,6 +44,7 @@ const SidebarPro = () => {
   const [name, setName] = useState();
   const [titleMenu, setTitleMenu] = useState();
   const [iconMenu, setIconMenu] = useState(<ContactsOutlinedIcon sx={{ color: "#003773" }} />);
+  const [showMenu, setMenu] = useState(false);
 
   const dataUser = JSON.parse(localStorage.getItem("user"));
 
@@ -72,6 +72,7 @@ const SidebarPro = () => {
       case "analista_credito":
         setTitleMenu("Analista de crédito");
         setIconMenu(<ManageSearchOutlinedIcon />);
+        setMenu(true);
         break;
     }
   }, []);
@@ -121,8 +122,7 @@ const SidebarPro = () => {
 
           <Box mb="25px">
             <Box display="flex" justifyContent="center" alignItems="center">
-            <ImageComponent altText="Infrastructure Image" width="100" height="50" />
-              {/* <img alt="profile-user" width="100px" height="50px" src={`../../assets/infra.png`} style={{ cursor: "pointer", borderRadius: "50%" }} /> */}
+              <ImageComponent altText="Infrastructure Image" width="100" height="50" />
             </Box>
             <Box textAlign="center">
               <Typography variant="h5" color={"#003773"} fontWeight="bold" sx={{ m: "10px 0 0 0" }}>
@@ -137,27 +137,15 @@ const SidebarPro = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item title="Inicio" to="/home" icon={<HomeOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
             <Item title={titleMenu} to="/commercial" icon={iconMenu} selected={selected} setSelected={setSelected} />
-            <SubMenu defaultOpen label={<span style={{ color: "#003773" }}>Configuración</span>} icon={<SettingsApplicationsOutlinedIcon sx={{ color: "#003773" }} />}>
-              <Item title="Usuarios" to="/config/user" icon={<PersonOutlineOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
-              <Item title="Catálogos" to="/config/catalogue" icon={<SummarizeOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
-              <Item title="Audit Trail" to="/config/audittrail" icon={<ContentPasteSearchOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
-            </SubMenu>
 
-            {/* <Item
-                  title="Cartera"
-                  to="/briefcase"
-                  icon={<ReceiptOutlinedIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                /> */}
+            {showMenu && (
+              <SubMenu defaultOpen label={<span style={{ color: "#003773" }}>Configuración</span>} icon={<SettingsApplicationsOutlinedIcon sx={{ color: "#003773" }} />}>
+                <Item title="Usuarios" to="/config/user" icon={<PersonOutlineOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
+                <Item title="Catálogos" to="/config/catalogue" icon={<SummarizeOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
+                <Item title="Audit Trail" to="/config/audittrail" icon={<ContentPasteSearchOutlinedIcon sx={{ color: "#003773" }} />} selected={selected} setSelected={setSelected} />
+              </SubMenu>
+            )}
 
-            {/* <Item
-                  title="Analista de crédito"
-                  to="/creditanalyst"
-                  icon={<ManageSearchOutlinedIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                /> */}
             <MenuItem
               active={selected == "cerrar_sesion"}
               style={{
@@ -168,13 +156,6 @@ const SidebarPro = () => {
             >
               <Typography> Cerrar sesión </Typography>
             </MenuItem>
-            {/* <Item
-                  title="Cerrar sesión"
-                  to="/signoff"
-                  icon={<LogoutOutlinedIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                /> */}
           </Box>
         </Menu>
       </Sidebar>

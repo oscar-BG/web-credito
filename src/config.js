@@ -1,6 +1,6 @@
 // src/config.js
 const configURL = {
-  apiBaseUrl: 'https://192.168.100.110:5555',
+  apiBaseUrl: 'http://52.1.16.20:8001',
 };
 
 export default configURL;

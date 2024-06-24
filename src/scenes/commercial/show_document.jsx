@@ -334,7 +334,7 @@ const ShowDocument = () => {
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
           <Header title="Comercial" subtitle="Administración de documentos" />
-          <span>{montoSolicitado}</span>
+          {/* <span>{montoSolicitado}</span> */}
           {/* onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema} */}
           <Formik>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
