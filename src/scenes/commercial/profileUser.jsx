@@ -26,7 +26,9 @@ const ProfileUser = () => {
   const [documentStatus, setDocumentStatus] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [statusActual, setStatus] = useState("");
-  const [visibleButton, setVisibleButton] = useState(false);
+  const [visibleButton, setVisibleButton] = useState(true);
+  const [disabledInput, setDisabledInput] = useState(true);
+  const [formValidate, setFomrValidate] = useState([]);
   const endOfPageRef = useRef(null);
   const [formData, setFormData] = useState({ id: 0, rfc: "", nombreRazonSocial: "", idSucursalZona: "", tipoCliente: "", actaConstitutiva: "", cartaExpedicion: "", cartaExpedicionDocumentos: "", fechaSolicitud: "", numeroCliente: "", idSector: "", giroEmpresarial: "", calle: "", numeroExterior: "", numeroInterior: "", colonia: "", municipio: "", estado: "", pais: "", cp: "", nombreSolicitante: "", nombreEjecutivo: "", nominaEjecutivo: "", nombreGerenteVentas: "", nominaGerenteVentas: "", montoCreditoSolicitado: "", idEstatus: 0, categoria: "", calificacion: "", montoCreditoAceptado: "", numeroZona: "", tipoSolicitud: "", fechaAceptacion : "", fechaPagare : "", vigenciaPagare : "", vigenciaDocumentos : "", vigencia: ""});
 
@@ -34,19 +36,32 @@ const ProfileUser = () => {
     // console.table(values);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     const idExpediente = values.id;
-    const raw = JSON.stringify({
-      "categoria" : values.categoria,
-      "calificacion":   values.calificacion,
-      "montoCreditoAceptado": values.montoCreditoAceptado,
-      "fechaAceptacion":values.fechaAceptacion ,
-      "vigencia": values.vigencia ,
-      "fechaPagare": values.fechaPagare,
-      "vigenciaPagare": values.vigenciaPagare,
-      "vigenciaDocumentos": values.vigenciaDocumentos,
-      "idEstatus": values.idEstatus 
-    });
+    let jsonForm = {};
+
+    switch (user.permisos) {
+      case 'analista_credito':
+        jsonForm = {
+          "categoria" : values.categoria,
+          "calificacion":   values.calificacion,
+          "montoCreditoAceptado": values.montoCreditoAceptado,
+          "fechaAceptacion":values.fechaAceptacion ,
+          "vigencia": values.vigencia ,
+          "fechaPagare": values.fechaPagare,
+          "vigenciaPagare": values.vigenciaPagare,
+          "vigenciaDocumentos": values.vigenciaDocumentos,
+          "idEstatus": values.idEstatus 
+        }
+        break;
+      case 'comercial_foranea':
+      case 'comercial_matriz':
+        jsonForm = {
+          "idEstatus": values.idEstatus
+        }
+        break;
+    }
+
+    const raw = JSON.stringify(jsonForm);
 
     const requestOptions = {
       method: "PUT",
@@ -114,12 +129,23 @@ const ProfileUser = () => {
               listaStatus.push(status);
             }
           })
+          setFomrValidate(checkoutSchemaRequired);
+          setDisabledInput(false);
+          break;
+        case 'comercial_foranea':
+        case 'comercial_matriz':
+          result.map((status) => {
+            if (status.estatusNombre == 'cargado' || status.estatusNombre == 'prevalidado' || status.id === status_actual) {
+              listaStatus.push(status);
+            }
+          })
+          setFomrValidate(checkoutSchemaValidate);
           break;
       
         default:
           break;
       }
-
+      // console.table(listaStatus);
       setDocumentStatus(listaStatus);
       setStatus(status_actual);
 
@@ -173,10 +199,10 @@ const ProfileUser = () => {
       if (result.montoCreditoAceptado <= 0) {
         result.montoCreditoAceptado = '';
       }
-      if (result.idEstatus === 5) {
-        setVisibleButton(true);
-      } 
-      console.table(result);
+      // if (result.idEstatus === 5) {
+      //   setVisibleButton(true);
+      // } 
+      // console.table(result);
       setFormData(result);
       setCarta(result.cartaExpedicion);
       setRfc(result.rfc);
@@ -191,8 +217,6 @@ const ProfileUser = () => {
   
 
   const formatDate = (date) => {
-    console.info("Fecha: ", date);
-    console.info(typeof(date))
 
     if (date === null || date === '' || date === undefined) {
       return "";
@@ -215,11 +239,12 @@ const ProfileUser = () => {
     if (idStatus === 5) {
       // Estatus "Aceptado"
       setVisibleButton(true);
-      endOfPageRef.current?.scrollIntoView({ behavior: 'smooth' });
+      
     } else {
       // Cualquier otro Status ocultar el boton de guardar
       setVisibleButton(true)
     }
+    endOfPageRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -230,7 +255,7 @@ const ProfileUser = () => {
         <Box m="20px">
           <Header title="Comercial" subtitle="Información de la solicitud" />
 
-          <Formik onSubmit={handleFormSubmit} initialValues={formData} validationSchema={checkoutSchema} enableReinitialize>
+          <Formik onSubmit={handleFormSubmit} initialValues={formData} validationSchema={formValidate} enableReinitialize>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -304,14 +329,14 @@ const ProfileUser = () => {
                   <TextField InputProps={{ readOnly: true }} fullWidth variant="standard" type="text" label="Núm. Nómina Gerente Ventas" onBlur={handleBlur} onChange={handleChange} value={values.nominaGerenteVentas} name="nominaGerenteVentas" error={!!touched.nominaGerenteVentas && !!errors.nominaGerenteVentas} helperText={touched.nominaGerenteVentas && errors.nominaGerenteVentas} sx={{ gridColumn: "span 1" }} />
                   <TextField InputProps={{ readOnly: true }} fullWidth variant="standard" type="text" label="Monto  de Crédito Solicitado" onBlur={handleBlur} onChange={handleChange} value={values.montoCreditoSolicitado} name="montoCreditoSolicitado" error={!!touched.montoCreditoSolicitado && !!errors.montoCreditoSolicitado} helperText={touched.montoCreditoSolicitado && errors.montoCreditoSolicitado} sx={{ gridColumn: "span 1" }} />
                   
-                  <TextField fullWidth variant="filled" type="text" label="Categoría" value={values.categoria} onBlur={handleBlur} onChange={handleChange} name="categoria" error={!!touched.categoria && !!errors.categoria} helperText={touched.categoria && errors.categoria} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Calificación" value={values.calificacion} onBlur={handleBlur} onChange={handleChange} name="calificacion" error={!!touched.calificacion && !!errors.calificacion} helperText={touched.calificacion && errors.calificacion} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="date" label="Fecha de aceptación" value={values.fechaAceptacion} onBlur={handleBlur} onChange={handleChange} name="fechaAceptacion" error={!!touched.fechaAceptacion && !!errors.fechaAceptacion} helperText={touched.fechaAceptacion && errors.fechaAceptacion} InputLabelProps={{   shrink: true, }} sx={{ gridColumn: "span 1" }}/>
-                  <TextField fullWidth variant="filled" type="date" label="Vigencia" value={values.vigencia} onBlur={handleBlur} onChange={handleChange} name="vigencia" error={!!touched.vigencia && !!errors.vigencia} helperText={touched.vigencia && errors.vigencia} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="text" label="Monto Crédito" value={values.montoCreditoAceptado} onBlur={handleBlur} onChange={handleChange} name="montoCreditoAceptado" error={!!touched.montoCreditoAceptado && !!errors.montoCreditoAceptado} helperText={touched.montoCreditoAceptado && errors.montoCreditoAceptado} sx={{ gridColumn: "span 1" }} />
-                  <TextField fullWidth variant="filled" type="date" label="Fecha Pagare" value={values.fechaPagare} onBlur={handleBlur} onChange={handleChange} name="fechaPagare" error={!!touched.fechaPagare && !!errors.fechaPagare} helperText={touched.fechaPagare && errors.fechaPagare} InputLabelProps={{   shrink: true, }} sx={{ gridColumn: "span 1" }}/>
-                  <TextField fullWidth variant="filled" type="date" label="Vigencia Pagaré" value={values.vigenciaPagare} onBlur={handleBlur} onChange={handleChange} name="vigenciaPagare" error={!!touched.vigenciaPagare && !!errors.vigenciaPagare} helperText={touched.vigenciaPagare && errors.vigenciaPagare} sx={{ gridColumn: "span 1" }}  InputLabelProps={{ shrink: true, }}/>
-                  <TextField fullWidth variant="filled" type="date" label="Vigencia Documentos" value={values.vigenciaDocumentos} onBlur={handleBlur} onChange={handleChange} name="vigenciaDocumentos" error={!!touched.vigenciaDocumentos && !!errors.vigenciaDocumentos} helperText={touched.vigenciaDocumentos && errors.vigenciaDocumentos} sx={{ gridColumn: "span 1" }} InputLabelProps={{ shrink: true, }}/>
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="text" label="Categoría" value={values.categoria} onBlur={handleBlur} onChange={handleChange} name="categoria" error={!!touched.categoria && !!errors.categoria} helperText={touched.categoria && errors.categoria} sx={{ gridColumn: "span 1" }} />
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="text" label="Calificación" value={values.calificacion} onBlur={handleBlur} onChange={handleChange} name="calificacion" error={!!touched.calificacion && !!errors.calificacion} helperText={touched.calificacion && errors.calificacion} sx={{ gridColumn: "span 1" }} />
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="date" label="Fecha de aceptación" value={values.fechaAceptacion} onBlur={handleBlur} onChange={handleChange} name="fechaAceptacion" error={!!touched.fechaAceptacion && !!errors.fechaAceptacion} helperText={touched.fechaAceptacion && errors.fechaAceptacion} InputLabelProps={{   shrink: true, }} sx={{ gridColumn: "span 1" }}/>
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="date" label="Vigencia" value={values.vigencia} onBlur={handleBlur} onChange={handleChange} name="vigencia" error={!!touched.vigencia && !!errors.vigencia} helperText={touched.vigencia && errors.vigencia} InputLabelProps={{   shrink: true, }} sx={{ gridColumn: "span 1" }} />
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="text" label="Monto Crédito" value={values.montoCreditoAceptado} onBlur={handleBlur} onChange={handleChange} name="montoCreditoAceptado" error={!!touched.montoCreditoAceptado && !!errors.montoCreditoAceptado} helperText={touched.montoCreditoAceptado && errors.montoCreditoAceptado} sx={{ gridColumn: "span 1" }} />
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="date" label="Fecha Pagare" value={values.fechaPagare} onBlur={handleBlur} onChange={handleChange} name="fechaPagare" error={!!touched.fechaPagare && !!errors.fechaPagare} helperText={touched.fechaPagare && errors.fechaPagare} InputLabelProps={{   shrink: true, }} sx={{ gridColumn: "span 1" }}/>
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="date" label="Vigencia Pagaré" value={values.vigenciaPagare} onBlur={handleBlur} onChange={handleChange} name="vigenciaPagare" error={!!touched.vigenciaPagare && !!errors.vigenciaPagare} helperText={touched.vigenciaPagare && errors.vigenciaPagare} sx={{ gridColumn: "span 1" }}  InputLabelProps={{ shrink: true, }}/>
+                  <TextField InputProps={{ disabled: disabledInput }} fullWidth variant="filled" type="date" label="Vigencia Documentos" value={values.vigenciaDocumentos} onBlur={handleBlur} onChange={handleChange} name="vigenciaDocumentos" error={!!touched.vigenciaDocumentos && !!errors.vigenciaDocumentos} helperText={touched.vigenciaDocumentos && errors.vigenciaDocumentos} sx={{ gridColumn: "span 1" }} InputLabelProps={{ shrink: true, }}/>
 
                   
                 </Box>
@@ -339,7 +364,10 @@ const ProfileUser = () => {
   );
 };
 
-const checkoutSchema = yup.object().shape({
+const checkoutSchemaValidate = yup.object().shape({
+  idEstatus :           yup.string().required("Valor requerido")
+});
+const checkoutSchemaRequired = yup.object().shape({
   fechaSolicitud:       yup.string().required("Valor requerido"),
   tipoSolicitud:        yup.string().required("Valor requerido"),
   categoria:            yup.string().required("Valor requerido"),

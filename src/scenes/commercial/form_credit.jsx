@@ -90,8 +90,9 @@ const FormNuevoCredito = ({ dataUser }) => {
         }
       })
       .then((result) => {
-        var newExp = result.id;
-        navigate(`/commercial/show-document/${newExp}/${cartaValue}/${rfcCliente}`);
+        var userID = result.id;
+        // navigate(`/commercial/show-document/${newExp}/${cartaValue}/${rfcCliente}`);
+        navigate(`/commercial/profile-user/${userID}`);
       })
       .catch((error) => console.error(error));
   };
