@@ -18,12 +18,11 @@ import configURL from "../../config";
 
 const Commercial = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
-  const [user, setUser] = useState(userData);
+  const [user] = useState(userData);
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const [age, setAge] = useState("");
   const [isSidebar, setIsSidebar] = useState(true);
   const [dataTable, setDataTable] = useState([]);
 
@@ -54,6 +53,7 @@ const Commercial = () => {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify(filteredValues);
+    console.table(raw);
 
     const requestOptions = {
       method: "POST",
@@ -124,12 +124,28 @@ const Commercial = () => {
     };
 
     const fetchStatus = async () => {
+      let listaStatus = [];
+
       try {
         const response = await fetch(configURL.apiBaseUrl + "/Catalogos/Estatus", {
           method: "GET",
         });
-        const result = await response.json();
-        setListStatus(result);
+        const result = await response.json()
+        // console.table(result);
+        // console.log(user.permisos);
+        switch (user.permisos) {
+          case 'cartera_foranea':
+          case 'cartera_matriz':
+            result.map((status) => {
+              // console.log(status);
+              if (status.estatusNombre === 'cargado') {
+                listaStatus.push(status);
+              }
+            })
+            break;
+        }
+        console.table(listaStatus);
+        setListStatus(listaStatus);
       } catch (error) {
         alert(error);
       } finally {
@@ -428,7 +444,7 @@ const checkoutSchema = yup.object().shape({
   nombreRazonSocial: yup.string(),
   numeroZona: yup.string(),
   idSucursalZona: yup.string(),
-  idEstatus: yup.string(),
+  idEstatus: yup.string().required("Valor requerido"),
   tipoCliente: yup.string(),
   cartaExpedicion: yup.string(),
 });

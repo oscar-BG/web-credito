@@ -135,9 +135,14 @@ const ProfileUser = () => {
         case 'comercial_foranea':
         case 'comercial_matriz':
           result.map((status) => {
-            if (status.estatusNombre == 'cargado' || status.estatusNombre == 'prevalidado' || status.id === status_actual) {
-              listaStatus.push(status);
+            if (status_actual === 1) {
+              if (status.estatusNombre == 'cargado' || status.id === status_actual) {
+                listaStatus.push(status);
+              }
             }
+            // if (status.estatusNombre == 'cargado' || status.estatusNombre == 'prevalidado' || status.id === status_actual) {
+            //   listaStatus.push(status);
+            // }
           })
           setFomrValidate(checkoutSchemaValidate);
           break;
