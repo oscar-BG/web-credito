@@ -132,8 +132,16 @@ const Commercial = () => {
         });
         const result = await response.json()
         // console.table(result);
-        // console.log(user.permisos);
+        console.log(user.permisos);
         switch (user.permisos) {
+          case 'comercial_matriz':
+          case 'comercial_forenea':
+            result.map((status) => {
+              if (status.estatusNombre === 'capturado' || status.estatusNombre === 'cargado' || status.estatusNombre === 'aceptado' || status.estatusNombre == 'rechazado') {
+                listaStatus.push(status);
+              }
+            });
+            break;
           case 'cartera_foranea':
           case 'cartera_matriz':
             result.map((status) => {
@@ -141,10 +149,17 @@ const Commercial = () => {
               if (status.estatusNombre === 'cargado') {
                 listaStatus.push(status);
               }
-            })
+            });
+          case 'analista_credito':
+            result.map((status) => {
+              if (status.estatusNombre === 'prevalidado' || status.estatusNombre === 'aceptado' || status.estatusNombre === 'rechazado') {
+                listaStatus.push(status);
+              }
+            });
+            break;
             break;
         }
-        console.table(listaStatus);
+        // console.table(listaStatus);
         setListStatus(listaStatus);
       } catch (error) {
         alert(error);
