@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import configURL from "../../config";
-import { SettingsEthernet } from "@mui/icons-material";
+// import { SettingsEthernet } from "@mui/icons-material";
 
 const ProfileUser = () => {
   const theme = useTheme();
@@ -115,6 +115,7 @@ const ProfileUser = () => {
   };
 
   const fetchStatusDocument = async (status_actual) => {
+    console.log("Estatus Actual: ", status_actual);
     try {
       const response = await fetch(configURL.apiBaseUrl+"/Catalogos/Estatus", {
         method: "GET"
@@ -137,6 +138,11 @@ const ProfileUser = () => {
           result.map((status) => {
             if (status_actual === 1) {
               if (status.estatusNombre == 'cargado' || status.id === status_actual) {
+                listaStatus.push(status);
+              }
+            }
+            if (status_actual === 5) {
+              if (status.estatusNombre === 'cargado' || status.estatusNombre === 'prevalidado' || status.estatusNombre === 'capturado') {
                 listaStatus.push(status);
               }
             }

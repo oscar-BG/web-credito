@@ -38,7 +38,7 @@ function App() {
             <Route path="/commercial" element={<Commercial/>} />
             <Route path="/commercial/new-request-document" element={<DocumentRequest/>} />
             <Route path="/commercial/profile-user/:userID" element={<ProfileUser/>} />
-            <Route path="/commercial/show-document/:userID/:carta/:rfc" element={<ShowDocument/>} />
+            <Route path="/commercial/show-document/:clienteID/:carta/:rfc" element={<ShowDocument/>} />
             <Route path="/briefcase" element={<Briefcase/>} />
             <Route path="/creditanalyst" element={<Creditanalyst/>} />
             <Route path="/config/user" element={<User/>} />

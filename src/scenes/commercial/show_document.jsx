@@ -10,9 +10,9 @@ import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import configURL from "../../config";
-import Select from "@mui/material/Select";
+// import Select from "@mui/material/Select";
 
 const style = {
   position: "absolute",
@@ -32,7 +32,7 @@ const ShowDocument = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setOpen] = useState(false);
-  const { userID, carta, rfc } = useParams();
+  const { clienteID, carta, rfc } = useParams();
   const [base64, setbase64] = useState("iVBORw0KGgoAAAANSUhEUgAAAJsAAABgCAYAAAAKNABWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABJ0RVh0U29mdHdhcmUAR3JlZW5zaG90XlUIBQAAAQBJREFUeF7t0jENADAQA7Hyxxzpy+ImD2bgt+2gIBsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsRHYfQZmZzI7xpikAAAAASUVORK5CYII=");
   const [mmTyoe, setMimeType] = useState("image/png");
   const [isSidebar, setIsSidebar] = useState(true);
@@ -41,62 +41,63 @@ const ShowDocument = () => {
   const [nameDoc, setNameDoc] = useState("");
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [montoSolicitado, setMonto] = useState(0);
-  const [listStatus, setListStatus] = useState([]);
+  // const [listStatus, setListStatus] = useState([]);
   const [status, setStatus] = useState("");
-  const [loadingStatus, setLoadingStatus] = useState(true);
+  // const [loadingStatus, setLoadingStatus] = useState(true);
+  const [cartaExcepcion, setCartaExcepcion] = useState("NO");
   const [perfilUsuario] = useState(user.permisos);
   const [documents, setDocuments] = useState([]);
   const [visibleDocCredit, setVisibleDocCredit] = useState(false);
   const [visibleUploadDocCredit, setVisibleUploadDocCredit] = useState(false);
+  const [tipoCliente, setTipoCliente] = useState(0);
   // const [uploadDocument, setUploadDocument] = useState(false);
 
-  var initialDocuments = [];
 
-  const doctosCredito = ["Pagaré emitido por INFRA", "Seguro de Crédito / Carta de Crédito", "Carta de Aceptación de condiciones Crediticias", "Caratulas actas constitutivas", "Reporte Historial SISCOM", "Determinación de la línea de crédito", "Análisis de estados Financieros", "Análisis Buró de Crédito", "Validación INE", "Referencias Comerciales"];
+  const getExpediente = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    try {
+      const response = await fetch(`${configURL.apiBaseUrl}/Expediente/${clienteID}`, {
+        method: "GET",
+        headers: myHeaders,
+      });
+      const result = await response.json();
+      // console.table(result);
 
-  const doctosParciales = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Constancia de situación fiscal vigente", "Opinión de cumplimiento positiva vigente", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Estados financieros", "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud", "Contrato / Pedido / Orden de compra", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Formato Autorización Buró de Crédito", "Identificación Oficial", "Check List Firma de Contrato", "Check List Firma de Pagaré", "Perfil del Cliente"];
-
-  const requiredDocuments = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Copia de identificación del represante legal", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Contrato / Pedido / Orden de compra", "Check list firma de contrado", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial", "Check list de firma pagare"];
-
-  const handleClickOpen = (nameDoc) => {
-    setNameDoc(nameDoc);
-    setOpen(true);
+      // setMonto(1000000);
+      setStatus(result.idEstatus);
+      setMonto(result.montoCreditoSolicitado);
+      setCartaExcepcion(result.cartaExpedicion);
+      setTipoCliente(result.tipoCliente)
+      return {
+        cartaExcepcion : result.cartaExpedicion,
+        tipoCliente : result.tipoCliente
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const getTipoCliente = async (idTipoCliente) => {
+    const response = await fetch("http://52.1.16.20:8001/Catalogos/TipoCliente", {
+      method: "GET"
+    });
 
-  const formik = useFormik({
-    initialValues: {
-      file: null,
-    },
-    validationSchema: Yup.object({
-      file: Yup.mixed().required("Archivo obligatorio"),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-      const formData = new FormData();
-      formData.append("Cliente", rfc);
-      formData.append("IDEXP", rfc);
-      formData.append("TipoDocumento", nameDoc);
-      formData.append("binFile", values.file);
+    const result = await response.json();
+    let documentoCliente = result.find(item => item.id == idTipoCliente);
+    console.log(documentoCliente);
+    return documentoCliente;
 
-      fetch(`${configURL.apiBaseUrl}/api/AE/UploadDocument`, {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Archivo subido exitosamente", data);
-          setOpen(false);
-        })
-        .catch((error) => {
-          console.error("Error al subir el archivo:", error);
-        }
-      );
-    },
-  });
+      // .then((response) => response.json())
+      // .then((result) => {
+      //   let documentoCliente = result.find(item => item.id == idTipoCliente);
+      //   // console.log(documentoCliente);
+      //   let documentRequerido = JSON.parse(documentoCliente.doctos);
+      //   return documentRequerido;
+      // })
+      // .catch((error) => console.error(error));
+  }
 
   const getClientDocuments = function () {
     const requestOptions = {
@@ -107,202 +108,250 @@ const ShowDocument = () => {
     fetch(`${configURL.apiBaseUrl}/Expediente/Documentos/${rfc}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        initialDocuments = result;
-        const updatedDocuments = initialDocuments.map((result) => ({
-          ...result,
-          requerido: carta == "SI" ? requiredDocuments.includes(result.documentoNombre) : true,
-        }));
+        // console.table(result);
+        // initialDocuments = result;
+        // const updatedDocuments = initialDocuments.map((result) => ({
+        //   ...result,
+        //   requerido: carta == "SI" ? requiredDocuments.includes(result.documentoNombre) : true,
+        // }));
 
-        setDocuments(updatedDocuments);
+        // setDocuments(updatedDocuments);
       })
       .catch((error) => console.error(error));
   };
-
-  const getExpediente = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    try {
-      const response = await fetch(`${configURL.apiBaseUrl}/Expediente/BuscarExpedientes`, {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify({ rfc: rfc }),
-      });
-      const result = await response.json();
-      // console.log("result expediente", result);
-
-      setStatus(result[0].idEstatus);
-      setMonto(1000000);
-      // setMonto(result[0].montoCreditoSolicitado);
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
-  };
-
-  const fetchStatus = async () => {
-    try {
-      const response = await fetch(configURL.apiBaseUrl + "/Catalogos/Estatus", {
-        method: "GET",
-      });
-      const result = await response.json();
-      setListStatus(result);
-    } catch (error) {
-      alert(error);
-    } finally {
-      setLoadingStatus(false);
-    }
-  };
-
-  const show_documentExpediente = (documento, iddb) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      idexp: rfc,
-      iddb: iddb.toString(),
-      tipoDoc: documento,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-    };
-
-    fetch(`${configURL.apiBaseUrl}/api/AE/GetDocumento`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        setMimeType("application/pdf");
-        setbase64(result);
-      })
-      .catch((error) => console.error(error));
-  };
-
-  useEffect(() => {
-    console.info("Permisos: ", perfilUsuario);
-    switch (perfilUsuario) {
-      case 'comercial_matriz':
-        setVisibleDocCredit(false);
-        break;
-      case 'comercial_foranea':
-        setVisibleDocCredit(false);
-        break;
-      case 'cartera_foranea':
-        if (montoSolicitado < 2000000) {
-          setVisibleDocCredit(true);
-        }
-        break;
-      case 'cartera_matriz':
-        // setVisibleDocCredit(false);
-        if (montoSolicitado < 2000000) {
-          setVisibleDocCredit(true);
-        }
-        break;
-      case 'analista_credito':
-        setVisibleDocCredit(true);
-        break;
-    }
-  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchStatus();
-      await getExpediente();
+      let result = await getExpediente();
+      // console.table(result);
+      if (result) {
+        // console.info("tipoCliente: " + result.tipoCliente)
+        let documentosRequeridos = await getTipoCliente(result.tipoCliente);
+        console.log(documentosRequeridos);
+      }
     };
 
     fetchData();
     getClientDocuments();
-    return () => {
-      formik.resetForm();
-    };
-  }, [open]);
 
-  useEffect(() => {
-    determinePermissions();
-  }, [montoSolicitado, perfilUsuario, documents]);
+  }, [])
 
-  const determinePermissions = () => {
-    let allowedDocuments = [];
-    let allowedDocumentsCredit = [];
-    console.log(montoSolicitado, perfilUsuario, documents);
-    if (montoSolicitado > 2000000) {
-      if (perfilUsuario.includes("comercial_matriz") || perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
-        allowedDocuments = doctosParciales;
-      } else if (perfilUsuario.includes("analista_credito")) {
-        // allowedDocuments = doctosCredito;
-        allowedDocumentsCredit = doctosCredito;
-      }
-    } else {
-      if (perfilUsuario.includes("comercial_matriz")) {
-        allowedDocuments = doctosParciales;
-      } else if (perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
-        // allowedDocuments = doctosCredito;
-        allowedDocumentsCredit = doctosCredito;
-      } else if (perfilUsuario.includes("analista_credito")) {
-        allowedDocuments = [];
-      }
-    }
+  // var initialDocuments = [];
 
-    const updatedDocuments = documents
-      .filter((doc) => allowedDocuments.includes(doc.documentoNombre))
-      .map((doc) => ({
-        ...doc,
-        permitido: true,
-      }));
+  // const doctosCredito = ["Pagaré emitido por INFRA", "Seguro de Crédito / Carta de Crédito", "Carta de Aceptación de condiciones Crediticias", "Caratulas actas constitutivas", "Reporte Historial SISCOM", "Determinación de la línea de crédito", "Análisis de estados Financieros", "Análisis Buró de Crédito", "Validación INE", "Referencias Comerciales"];
+
+  // const doctosParciales = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Constancia de situación fiscal vigente", "Opinión de cumplimiento positiva vigente", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Estados financieros", "Estados de cuenta bancarios de los últimos 2 meses a la fecha de solicitud", "Contrato / Pedido / Orden de compra", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Formato Autorización Buró de Crédito", "Identificación Oficial", "Check List Firma de Contrato", "Check List Firma de Pagaré", "Perfil del Cliente"];
+
+  // const requiredDocuments = ["Solicitud de Crédito firmada en original por el cliente, ejecutivo y máximo nivel comercial según punto", "Comprobante domicilio (No mayor a 3 meses a la fecha de solicitud)", "Copia de identificación del represante legal", "Acta constitutiva", "Poder notarial (Facultad de otorgar y suscribir títulos de crédito)", "Contrato / Pedido / Orden de compra", "Check list firma de contrado", "Proyección de ventas firmada en original por ejecutivo y máximo nivel comercial según punto", "Perfil del cliente firmado en original por el cliente, ejecutivo y máximo nivel comercial", "Check list de firma pagare"];
+
+  // const handleClickOpen = (nameDoc) => {
+  //   setNameDoc(nameDoc);
+  //   setOpen(true);
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+
+  // const formik = useFormik({
+  //   initialValues: {
+  //     file: null,
+  //   },
+  //   validationSchema: Yup.object({
+  //     file: Yup.mixed().required("Archivo obligatorio"),
+  //   }),
+  //   onSubmit: (values) => {
+  //     console.log(values);
+  //     const formData = new FormData();
+  //     formData.append("Cliente", rfc);
+  //     formData.append("IDEXP", rfc);
+  //     formData.append("TipoDocumento", nameDoc);
+  //     formData.append("binFile", values.file);
+
+  //     fetch(`${configURL.apiBaseUrl}/api/AE/UploadDocument`, {
+  //       method: "POST",
+  //       body: formData,
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Archivo subido exitosamente", data);
+  //         setOpen(false);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error al subir el archivo:", error);
+  //       }
+  //     );
+  //   },
+  // });
+
+  
+
+  
+
+  // const fetchStatus = async () => {
+  //   try {
+  //     const response = await fetch(configURL.apiBaseUrl + "/Catalogos/Estatus", {
+  //       method: "GET",
+  //     });
+  //     const result = await response.json();
+  //     setListStatus(result);
+  //   } catch (error) {
+  //     alert(error);
+  //   } finally {
+  //     setLoadingStatus(false);
+  //   }
+  // };
+
+  // const show_documentExpediente = (documento, iddb) => {
+  //   const myHeaders = new Headers();
+  //   myHeaders.append("Content-Type", "application/json");
+
+  //   const raw = JSON.stringify({
+  //     idexp: rfc,
+  //     iddb: iddb.toString(),
+  //     tipoDoc: documento,
+  //   });
+
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: raw,
+  //   };
+
+  //   fetch(`${configURL.apiBaseUrl}/api/AE/GetDocumento`, requestOptions)
+  //     .then((response) => response.text())
+  //     .then((result) => {
+  //       setMimeType("application/pdf");
+  //       setbase64(result);
+  //     })
+  //     .catch((error) => console.error(error));
+  // };
+
+  // useEffect(() => {
+  //   console.info("Permisos: ", perfilUsuario);
+  //   switch (perfilUsuario) {
+  //     case 'comercial_matriz':
+  //       setVisibleDocCredit(false);
+  //       break;
+  //     case 'comercial_foranea':
+  //       setVisibleDocCredit(false);
+  //       break;
+  //     case 'cartera_foranea':
+  //       if (montoSolicitado < 2000000) {
+  //         setVisibleDocCredit(true);
+  //       }
+  //       break;
+  //     case 'cartera_matriz':
+  //       // setVisibleDocCredit(false);
+  //       if (montoSolicitado < 2000000) {
+  //         setVisibleDocCredit(true);
+  //       }
+  //       break;
+  //     case 'analista_credito':
+  //       setVisibleDocCredit(true);
+  //       break;
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // await fetchStatus();
+  //     await getExpediente();
+  //   };
+
+  //   fetchData();
+  //   getClientDocuments();
+  //   return () => {
+  //     formik.resetForm();
+  //   };
+  // }, [open]);
+
+  // useEffect(() => {
+  //   determinePermissions();
+  // }, [montoSolicitado, perfilUsuario, documents]);
+
+  // const determinePermissions = () => {
+  //   let allowedDocuments = [];
+  //   let allowedDocumentsCredit = [];
+  //   console.log(montoSolicitado, perfilUsuario, documents);
+  //   if (montoSolicitado > 2000000) {
+  //     if (perfilUsuario.includes("comercial_matriz") || perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
+  //       allowedDocuments = doctosParciales;
+  //     } else if (perfilUsuario.includes("analista_credito")) {
+  //       // allowedDocuments = doctosCredito;
+  //       allowedDocumentsCredit = doctosCredito;
+  //     }
+  //   } else {
+  //     if (perfilUsuario.includes("comercial_matriz")) {
+  //       allowedDocuments = doctosParciales;
+  //     } else if (perfilUsuario.includes("cartera_matriz") || perfilUsuario.includes("cartera_foranea")) {
+  //       // allowedDocuments = doctosCredito;
+  //       allowedDocumentsCredit = doctosCredito;
+  //     } else if (perfilUsuario.includes("analista_credito")) {
+  //       allowedDocuments = [];
+  //     }
+  //   }
+
+  //   const updatedDocuments = documents
+  //     .filter((doc) => allowedDocuments.includes(doc.documentoNombre))
+  //     .map((doc) => ({
+  //       ...doc,
+  //       permitido: true,
+  //     }));
     
-    const updatedDocumentsCredit = documents
-      .filter((doc) => allowedDocumentsCredit.includes(doc.documentoNombre))
-      .map((doc) => ({
-        ...doc,
-        permitido: true
-      }));
+  //   const updatedDocumentsCredit = documents
+  //     .filter((doc) => allowedDocumentsCredit.includes(doc.documentoNombre))
+  //     .map((doc) => ({
+  //       ...doc,
+  //       permitido: true
+  //     }));
 
-    setDocsClient(updatedDocuments);
-    setDocsClientCredit(updatedDocumentsCredit);
-    console.table(docsClientCredit);
-  };
+  //   setDocsClient(updatedDocuments);
+  //   setDocsClientCredit(updatedDocumentsCredit);
+  //   console.table(docsClientCredit);
+  // };
 
-  const handleFileChange = (event) => {
-    formik.setFieldValue("file", event.currentTarget.files[0]);
-  };
+  // const handleFileChange = (event) => {
+  //   formik.setFieldValue("file", event.currentTarget.files[0]);
+  // };
 
-  const handleSelectStatus = (event, setFieldValue) => {
-    console.log("event status", event.target.value);
-    setStatus(event.target.value);
-    setFieldValue("idEstatus", event.target.value);
-    // actualizaEstatus(event.target.value);
-    // setFieldValue("idEstatus", event.target.value);
-  };
+  // const handleSelectStatus = (event, setFieldValue) => {
+  //   console.log("event status", event.target.value);
+  //   // setStatus(event.target.value);
+  //   setFieldValue("idEstatus", event.target.value);
+  //   // actualizaEstatus(event.target.value);
+  //   // setFieldValue("idEstatus", event.target.value);
+  // };
 
-  const handleDocumentCredit = () => {
-    // Actualizar el status del expediente  a "check out"
-    setVisibleUploadDocCredit(true);
-    actualizaEstatus(6);
-  }
+  // const handleDocumentCredit = () => {
+  //   // Actualizar el status del expediente  a "check out"
+  //   setVisibleUploadDocCredit(true);
+  //   actualizaEstatus(6);
+  // }
 
-  const actualizaEstatus = (idActualizaEstatus) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+  // const actualizaEstatus = (idActualizaEstatus) => {
+  //   const myHeaders = new Headers();
+  //   myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({
-      idEstatus: idActualizaEstatus,
-    });
+  //   const raw = JSON.stringify({
+  //     idEstatus: idActualizaEstatus,
+  //   });
 
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
+  //   const requestOptions = {
+  //     method: "PUT",
+  //     headers: myHeaders,
+  //     body: raw,
+  //     redirect: "follow",
+  //   };
 
-    var idExp = parseInt(userID);
-    console.log("idExp", idExp);
+  //   var idExp = parseInt(clienteID);
+  //   console.log("idExp", idExp);
 
-    fetch(`${configURL.apiBaseUrl}/Expediente/Actualizar/${idExp}`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
-  };
+  //   fetch(`${configURL.apiBaseUrl}/Expediente/Actualizar/${idExp}`, requestOptions)
+  //     .then((response) => response.text())
+  //     .then((result) => console.log(result))
+  //     .catch((error) => console.error(error));
+  // };
 
   const hideiddb = true;
 
@@ -314,15 +363,15 @@ const ShowDocument = () => {
       field: "cargado",
       headerName: "Acción",
       renderCell: ({ row: { cargado, documentoNombre, id, iddb } }) => {
-        return cargado ? (
-          <Button variant="contained" color="info" onClick={() => show_documentExpediente(documentoNombre, iddb)}>
-            <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
-          </Button>
-        ) : (
-          <Button variant="contained" color="success" onClick={() => handleClickOpen(documentoNombre)}>
-            <BackupOutlinedIcon></BackupOutlinedIcon>
-          </Button>
-        );
+        // return cargado ? (
+        //   <Button variant="contained" color="info" onClick={() => show_documentExpediente(documentoNombre, iddb)}>
+        //     <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
+        //   </Button>
+        // ) : (
+        //   <Button variant="contained" color="success" onClick={() => handleClickOpen(documentoNombre)}>
+        //     <BackupOutlinedIcon></BackupOutlinedIcon>
+        //   </Button>
+        // );
       },
     },
   ];
@@ -336,7 +385,7 @@ const ShowDocument = () => {
           <Header title="Comercial" subtitle="Administración de documentos" />
           {/* <span>{montoSolicitado}</span> */}
           {/* onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema} */}
-          <Formik>
+          {/* <Formik>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -364,9 +413,9 @@ const ShowDocument = () => {
                 </Box>
               </form>
             )}
-          </Formik>
+          </Formik> */}
 
-          <Dialog open={open} onClose={handleClose}>
+          {/* <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Documento</DialogTitle>
             <DialogContent>
               <form onSubmit={formik.handleSubmit}>
@@ -384,7 +433,7 @@ const ShowDocument = () => {
                 <Button onClick={handleClose}> Cerrar</Button>
               </Box>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
 
           <Box sx={{ flexGrow: 1, padding: 1 }}>
             <Grid container spacing={2}>
@@ -423,7 +472,7 @@ const ShowDocument = () => {
                 >
                   <DataGrid rows={docsClient} columns={columns} />
                 </Box>
-                {
+                {/* {
                   visibleDocCredit ? (
                     <Box display="flex" justifyContent="center">
                       <Button variant="contained" size="large" color="secondary" onClick={handleDocumentCredit}>
@@ -431,7 +480,7 @@ const ShowDocument = () => {
                       </Button>
                     </Box>
                   ) : ``
-                }
+                } */}
                 
                 {
                   visibleUploadDocCredit ? (
@@ -469,7 +518,7 @@ const ShowDocument = () => {
                       }}
                     >
                       {/* Mostrar documentos de crédito */}
-                      <DataGrid rows={docsClientCredit} columns={columns} />
+                      {/* <DataGrid rows={docsClientCredit} columns={columns} /> */}
                     </Box>
                   ) : ``
                 }

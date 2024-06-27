@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, useTheme, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button } from "@mui/material";
+import { Box, useTheme, TextField, MenuItem, FormControl, FormControlLabel, FormLabel, RadioGroup, Radio, Button, FormHelperText } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import configURL from "../../config";
+import Swal from "sweetalert2";
 
 const Commercial = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -62,8 +63,20 @@ const Commercial = () => {
     };
 
     fetch(configURL.apiBaseUrl + "/Expediente/BuscarExpedientes", requestOptions)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          Swal.fire({
+            text: "No se encontrarón resultados",
+            icon: "info",
+            confirmButtonText: "Entendido",
+          });
+          return  []
+        }
+      })
       .then((result) => {
+        console.log(result);
         setDataTable(result);
       })
       .catch((error) => console.error(error));
@@ -135,7 +148,7 @@ const Commercial = () => {
         console.log(user.permisos);
         switch (user.permisos) {
           case 'comercial_matriz':
-          case 'comercial_forenea':
+          case 'comercial_foranea':
             result.map((status) => {
               if (status.estatusNombre === 'capturado' || status.estatusNombre === 'cargado' || status.estatusNombre === 'aceptado' || status.estatusNombre == 'rechazado') {
                 listaStatus.push(status);
@@ -380,6 +393,7 @@ const Commercial = () => {
                         ))
                       )}
                     </Select>
+                    {touched.idEstatus && errors.idEstatus && <FormHelperText style={{color: "red"}}>{errors.idEstatus}</FormHelperText>}
                   </FormControl>
 
                   <FormControl fullWidth>
