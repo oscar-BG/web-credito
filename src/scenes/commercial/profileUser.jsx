@@ -152,11 +152,20 @@ const ProfileUser = () => {
           })
           setFomrValidate(checkoutSchemaValidate);
           break;
-      
-        default:
+        case 'cartera_forenea':
+        case 'cartera_matriz':
+          result.map((status) => {
+            if (status_actual === 2) {
+              if (status.estatusNombre == 'prevalidado' || status.id === status_actual) {
+                listaStatus.push(status);
+              }
+            }
+          });
+
+          setFomrValidate(checkoutSchemaValidate)
           break;
       }
-      // console.table(listaStatus);
+      console.table(listaStatus);
       setDocumentStatus(listaStatus);
       setStatus(status_actual);
 
