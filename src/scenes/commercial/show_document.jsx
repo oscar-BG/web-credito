@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Input, FormHelperText, MenuItem } from "@mui/material";
+import { useTheme, Box, Grid, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Input, FormHelperText } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -14,17 +14,7 @@ import { useParams } from "react-router-dom";
 import configURL from "../../config";
 // import Select from "@mui/material/Select";
 
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
+
 
 const ShowDocument = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -36,17 +26,17 @@ const ShowDocument = () => {
   const [base64, setbase64] = useState("iVBORw0KGgoAAAANSUhEUgAAAJsAAABgCAYAAAAKNABWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABJ0RVh0U29mdHdhcmUAR3JlZW5zaG90XlUIBQAAAQBJREFUeF7t0jENADAQA7Hyxxzpy+ImD2bgt+2gIBsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsZGQjIxsZ2cjIRkY2MrKRkY2MbGRkIyMbGdnIyEZGNjKykZGNjGxkZCMjGxnZyMhGRjYyspGRjYxsRHYfQZmZzI7xpikAAAAASUVORK5CYII=");
   const [mmTyoe, setMimeType] = useState("image/png");
   const [isSidebar, setIsSidebar] = useState(true);
-  const [docsClient, setDocsClient] = useState([]);
+  // const [docsClient, setDocsClient] = useState([]);
   // const [docsClientCredit, setDocsClientCredit] = useState([]);
   const [nameDoc, setNameDoc] = useState("");
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  // const isNonMobile = useMediaQuery("(min-width:600px)");
   const [montoSolicitado, setMonto] = useState(0);
   // const [listStatus, setListStatus] = useState([]);
   const [status, setStatus] = useState("");
   // const [loadingStatus, setLoadingStatus] = useState(true);
   const [cartaExcepcion, setCartaExcepcion] = useState(carta);
   const [perfilUsuario] = useState(user.permisos);
-  const [documents, setDocuments] = useState([]);
+  // const [documents, setDocuments] = useState([]);
   const [visibleDocCredit, setVisibleDocCredit] = useState(false);
   const [visibleUploadDocCredit, setVisibleUploadDocCredit] = useState(false);
   const [tipoCliente, setTipoCliente] = useState(0);
@@ -70,7 +60,8 @@ const ShowDocument = () => {
       setStatus(result.idEstatus);
       setMonto(result.montoCreditoSolicitado);
       setCartaExcepcion(result.cartaExpedicion);
-      setTipoCliente(result.tipoCliente)
+      setTipoCliente(result.tipoCliente);
+      console.info("Monto solicitado: ", result.montoCreditoSolicitado)
       return {
         cartaExcepcion : result.cartaExpedicion,
         tipoCliente : result.tipoCliente
@@ -105,7 +96,7 @@ const ShowDocument = () => {
       const documentoFiltradoComercial  = response.filter(documento => idTipoDocument.includes(documento.id));
       const documentoFiltradoCredito = response.filter(documento => idTipoDocumentCredito.includes(documento.id));
 
-      console.table(documentoFiltradoCredito);
+      // console.table(documentoFiltradoCredito);
       
       updatedDocuments = documentoFiltradoComercial.map((documento) => ({
         ...documento,
@@ -165,8 +156,8 @@ const ShowDocument = () => {
         let idDocs = await JSON.parse(documentosRequeridos.doctos);
         if (idDocs) {
           let idTipoDocument = await getCatalogoDocumentos();
-          console.log(idTipoDocument[0]);
-          console.log(idTipoDocument[1]);
+          // console.log(idTipoDocument[0]);
+          // console.log(idTipoDocument[1]);
           await getClientDocuments(idDocs, idTipoDocument[0], idTipoDocument[1]);
           // setDocumentosComercial(documents)
         }

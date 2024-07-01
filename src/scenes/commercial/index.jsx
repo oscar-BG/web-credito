@@ -11,6 +11,8 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import UnpublishedOutlinedIcon from '@mui/icons-material/UnpublishedOutlined';
 import { useNavigate } from "react-router-dom";
 import SidebarPro from "../global/Sidebar";
 import Topbar from "../global/Topbar";
@@ -44,6 +46,7 @@ const Commercial = () => {
   const [loadingTipoCliente, setLoadingTipoCliente] = useState(true);
 
   const [titleView, setTitle] = useState("");
+  const [hideColumn, setHideColumn] = useState(true);
 
   const handleFormSubmit = (values) => {
     // console.log(values);
@@ -113,6 +116,7 @@ const Commercial = () => {
         case "cartera_foranea":
         case "cartera_matriz":
           setTitle("Cartera");
+          setHideColumn(false);
           // setIconMenu(<ReceiptOutlinedIcon />);
           break;
         case "analista_credito":
@@ -300,6 +304,11 @@ const Commercial = () => {
       flex: 1,
       renderHeader: (params) => <Box sx={{ whiteSpace: "normal", wordWrap: "break-word", textAlign: "center" }}>{params.colDef.headerName}</Box>,
     },
+    ...(hideColumn ? [] : [{ field: "checkOut", headerName: "Check", flex: 1, renderCell: ({row : {checkOut} }) => {
+      return (
+        checkOut === 1 ? <CheckCircleOutlinedIcon  sx={{ color: '#5FD411' }}/> : <UnpublishedOutlinedIcon  sx={{ color: '#F92020' }} />
+      );
+    } }]),
     {
       field: "id",
       headerName: "Expediente",
@@ -315,6 +324,7 @@ const Commercial = () => {
         );
       },
     },
+    
   ];
 
   return (

@@ -14,7 +14,6 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 // import { Form } from "react-router-dom";
 import configURL from "../../config";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FormNuevoCredito = ({ dataUser }) => {

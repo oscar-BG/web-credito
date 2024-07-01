@@ -152,7 +152,7 @@ const ProfileUser = () => {
           })
           setFomrValidate(checkoutSchemaValidate);
           break;
-        case 'cartera_forenea':
+        case 'cartera_foranea':
         case 'cartera_matriz':
           result.map((status) => {
             if (status_actual === 2) {
